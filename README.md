@@ -10,8 +10,9 @@ Follow this checklist when setting up the project to avoid non-code problems.
  * The folder C:\Users\<username>\Pictures\MtG-cards exists.
  * It contains images with 1 MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
- * The folder C:\Program Files\Tesseract-OCR\tessdata exists.
- * It contains the file eng.traineddata of the correct version (check Vcpkg to see which version).
+ * ~~The folder C:\Program Files\Tesseract-OCR\tessdata exists.~~
+ * ~~It contains the file eng.traineddata of the correct version (check Vcpkg to see which version).~~
+ * Don't worry about the Tesseract trained data file. It should be handled and used by the project code now! :-D
  
 ## Environment
 This project is written with the C++17 standard.
