@@ -58,6 +58,9 @@
     <Filter Include="Source Files\Containers">
       <UniqueIdentifier>{ce9d0f0e-99b4-4a2d-ab83-eda853e3f7c8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\tessdata">
+      <UniqueIdentifier>{62663c6e-9be1-43b3-a115-7cb932869658}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -182,5 +185,10 @@
     <ClCompile Include="OcvMtgCardInfoHelper.cpp">
       <Filter>Source Files\Helpers</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="eng.traineddata">
+      <Filter>Resource Files\tessdata</Filter>
+    </None>
   </ItemGroup>
 </Project>
