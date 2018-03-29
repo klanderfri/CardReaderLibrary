@@ -14,6 +14,9 @@ public:
 	std::wstring GetUserPicturesFileDirectory();
 	std::wstring AddToEndOfFilename(std::wstring originalFilename, std::wstring addition);
 	void SetConsoleWidthInCharacters(int amountOfCharacters);
+	std::wstring GetPathToExeParentDirectory();
+	std::wstring GetPathToExeFile();
+	std::wstring GetExeFileName();
 
 private:
 

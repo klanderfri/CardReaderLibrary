@@ -16,7 +16,9 @@ OcvTitleOcrReader::~OcvTitleOcrReader()
 
 pair<wstring, int> OcvTitleOcrReader::DecodeTitle() {
 
-	ocr.Init(NULL, "eng", OEM_TESSERACT_ONLY);
+	string trainedDataFolderPath = systemMethods->ToString(systemMethods->GetPathToExeParentDirectory()) + "tessdata";
+	const char* path = trainedDataFolderPath.c_str();
+	ocr.Init(path, "eng", OEM_TESSERACT_ONLY);
 	ocr.SetPageSegMode(PSM_SINGLE_LINE);
 	ocr.SetImage((uchar*)originalImageData.data, originalImageData.cols, originalImageData.rows, originalImageData.channels(), originalImageData.step1());
 

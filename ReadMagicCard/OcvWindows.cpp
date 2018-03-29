@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <windows.h>
 #include <Lmcons.h>
+#include "boost\filesystem\path.hpp"
 
 using namespace std;
 
@@ -141,4 +142,34 @@ void OcvWindows::SetConsoleWidthInCharacters(int amountOfCharacters) {
 	int width = amountOfCharacters * Font.dwFontSize.X + 33; //Lets hope the user doesn't change the font size!
 	int height = (int)round(width / phi); //Use the golden ratio! :-D
 	MoveWindow(console, r.left, r.top, width, height, TRUE);
+}
+
+wstring OcvWindows::GetPathToExeParentDirectory() {
+
+	//Implemented as suggested at:
+	//https://gist.github.com/yoggy/1496617
+	
+	boost::filesystem::path path(GetPathToExeFile());
+	wstring tmp = path.parent_path().wstring();
+	return path.parent_path().wstring() + L"\\";
+}
+
+wstring OcvWindows::GetPathToExeFile() {
+
+	//Implemented as suggested at:
+	//https://gist.github.com/yoggy/1496617
+
+	wchar_t path[MAX_PATH];
+	GetModuleFileName(NULL, path, MAX_PATH);
+	return wstring(path);
+}
+
+wstring OcvWindows::GetExeFileName()
+{
+	//Implemented as suggested at:
+	//https://gist.github.com/yoggy/1496617
+
+	boost::filesystem::path path(GetPathToExeFile());
+	wstring tmp = path.filename().wstring();
+	return path.filename().wstring();
 }
