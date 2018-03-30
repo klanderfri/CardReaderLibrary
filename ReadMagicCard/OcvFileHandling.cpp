@@ -24,16 +24,13 @@ wstring OcvFileHandling::GetMtgImageFileFolderPath(OcvSystemDependencyClass* sys
 	return systemMethods->GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
 }
 
-vector<wstring> OcvFileHandling::GetMtgImageFileNames(OcvSystemDependencyClass* systemMethods) {
+vector<wstring> OcvFileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
 
 	//Create a list holding the filenames.
 	vector<wstring> filenames;
 
-	//Get all the file names.
-	wstring folderPath = GetMtgImageFileFolderPath(systemMethods);
-
 	//Run the reader for every card in the working folder.
-	for (auto & p : fs::directory_iterator(folderPath)) {
+	for (auto & p : fs::directory_iterator(fullFolderPath)) {
 
 		//Fetch the file name.
 		wstring filePath = p.path().wstring();
