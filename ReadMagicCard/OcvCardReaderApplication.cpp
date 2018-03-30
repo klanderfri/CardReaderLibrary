@@ -45,7 +45,7 @@ int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallel
 	if (numberOfFiles <= (size_t)OcvCardCollectionReader::MaxSize()) {
 
 		//Create a card collection reader.
-		OcvCardCollectionReader readers(systemMethodsPointer, (int)numberOfFiles, doDebugging, runParallelized);
+		OcvCardCollectionReader readers(systemMethodsPointer, doDebugging, runParallelized);
 
 		//Run the reader for every card in the working folder.
 		for (size_t i = 0; i < numberOfFiles; i++) {

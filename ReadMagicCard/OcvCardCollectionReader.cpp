@@ -6,7 +6,7 @@
 using namespace std;
 using namespace cv;
 
-OcvCardCollectionReader::OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, int amountOfCardsToRead, bool debuggingOn, bool runParallelized)
+OcvCardCollectionReader::OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, bool debuggingOn, bool runParallelized)
 {
 	m_systemMethods = systemMethods;
 	m_debuggingOn = debuggingOn;
