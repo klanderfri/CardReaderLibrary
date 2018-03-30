@@ -57,3 +57,6 @@ a similar class derived from the OcvSystemDependencyClass class!
 ## Test Data
 A zip files with test data (aka photos of MtG cards) can be downloaded from the link below.
 http://tankarochkuriosa.se/documents/mtg-cards.zip (163 MB)
+
+## About Compile Warnings
+There should be no warnings. Warnings are just as bad as errors. If you get warnings, you're doing it wrong!
