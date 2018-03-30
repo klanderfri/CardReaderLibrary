@@ -168,6 +168,7 @@
     <ClInclude Include="OcvCardExtractor.h" />
     <ClInclude Include="OcvCardHandler.h" />
     <ClInclude Include="OcvCardReader.h" />
+    <ClInclude Include="OcvCardReaderApplication.h" />
     <ClInclude Include="OcvException.h" />
     <ClInclude Include="OcvFileHandling.h" />
     <ClInclude Include="OcvImageHelper.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="OcvCardExtractor.cpp" />
     <ClCompile Include="OcvCardHandler.cpp" />
     <ClCompile Include="OcvCardReader.cpp" />
+    <ClCompile Include="OcvCardReaderApplication.cpp" />
     <ClCompile Include="OcvFileHandling.cpp" />
     <ClCompile Include="OcvImageHelper.cpp" />
     <ClCompile Include="OcvLetterCheckHelper.cpp" />

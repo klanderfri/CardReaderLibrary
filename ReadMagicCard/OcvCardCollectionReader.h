@@ -11,7 +11,7 @@ public:
 		std::wstring CardName;
 	};
 
-	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, int amountOfCardsToRead = 0, bool debuggingOn = false, bool runParallelized = true);
+	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, int amountOfCardsToRead, bool debuggingOn, bool runParallelized);
 	~OcvCardCollectionReader();
 
 	//Adds a card to the collection.
