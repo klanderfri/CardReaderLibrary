@@ -7,11 +7,11 @@ BEFORE opening/installing/starting this project!
 
 ## Checklist
 Follow this checklist when setting up the project to avoid non-code problems.
- * The folder C:\Users\<username>\Pictures\MtG-cards exists.
+ * Check that the folder C:\Users\<username>\Pictures\MtG-cards exists.
  * It contains images with 1 MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
- * ~~The folder C:\Program Files\Tesseract-OCR\tessdata exists.~~
- * ~~It contains the file eng.traineddata of the correct version (check Vcpkg to see which version).~~
+ * ~~Check that the folder C:\Program Files\Tesseract-OCR\tessdata exists.~~
+ * ~~Make sure it contains the file eng.traineddata of the correct version (check Vcpkg to see which version).~~
  * Don't worry about the Tesseract trained data file. It should be handled and used by the project code now! :-D
  
 ## Environment
@@ -59,4 +59,4 @@ A zip files with test data (aka photos of MtG cards) can be downloaded from the 
 http://tankarochkuriosa.se/documents/mtg-cards.zip (163 MB)
 
 ## About Compile Warnings
-There should be no warnings. Warnings are just as bad as errors. If you get warnings, you're doing it wrong!
+There should be NO warnings. Warnings are just as bad as errors. If you get warnings, you're doing it wrong!
