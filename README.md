@@ -53,3 +53,7 @@ The code is meant to run on Windows.
 
 If you add OS-specific code, make sure you use the OcvWindows class or
 a similar class derived from the OcvSystemDependencyClass class!
+
+## Test Data
+A zip files with test data (aka photos of MtG cards) can be downloaded from the link below.
+http://tankarochkuriosa.se/documents/mtg-cards.zip (163 MB)
