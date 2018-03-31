@@ -13,8 +13,7 @@ using namespace cv;
 using namespace std;
 
 OcvCardReader::OcvCardReader(wstring imageFileName, OcvSystemDependencyClass* systemMethods, bool doDebugging)
-	: OcvCardHandler(imageFileName, Mat(), systemMethods, doDebugging),
-	TITLE_FORM({ 0.0441176, 0.0661765, 1 })
+	: OcvCardHandler(imageFileName, Mat(), systemMethods, doDebugging)
 {
 }
 

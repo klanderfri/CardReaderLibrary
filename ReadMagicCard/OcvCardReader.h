@@ -17,15 +17,6 @@ public:
 
 private:
 
-	struct CardTitleAreaForm {
-		double height;
-		double width;
-		double zoom;
-	};
-
-	//Numbers defining how the title looks like.
-	const CardTitleAreaForm TITLE_FORM;
-
 	//Crops out the card title.
 	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImage);
 	//Reads the title of the card.
