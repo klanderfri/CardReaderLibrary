@@ -46,8 +46,7 @@ int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallel
 		auto result = readers->ExtractCardNames();
 
 		//Give a reassuring message... or not.
-		bool successful = checkIfExecutionWasSuccessful(result);
-		printResultMessage(successful, readers->AmountOfErrors());
+		printResultMessage(readers->AmountOfErrors());
 
 		//Since we don't need the readers anymore...
 		delete readers;
@@ -106,22 +105,10 @@ void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* sys
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-bool OcvCardReaderApplication::checkIfExecutionWasSuccessful(vector<CardNameInfo> executionResult) {
-
-	for (auto info : executionResult) {
-
-		if (!info.Success) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-void OcvCardReaderApplication::printResultMessage(bool runWasSuccessful, int numberOfErrors) {
+void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
 
 	wstring message;
-	if (runWasSuccessful) {
+	if (numberOfErrors > 0) {
 		message = L"All images was successfully read! Yeay! :-)";
 	}
 	else {
@@ -129,6 +116,7 @@ void OcvCardReaderApplication::printResultMessage(bool runWasSuccessful, int num
 		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
 		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
 	}
+
 	wcout << endl << message << endl;
 }
 

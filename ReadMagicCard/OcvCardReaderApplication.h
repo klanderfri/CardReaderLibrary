@@ -24,10 +24,8 @@ private:
 	OcvCardCollectionReader* createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int longestFilenameLength);
-	//Checks if the execution was successful, aka without errors.
-	bool checkIfExecutionWasSuccessful(std::vector<CardNameInfo> executionResult);
 	//Prints a message telling the user how the execution went.
-	void printResultMessage(bool runWasSuccessful, int numberOfErrors);
+	void printResultMessage(int numberOfErrors);
 	//Prints a message telling the user that there are to many files to successfully read them all.
 	void printToManyFilesMessage();
 	//Extracts the time (in milliseconds) that passed between two time points.
