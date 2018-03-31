@@ -85,6 +85,7 @@ void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<Card
 	for (int i = range.start; i < range.end; i++)
 	{
 		wstring fileName, cardName;
+		int confidence;
 		bool success = true;
 
 		try {
@@ -92,6 +93,7 @@ void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<Card
 			//Extract the card name.
 			fileName = m_readers[i].GetImageFileName();
 			cardName = m_readers[i].ExtractCardName();
+			confidence = m_readers[i].GetConfidence();
 
 			if (!m_readers[i].GetSuccess()) {
 				success = false;
@@ -114,6 +116,7 @@ void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<Card
 		info.CardName = cardName;
 		info.FileName = fileName;
 		info.Success = success;
+		info.Confidence = confidence;
 
 		result.push_back(info);
 	}

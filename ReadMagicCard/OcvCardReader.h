@@ -14,6 +14,8 @@ public:
 	std::wstring ExtractCardName();
 	//Get the success of the extraction.
 	bool GetSuccess();
+	//Get the confidence of the Tesseract title read.
+	int GetConfidence();
 
 private:
 
@@ -32,4 +34,6 @@ private:
 
 	//Tells if the extraction was successfull.
 	bool m_success = false;
+	//Tells how confident Tesseract was of decoding the title.
+	int m_confidence = 0;
 };

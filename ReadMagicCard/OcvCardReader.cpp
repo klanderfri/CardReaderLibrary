@@ -31,6 +31,11 @@ bool OcvCardReader::GetSuccess() {
 	return m_success;
 }
 
+int OcvCardReader::GetConfidence() {
+
+	return m_confidence;
+}
+
 wstring OcvCardReader::ExtractCardName() {
 
 	//Load the image.
@@ -89,6 +94,7 @@ pair<wstring, int> OcvCardReader::readTitle(Mat cardImage, int numberOfTries) {
 
 	//Store the confidence
 	storeConfidence(numberOfTries, result.first, result.second);
+	m_confidence = result.second;
 
 	return result;
 }
