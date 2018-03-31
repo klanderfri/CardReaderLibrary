@@ -8,6 +8,7 @@
 #include "OcvSaveImage.h"
 #include "OcvTitleExtractor.h"
 #include "OcvTitleOcrReader.h"
+#include "boost\algorithm\string.hpp"
 
 using namespace cv;
 using namespace std;
@@ -156,7 +157,7 @@ bool OcvCardReader::containsInvalidCharacters(wstring title) {
 
 	//Make the title lowercase to make it easier to work with.
 	string titleStr = systemMethods->ToString(title);
-	transform(titleStr.begin(), titleStr.end(), titleStr.begin(), ::tolower);
+	boost::algorithm::to_lower(titleStr);
 
 	vector<char> allowedCharacters
 	{
