@@ -108,7 +108,7 @@ void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* sys
 void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
 
 	wstring message;
-	if (numberOfErrors > 0) {
+	if (numberOfErrors == 0) {
 		message = L"All images was successfully read! Yeay! :-)";
 	}
 	else {
