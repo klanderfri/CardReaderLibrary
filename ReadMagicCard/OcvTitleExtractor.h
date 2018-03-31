@@ -6,7 +6,7 @@ class OcvTitleExtractor :
 	public OcvSectionExtractor
 {
 public:
-	OcvTitleExtractor(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn);
+	OcvTitleExtractor(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvTitleExtractor();
 
 	//Extracts an image containing the card title.

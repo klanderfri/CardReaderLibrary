@@ -6,7 +6,7 @@ class OcvTitleOcrReader :
 	OcvCardHandler
 {
 public:
-	OcvTitleOcrReader(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn = false);
+	OcvTitleOcrReader(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvTitleOcrReader();
 
 	//Decodes the title image and turns it into a wstring. The result also contains the Tesseract confidence.

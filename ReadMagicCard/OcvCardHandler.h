@@ -7,7 +7,7 @@ public:
 	//Type used by OpenCV methods to represent hierarchies when finding contours.
 	typedef std::vector<cv::Vec4i> Hierarchy;
 
-	OcvCardHandler(std::wstring imageFileName, cv::Mat imageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn);
+	OcvCardHandler(std::wstring imageFileName, cv::Mat imageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvCardHandler();
 
 protected:
@@ -20,7 +20,7 @@ protected:
 	//The image data of the image containing the card.
 	cv::Mat originalImageData;
 	//Telling if the program should do debugging such as exporting the images to files.
-	bool debuggingOn;
+	bool doDebugging;
 	//Pointer to object handling the system dependent methods.
 	OcvSystemDependencyClass* systemMethods;
 };

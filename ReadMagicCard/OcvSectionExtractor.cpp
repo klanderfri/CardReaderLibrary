@@ -4,8 +4,8 @@
 using namespace cv;
 using namespace std;
 
-OcvSectionExtractor::OcvSectionExtractor(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn)
-	: OcvCardHandler(imageFileName, originalImageData, systemMethods, debuggingOn)
+OcvSectionExtractor::OcvSectionExtractor(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging)
+	: OcvCardHandler(imageFileName, originalImageData, systemMethods, doDebugging)
 {
 }
 

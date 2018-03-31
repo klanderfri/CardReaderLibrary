@@ -5,7 +5,7 @@ class OcvCardExtractor :
 	public OcvSectionExtractor
 {
 public:
-	OcvCardExtractor(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn);
+	OcvCardExtractor(std::wstring imageFileName, cv::Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvCardExtractor();
 
 	//Extracts an image containing the card.

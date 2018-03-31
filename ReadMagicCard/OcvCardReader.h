@@ -5,7 +5,7 @@ class OcvCardReader :
 	OcvCardHandler
 {
 public:
-	OcvCardReader(std::wstring imageFileName, OcvSystemDependencyClass* systemMethods, bool debuggingOn = false);
+	OcvCardReader(std::wstring imageFileName, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvCardReader();
 
 	//Get the name of the file containing the image.

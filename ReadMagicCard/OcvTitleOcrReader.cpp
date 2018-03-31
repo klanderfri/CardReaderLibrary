@@ -5,8 +5,8 @@ using namespace std;
 using namespace cv;
 using namespace tesseract;
 
-OcvTitleOcrReader::OcvTitleOcrReader(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn)
-	: OcvCardHandler(imageFileName, originalImageData, systemMethods, debuggingOn)
+OcvTitleOcrReader::OcvTitleOcrReader(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging)
+	: OcvCardHandler(imageFileName, originalImageData, systemMethods, doDebugging)
 {
 }
 

@@ -7,8 +7,8 @@
 using namespace cv;
 using namespace std;
 
-OcvTitleExtractor::OcvTitleExtractor(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn)
-	: OcvSectionExtractor(imageFileName, originalImageData, systemMethods, debuggingOn)
+OcvTitleExtractor::OcvTitleExtractor(wstring imageFileName, Mat originalImageData, OcvSystemDependencyClass* systemMethods, bool doDebugging)
+	: OcvSectionExtractor(imageFileName, originalImageData, systemMethods, doDebugging)
 {
 }
 
@@ -82,7 +82,7 @@ bool OcvTitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 
 		combinedLetterContorus.insert(combinedLetterContorus.end(), letterContour.begin(), letterContour.end());
 
-		if (debuggingOn) {
+		if (doDebugging) {
 
 			onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
 
@@ -105,7 +105,7 @@ bool OcvTitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 	RotatedRect textArea = minAreaRect(combinedLetterContorus);
 
 	//Store result for debugging.
-	if (debuggingOn) {
+	if (doDebugging) {
 		OcvSaveImage::SaveImageData(systemMethods, onlyLettersBound, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles"), L"7 - Only Title Letters");
 		Mat possibleTitleArea = OcvImageHelper::DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
 		OcvSaveImage::SaveImageData(systemMethods, possibleTitleArea, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle"), L"8 - Possible Title Area");
@@ -125,7 +125,7 @@ bool OcvTitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 	OcvImageHelper::CropImageWithSolidBorder(textImage, textImage, straightTextArea, 10);
 
 	//Store result for debugging.
-	if (debuggingOn) {
+	if (doDebugging) {
 		OcvSaveImage::SaveImageData(systemMethods, textImage, imageFileName, L"9 - Title Text");
 	}
 

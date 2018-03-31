@@ -12,8 +12,8 @@
 using namespace cv;
 using namespace std;
 
-OcvCardReader::OcvCardReader(wstring imageFileName, OcvSystemDependencyClass* systemMethods, bool debuggingOn)
-	: OcvCardHandler(imageFileName, Mat(), systemMethods, debuggingOn),
+OcvCardReader::OcvCardReader(wstring imageFileName, OcvSystemDependencyClass* systemMethods, bool doDebugging)
+	: OcvCardHandler(imageFileName, Mat(), systemMethods, doDebugging),
 	TITLE_FORM({ 0.0441176, 0.0661765, 1 })
 {
 }
@@ -38,7 +38,7 @@ wstring OcvCardReader::ExtractCardName() {
 	Mat originalImage = OcvLoadImage::LoadImageData(systemMethods, imageFileName);
 
 	//Extract the card part.
-	OcvCardExtractor cardExtractor(imageFileName, originalImage, systemMethods, debuggingOn);
+	OcvCardExtractor cardExtractor(imageFileName, originalImage, systemMethods, doDebugging);
 	Mat cardImage;
 	bool success = cardExtractor.ExtractCard(cardImage);
 
@@ -85,7 +85,7 @@ pair<wstring, int> OcvCardReader::readTitle(Mat cardImage, int numberOfTries) {
 	}
 
 	//Read the title.
-	OcvTitleOcrReader titleReader(imageFileName, ocrTitle, systemMethods, debuggingOn);
+	OcvTitleOcrReader titleReader(imageFileName, ocrTitle, systemMethods, doDebugging);
 	auto result = titleReader.DecodeTitle();
 
 	//Store the confidence
@@ -100,7 +100,7 @@ bool OcvCardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage) {
 	cropImageToTitleSection(cardImage, outImage);
 
 	//Prepare the tile for OCR reading.
-	OcvTitleExtractor titleExtractor(imageFileName, outImage, systemMethods, debuggingOn);
+	OcvTitleExtractor titleExtractor(imageFileName, outImage, systemMethods, doDebugging);
 	bool success = titleExtractor.ExtractTitle(outImage);
 
 	//See if we need to stop.
@@ -112,7 +112,7 @@ bool OcvCardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage) {
 	OcvImageHelper::SetBackgroundByInverting(outImage, true);
 
 	//Store result for debugging.
-	if (debuggingOn) {
+	if (doDebugging) {
 		OcvSaveImage::SaveImageData(systemMethods, outImage, imageFileName, L"10 - OCR Prepared Title");
 	}
 
@@ -121,7 +121,7 @@ bool OcvCardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage) {
 
 void OcvCardReader::storeConfidence(int numberOfTries, wstring ocrResult, int ocrConfidence) {
 
-	if (debuggingOn) {
+	if (doDebugging) {
 
 		wstring textfileName = L"TitleDecodeConfidence.txt";
 		wstring subfolderName = L"Image Data";
@@ -176,7 +176,7 @@ void OcvCardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImag
 	OcvImageHelper::CropImage(rawCardImage, outImage, titleBox);
 
 	//Store result for debugging.
-	if (debuggingOn) {
+	if (doDebugging) {
 		OcvSaveImage::SaveImageData(systemMethods, outImage, imageFileName, L"6 - Title Section");
 	}
 }

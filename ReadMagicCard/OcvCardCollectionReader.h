@@ -11,7 +11,7 @@ public:
 		std::wstring CardName;
 	};
 
-	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, bool debuggingOn, bool runParallelized);
+	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, bool doDebugging, bool runParallelized);
 	~OcvCardCollectionReader();
 
 	//Adds a card to the collection.
@@ -39,7 +39,7 @@ private:
 	//Pointer to object handling the system dependent methods.
 	OcvSystemDependencyClass * m_systemMethods;
 	//Telling if the program should do debugging such as exporting the images to files.
-	bool m_debuggingOn;
+	bool m_doDebugging;
 	//Telling if the extraction should be done parallelized.
 	bool m_runParallelized;
 	//The container holding all the card readers.

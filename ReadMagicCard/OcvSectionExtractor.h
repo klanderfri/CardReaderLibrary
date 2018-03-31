@@ -6,7 +6,7 @@ class OcvSectionExtractor :
 	protected OcvCardHandler
 {
 public:
-	OcvSectionExtractor(std::wstring imageFileName, cv::Mat imageData, OcvSystemDependencyClass* systemMethods, bool debuggingOn);
+	OcvSectionExtractor(std::wstring imageFileName, cv::Mat imageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvSectionExtractor();
 
 protected:
