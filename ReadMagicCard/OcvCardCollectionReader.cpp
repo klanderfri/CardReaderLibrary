@@ -58,7 +58,7 @@ int OcvCardCollectionReader::AmountOfErrors() {
 	return m_amountOfErrors;
 }
 
-vector<OcvCardCollectionReader::CardNameInfo> OcvCardCollectionReader::ExtractCardNames() {
+vector<CardNameInfo> OcvCardCollectionReader::ExtractCardNames() {
 
 	vector<CardNameInfo> result = vector<CardNameInfo>();
 	Range range = getRange();
@@ -80,7 +80,7 @@ vector<OcvCardCollectionReader::CardNameInfo> OcvCardCollectionReader::ExtractCa
 	return result;
 }
 
-void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<OcvCardCollectionReader::CardNameInfo>& result, const int amountOfCardsRead, const int longestFilenameLength)
+void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<CardNameInfo>& result, const int amountOfCardsRead, const int longestFilenameLength)
 {
 	for (int i = range.start; i < range.end; i++)
 	{

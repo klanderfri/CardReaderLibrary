@@ -25,7 +25,7 @@ private:
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int longestFilenameLength);
 	//Checks if the execution was successful, aka without errors.
-	bool checkIfExecutionWasSuccessful(std::vector<OcvCardCollectionReader::CardNameInfo> executionResult);
+	bool checkIfExecutionWasSuccessful(std::vector<CardNameInfo> executionResult);
 	//Prints a message telling the user how the execution went.
 	void printResultMessage(bool runWasSuccessful, int numberOfErrors);
 	//Prints a message telling the user that there are to many files to successfully read them all.

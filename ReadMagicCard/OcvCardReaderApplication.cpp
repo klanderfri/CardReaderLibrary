@@ -106,7 +106,7 @@ void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* sys
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-bool OcvCardReaderApplication::checkIfExecutionWasSuccessful(vector<OcvCardCollectionReader::CardNameInfo> executionResult) {
+bool OcvCardReaderApplication::checkIfExecutionWasSuccessful(vector<CardNameInfo> executionResult) {
 
 	for (auto info : executionResult) {
 

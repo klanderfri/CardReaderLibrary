@@ -132,6 +132,9 @@
     <ClInclude Include="OcvCardReaderApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CardNameInfo.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -190,6 +193,9 @@
     </ClCompile>
     <ClCompile Include="OcvCardReaderApplication.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CardNameInfo.cpp">
+      <Filter>Source Files\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
