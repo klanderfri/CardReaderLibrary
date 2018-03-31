@@ -48,7 +48,7 @@ int OcvCardCollectionReader::Size() {
 	return m_currentSize;
 }
 
-int OcvCardCollectionReader::LongestFilenameLength() {
+int OcvCardCollectionReader::LengthOfLongestFilename() {
 
 	return (int)(m_longestFilename.length()); //Cast should we find. Hard to thinkt that any OS would allow filenames longer than INT_MAX!
 }
@@ -64,59 +64,47 @@ vector<CardNameInfo> OcvCardCollectionReader::ExtractCardNames() {
 	Range range = getRange();
 	m_counterForCardExtractionMessage = 0;
 	m_amountOfErrors = 0;
-	int longestFilenameLength = LongestFilenameLength();
+	int lengthOfLongestFilename = LengthOfLongestFilename();
 
 	wcout << L"Reading cards . . ." << endl;
 
 	if (m_runParallelized) {
 		parallel_for_(range, [&](const Range& internalRange) {
-			cardNameExtraction(internalRange, result, range.end, longestFilenameLength);
+			cardNameExtraction(internalRange, result, range.end, lengthOfLongestFilename);
 		});
 	}
 	else {
-		cardNameExtraction(range, result, range.end, longestFilenameLength);
+		cardNameExtraction(range, result, range.end, lengthOfLongestFilename);
 	}
 
 	return result;
 }
 
-void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<CardNameInfo>& result, const int amountOfCardsRead, const int longestFilenameLength)
+void OcvCardCollectionReader::cardNameExtraction(const Range& range, vector<CardNameInfo>& result, const int amountOfCardsRead, const int lengthOfLongestFilename)
 {
 	for (int i = range.start; i < range.end; i++)
 	{
-		wstring fileName, cardName;
-		int confidence;
-		bool success = true;
+		CardNameInfo info;
 
 		try {
 
 			//Extract the card name.
-			fileName = m_readers[i].GetImageFileName();
-			cardName = m_readers[i].ExtractCardName();
-			confidence = m_readers[i].GetConfidence();
-
-			if (!m_readers[i].GetSuccess()) {
-				success = false;
-			}
+			info.FileName = m_readers[i].GetImageFileName();
+			info.CardName = m_readers[i].ExtractCardName();
+			info.Confidence = m_readers[i].GetConfidence();
+			info.Success = m_readers[i].GetSuccess();
 		}
 		catch (exception& ex) {
 
-			success = false;
-			cardName = m_systemMethods->ToWString((string)ex.what());
+			info.CardName = m_systemMethods->ToWString((string)ex.what());
 		}
 
 		//Print that we have read the image.
-		printProgressMessage(fileName, cardName, amountOfCardsRead, longestFilenameLength);
+		printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 
-		if (!success) {
+		if (!info.Success) {
 			m_amountOfErrors++;
 		}
-
-		CardNameInfo info;
-		info.CardName = cardName;
-		info.FileName = fileName;
-		info.Success = success;
-		info.Confidence = confidence;
 
 		result.push_back(info);
 	}
@@ -130,7 +118,7 @@ Range OcvCardCollectionReader::getRange() {
 	return range;
 }
 
-void OcvCardCollectionReader::printProgressMessage(const wstring fileName, const wstring cardName, const int amountOfCardsRead, const int longestFilenameLength)
+void OcvCardCollectionReader::printProgressMessage(const wstring fileName, const wstring cardName, const int amountOfCardsRead, const int lengthOfLongestFilename)
 {
 	m_consoleLock.lock();
 
@@ -138,7 +126,7 @@ void OcvCardCollectionReader::printProgressMessage(const wstring fileName, const
 	wcout << L"Done reading image "
 		<< setw(spaceForCardAmount) << to_wstring(m_counterForCardExtractionMessage + 1) << L" of "
 		<< setw(spaceForCardAmount + 2) << to_wstring(amountOfCardsRead) + L": "
-		<< left << setw(longestFilenameLength + 3) << L"'" + fileName + L"'"
+		<< left << setw(lengthOfLongestFilename + 3) << L"'" + fileName + L"'"
 		<< L"'" + cardName + L"'"
 		<< right << endl;
 	m_counterForCardExtractionMessage++;

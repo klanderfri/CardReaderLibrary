@@ -23,7 +23,7 @@ private:
 	//Creates an collection holding a reader for evere card image.
 	OcvCardCollectionReader* createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
-	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int longestFilenameLength);
+	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
 	void printResultMessage(int numberOfErrors);
 	//Prints a message telling the user that there are to many files to successfully read them all.

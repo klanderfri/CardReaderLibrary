@@ -18,16 +18,16 @@ public:
 	//Gets the amount of cards the reader holds.
 	int Size();
 	//Gets the lenght of the longest filename.
-	int LongestFilenameLength();
+	int LengthOfLongestFilename();
 	//Gets the amount of card that couldn't be read.
 	int AmountOfErrors();
 
 private:
 
 	//Extracts the card names from the card images.
-	void cardNameExtraction(const cv::Range& range, std::vector<CardNameInfo>& result, const int amountOfCardsRead, const int longestFilenameLength);
+	void cardNameExtraction(const cv::Range& range, std::vector<CardNameInfo>& result, const int amountOfCardsRead, const int lengthOfLongestFilename);
 	//Prints a message about the progress.
-	void printProgressMessage(const std::wstring fileName, const std::wstring cardName, const int amountOfCardsRead, const int longestFilenameLength);
+	void printProgressMessage(const std::wstring fileName, const std::wstring cardName, const int amountOfCardsRead, const int lengthOfLongestFilename);
 	//Gets the range of the internal readers.
 	cv::Range getRange();
 

@@ -40,7 +40,7 @@ int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallel
 		OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, doDebugging, runParallelized);
 		
 		//Resize console window to avoid line breaks.
-		reziseCommandWindow(systemMethods, numberOfFiles, readers->LongestFilenameLength());
+		reziseCommandWindow(systemMethods, numberOfFiles, readers->LengthOfLongestFilename());
 		
 		//Fetch the card names.
 		auto result = readers->ExtractCardNames();
@@ -99,9 +99,9 @@ OcvCardCollectionReader* OcvCardReaderApplication::createCardReaderCollection(Oc
 	return readers;
 }
 
-void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int longestFilenameLength) {
+void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename) {
 
-	int lettersToAccommodate = to_string(numberOfFiles).length() * 2 + longestFilenameLength + 75;
+	int lettersToAccommodate = to_string(numberOfFiles).length() * 2 + lengthOfLongestFilename + 75;
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
