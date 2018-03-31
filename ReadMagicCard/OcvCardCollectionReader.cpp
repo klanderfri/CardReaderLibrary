@@ -50,7 +50,7 @@ int OcvCardCollectionReader::Size() {
 
 int OcvCardCollectionReader::LengthOfLongestFilename() {
 
-	return (int)(m_longestFilename.length()); //Cast should we fine. Hard to thinkt that any OS would allow filenames longer than INT_MAX!
+	return (int)(m_longestFilename.length()); //Cast should be fine. Hard to thinkt that any OS would allow filenames longer than INT_MAX!
 }
 
 int OcvCardCollectionReader::AmountOfErrors() {
