@@ -36,20 +36,8 @@ int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallel
 	size_t numberOfFiles = filenamesOfImages.size();
 	if (numberOfFiles <= (size_t)OcvCardCollectionReader::MaxSize()) {
 
-		//Create a reader for every card.
-		OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, doDebugging, runParallelized);
-		
-		//Resize console window to avoid line breaks.
-		reziseCommandWindow(systemMethods, numberOfFiles, readers->LengthOfLongestFilename());
-		
-		//Fetch the card names.
-		auto result = readers->ExtractCardNames();
-
-		//Give a reassuring message... or not.
-		printResultMessage(readers->AmountOfErrors());
-
-		//Since we don't need the readers anymore...
-		delete readers;
+		//Read the cards.
+		readAllCards(systemMethods, filenamesOfImages, doDebugging, runParallelized);
 	}
 	else {
 
@@ -118,6 +106,24 @@ void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
 	}
 
 	wcout << endl << message << endl;
+}
+
+void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized) {
+
+	//Create a reader for every card.
+	OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, doDebugging, runParallelized);
+
+	//Resize console window to avoid line breaks.
+	reziseCommandWindow(systemMethods, filenamesOfImages.size(), readers->LengthOfLongestFilename());
+
+	//Fetch the card names.
+	auto result = readers->ExtractCardNames();
+
+	//Give a reassuring message... or not.
+	printResultMessage(readers->AmountOfErrors());
+
+	//Since we don't need the readers anymore...
+	delete readers;
 }
 
 void OcvCardReaderApplication::printToManyFilesMessage() {

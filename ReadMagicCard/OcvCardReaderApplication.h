@@ -26,6 +26,8 @@ private:
 	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
 	void printResultMessage(int numberOfErrors);
+	//Reads the title of the card in the provided image files.
+	void readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized);
 	//Prints a message telling the user that there are to many files to successfully read them all.
 	void printToManyFilesMessage();
 	//Extracts the time (in milliseconds) that passed between two time points.
