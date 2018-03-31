@@ -117,7 +117,7 @@ void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMeth
 	reziseCommandWindow(systemMethods, filenamesOfImages.size(), readers->LengthOfLongestFilename());
 
 	//Fetch the card names.
-	auto result = readers->ExtractCardNames();
+	vector<CardNameInfo> result = readers->ExtractCardNames();
 
 	//Give a reassuring message... or not.
 	printResultMessage(readers->AmountOfErrors());
