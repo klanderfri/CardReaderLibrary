@@ -15,7 +15,7 @@ OcvCardReaderApplication::~OcvCardReaderApplication()
 {
 }
 
-int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallelized) {
+int OcvCardReaderApplication::Run(const bool runParallelized, const bool doDebugging) {
 
 	//Store the start time for later check of efficiency.
 	auto startTime = chrono::high_resolution_clock::now();
@@ -37,7 +37,7 @@ int OcvCardReaderApplication::Run(const bool doDebugging, const bool runParallel
 	if (numberOfFiles <= (size_t)OcvCardCollectionReader::MaxSize()) {
 
 		//Read the cards.
-		readAllCards(systemMethods, filenamesOfImages, doDebugging, runParallelized);
+		readAllCards(systemMethods, filenamesOfImages, runParallelized, doDebugging);
 	}
 	else {
 
@@ -73,9 +73,9 @@ vector<wstring> OcvCardReaderApplication::getMtgImageFileNames(OcvSystemDependen
 	return filenamesOfImages;
 }
 
-OcvCardCollectionReader* OcvCardReaderApplication::createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized) {
+OcvCardCollectionReader* OcvCardReaderApplication::createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
 
-	OcvCardCollectionReader *readers = new OcvCardCollectionReader(systemMethods, doDebugging, runParallelized);
+	OcvCardCollectionReader *readers = new OcvCardCollectionReader(systemMethods, runParallelized, doDebugging);
 
 	//Add the cards to the reader collection
 	for (size_t i = 0; i < filenamesOfImages.size(); i++) {
@@ -108,10 +108,10 @@ void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
 	wcout << endl << message << endl;
 }
 
-void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized) {
+void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
 
 	//Create a reader for every card.
-	OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, doDebugging, runParallelized);
+	OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, runParallelized, doDebugging);
 
 	//Resize console window to avoid line breaks.
 	reziseCommandWindow(systemMethods, filenamesOfImages.size(), readers->LengthOfLongestFilename());

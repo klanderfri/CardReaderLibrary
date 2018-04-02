@@ -12,7 +12,7 @@ public:
 	~OcvCardReaderApplication();
 
 	//Runs the card reader application.
-	int Run(const bool doDebugging, const bool runParallelized);
+	int Run(const bool runParallelized, const bool doDebugging);
 
 private:
 
@@ -21,13 +21,13 @@ private:
 	//Fetches the file names of the MtG image files.
 	std::vector<std::wstring> getMtgImageFileNames(OcvSystemDependencyClass* systemMethods);
 	//Creates an collection holding a reader for evere card image.
-	OcvCardCollectionReader* createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized);
+	OcvCardCollectionReader* createCardReaderCollection(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
 	void printResultMessage(int numberOfErrors);
 	//Reads the title of the card in the provided image files.
-	void readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool doDebugging, const bool runParallelized);
+	void readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are to many files to successfully read them all.
 	void printToManyFilesMessage();
 	//Extracts the time (in milliseconds) that passed between two time points.

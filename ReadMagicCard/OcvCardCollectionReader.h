@@ -6,7 +6,7 @@
 class OcvCardCollectionReader
 {
 public:
-	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, bool doDebugging, bool runParallelized);
+	OcvCardCollectionReader(OcvSystemDependencyClass* systemMethods, bool runParallelized, bool doDebugging);
 	~OcvCardCollectionReader();
 
 	//Adds a card to the collection.
