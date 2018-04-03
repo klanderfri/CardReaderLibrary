@@ -38,7 +38,7 @@ Includes should be added in this order:
  * stdafx.h
  * The header file of the file.
  * Ocv-header files.
- * <include> headers.
+ * &lt;include&gt; headers.
  * OpenCV headers.
  * Boost headers.
  * Leptonica headers.
