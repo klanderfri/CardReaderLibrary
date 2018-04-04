@@ -80,7 +80,10 @@ bool TestRunner::compareByCardName(FileCardPair pair1, FileCardPair pair2)
 
 vector<TestRunner::FileCardPair> TestRunner::getExpectedResult() {
 
-	vector<FileCardPair> expectedResults{
+	//The test data files, i.e the image files, can be downloaded from a third-party server.
+	//Check the ReadMe for information about the adress.
+
+	vector<FileCardPair> expectedResults {
 
 		FileCardPair{ L"Raptor Companion - Rotated.jpg", L"Raptor Companion" },
 		FileCardPair{ L"Enter the Unknown.jpg", L"Enter the Unknown" },
