@@ -62,3 +62,6 @@ There should be NO warnings. Warnings are just as bad as errors. If you get warn
 The program accepts two command arguments.
  * The first one is runParallelized. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to "true" makes the program run faster but also makes it harder to debug.
  * The second on is doDebugging. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true makes the program output image- and text-files representing the progress of the reading, but makes the program slower.
+ 
+ ## Language
+ British English should be used everywere where it's possible. American English should be avoided.
