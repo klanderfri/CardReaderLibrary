@@ -8,11 +8,8 @@ BEFORE opening/installing/starting this project!
 ## Checklist
 Follow this checklist when setting up the project to avoid non-code problems.
  * Check that the folder C:\Users\<username>\Pictures\MtG-cards exists.
- * It contains images with 1 MtG-card in each.
+ * It contains images with one (1) MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
- * ~~Check that the folder C:\Program Files\Tesseract-OCR\tessdata exists.~~
- * ~~Make sure it contains the file eng.traineddata of the correct version (check Vcpkg to see which version).~~
- * Don't worry about the Tesseract trained data file. It should be handled and used by the project code now! :-D
  
 ## Environment
 This project is written with the C++17 standard.
@@ -41,7 +38,7 @@ Includes should be added in this order:
  * stdafx.h
  * The header file of the file.
  * Ocv-header files.
- * <include> headers.
+ * &lt;include&gt; headers.
  * OpenCV headers.
  * Boost headers.
  * Leptonica headers.
@@ -60,3 +57,8 @@ http://tankarochkuriosa.se/documents/mtg-cards.zip (163 MB)
 
 ## About Compile Warnings
 There should be NO warnings. Warnings are just as bad as errors. If you get warnings, you're doing it wrong!
+
+## Command Arguments
+The program accepts two command arguments.
+ * The first one is runParallelized. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to "true" makes the program run faster but also makes it harder to debug.
+ * The second on is doDebugging. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true makes the program output image- and text-files representing the progress of the reading, but makes the program slower.
