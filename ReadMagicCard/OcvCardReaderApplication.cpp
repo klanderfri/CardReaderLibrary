@@ -100,19 +100,22 @@ void OcvCardReaderApplication::reziseCommandWindow(OcvSystemDependencyClass* sys
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
+void OcvCardReaderApplication::printResultMessage(OcvSystemDependencyClass* systemMethods, int numberOfErrors) {
 
 	wstring message;
 	if (numberOfErrors == 0) {
+		systemMethods->SetCommandLineTextColour(Colour::Green);
 		message = L"All images was successfully read! Yeay! :-)";
 	}
 	else {
+		systemMethods->SetCommandLineTextColour(Colour::Red);
 		wstring amountOfErrorsStr = to_wstring(numberOfErrors);
 		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
 		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
 	}
 
 	wcout << endl << message << endl;
+	systemMethods->ResetCommandLineTextColour();
 }
 
 vector<CardNameInfo> OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
@@ -127,7 +130,7 @@ vector<CardNameInfo> OcvCardReaderApplication::readAllCards(OcvSystemDependencyC
 	vector<CardNameInfo> result = readers->ExtractCardNames();
 
 	//Give a reassuring message... or not.
-	printResultMessage(readers->AmountOfErrors());
+	printResultMessage(systemMethods, readers->AmountOfErrors());
 
 	//Since we don't need the readers anymore...
 	delete readers;

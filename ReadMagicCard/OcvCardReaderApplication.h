@@ -25,7 +25,7 @@ private:
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(OcvSystemDependencyClass* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
-	void printResultMessage(int numberOfErrors);
+	void printResultMessage(OcvSystemDependencyClass* systemMethods, int numberOfErrors);
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are to many files to successfully read them all.
