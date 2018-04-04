@@ -9,7 +9,7 @@ public:
 
 	std::string ToString(const std::wstring& wstringToConvert);
 	std::wstring ToWString(const std::string& stringToConvert);
-	std::string ToString(const float& floatToConvert, int precision);
+	std::wstring ToWString(const float& floatToConvert, int numberOfDecimals);
 	std::wstring GetCurrentUserName();
 	std::wstring GetUserPicturesFileDirectory();
 	std::wstring AddToEndOfFilename(std::wstring originalFilename, std::wstring addition);

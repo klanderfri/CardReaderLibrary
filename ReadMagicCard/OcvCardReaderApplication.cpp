@@ -49,7 +49,7 @@ int OcvCardReaderApplication::Run(const bool runParallelized, const bool doDebug
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
-	printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
+	printExecutionTimeMessage(systemMethods, startTime, endTime, numberOfFiles, !doDebugging);
 
 	//Run tests to see if any code has been broken.
 	if (doDebugging) {
@@ -153,13 +153,20 @@ long long OcvCardReaderApplication::getexecutionTime(TimePoint startTime, TimePo
 	return chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
 }
 
-void OcvCardReaderApplication::printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
+void OcvCardReaderApplication::printExecutionTimeMessage(OcvSystemDependencyClass* systemMethods, TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
 
 	auto executionDurationTime = getexecutionTime(startTime, endTime);
-	wstring exeTime = showTimeInSeconds ? to_wstring(executionDurationTime / (float)1000000) : to_wstring(executionDurationTime);
+
+	//Print total execution time.
+	float totalExecutionTime = executionDurationTime / (float)(showTimeInSeconds ? 1000000 : 1);
+	wstring exeTime = systemMethods->ToWString(totalExecutionTime, showTimeInSeconds ? 1 : 0);
 	wstring timeUnit = showTimeInSeconds ? L"seconds" : L"microseconds";
 	wcout << endl << L"The reading took " + exeTime + L" " + timeUnit + L" to execute." << endl;
-	wcout << L"That's " + to_wstring(executionDurationTime / (numberOfFilesExecuted * (float)1000000)) + L" seconds per card on average!" << endl << endl;
+
+	//Print card avarage execution time.
+	float executionTimePerCard = executionDurationTime / numberOfFilesExecuted / (float)1000000;
+	wstring avarageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
+	wcout << L"That's " + avarageExecutionTimePerCard + L" seconds per card on average!" << endl << endl;
 }
 
 void OcvCardReaderApplication::runTestCases(OcvSystemDependencyClass* systemMethods, vector<CardNameInfo> result) {

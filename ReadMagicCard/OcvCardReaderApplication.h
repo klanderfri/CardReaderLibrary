@@ -33,7 +33,7 @@ private:
 	//Extracts the time (in milliseconds) that passed between two time points.
 	long long getexecutionTime(TimePoint startTime, TimePoint endTime);
 	//Prints a message telling the user the length of the execution time.
-	void printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
+	void printExecutionTimeMessage(OcvSystemDependencyClass* systemMethods, TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
 	//Checks if any code has been broken.
 	void runTestCases(OcvSystemDependencyClass* systemMethods, std::vector<CardNameInfo> result);
 };

@@ -10,7 +10,7 @@ public:
 	//Convert an UTF8 string to a wide Unicode string.
 	virtual std::wstring ToWString(const std::string& stringToConvert) = 0;
 	//Converts a float to an UTF8 string.
-	virtual std::string ToString(const float& floatToConvert, int precision = 5) = 0;
+	virtual std::wstring ToWString(const float& floatToConvert, int precision = 5) = 0;
 	//Gets the user name of the current user.
 	virtual std::wstring GetCurrentUserName() = 0;
 	//Gets the picture folder of the current user.

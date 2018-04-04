@@ -83,14 +83,14 @@ wstring OcvWindows::ToWString(const string& stringToConvert) {
 	return convertedWstring;
 }
 
-string OcvWindows::ToString(const float& floatToConvert, int precision) {
+wstring OcvWindows::ToWString(const float& floatToConvert, int numberOfDecimals) {
 
 	//Implemented as suggested at
 	//https://stackoverflow.com/a/29200671/1997617
 
-	stringstream stream;
-	stream << fixed << setprecision(precision) << floatToConvert;
-	string convertedString = stream.str();
+	wstringstream stream;
+	stream << fixed << setprecision(numberOfDecimals) << floatToConvert;
+	wstring convertedString = stream.str();
 
 	return convertedString;
 }

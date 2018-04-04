@@ -49,7 +49,7 @@ RotatedRect OcvCardExtractor::getOriginalCardArea(const Mat thumbImage, const Si
 	float sideFactor = longSide / shortSide;
 
 	if (doDebugging) {
-		wstring rowToAdd = imageFileName + L"\t" + systemMethods->ToWString(systemMethods->ToString(sideFactor));
+		wstring rowToAdd = imageFileName + L"\t" + systemMethods->ToWString(sideFactor);
 		OcvFileHandling::AddRowToFile(systemMethods, rowToAdd, L"CardSidesRelations.txt", L"Image Data");
 	}
 
