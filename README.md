@@ -65,3 +65,6 @@ The program accepts two command arguments.
  
  ## Language
  British English should be used everywere where it's possible. American English should be avoided.
+ 
+ ## Strings
+ One should use *wstring* when coding strings since this code is meant to run on Windows.
