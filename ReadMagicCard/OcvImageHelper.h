@@ -1,4 +1,6 @@
 #pragma once
+#include "Contour.h"
+#include "Hierarchy.h"
 #include <opencv2\imgproc.hpp>
 //Class holding image processing methods.
 class OcvImageHelper
@@ -18,9 +20,9 @@ public:
 	//Rotates an image.
 	static void RotateImage(const cv::Mat rawImage, cv::Mat& outImage, const double angleToRotate, const cv::Point2f centerPoint);
 	//Draws the specified limits to the image.
-	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const std::vector<cv::Point> limitContour = std::vector<cv::Point>());
+	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.
-	static cv::Mat DrawLimits(const cv::Mat image, const std::vector<std::vector<cv::Point>> contours, const std::vector<cv::Vec4i> hierarchy, bool useRandomColours = true);
+	static cv::Mat DrawLimits(const cv::Mat image, const Contours contours, const Hierarchy hierarchy, bool useRandomColours = true);
 	//Draws the specified center point to the image.
 	static cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, cv::Scalar colour = cv::Scalar(0, 0, 255), int radius = 10);
 	//Gets how many degrees the rectangle needs to be rotated in positive direction (counter-clockwise) to be straight.
@@ -37,6 +39,12 @@ public:
 	static void ResizeImage(const cv::Mat rawImage, cv::Mat& outImage, int height);
 	//Inverts the image background from black to white or vice versa.
 	static void SetBackgroundByInverting(cv::Mat& image, bool setblackBackground);
+	//Gives the smallest distance between the center and the limit of a rectangle.
+	static float SmallestDistanceCenterToLimit(cv::RotatedRect rectangle);
+	//Cuts out an area of an image that contains the contour.
+	static cv::Mat GetContourAreaFromImage(const Contour contour, const cv::Mat rawImage, const int margins, const bool drawContour = false);
+	//Checks if two contours are identical.
+	static bool IsIdenticalContours(Contour contour1, Contour contour2);
 
 private:
 

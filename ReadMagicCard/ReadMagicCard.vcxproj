@@ -167,6 +167,7 @@
   <ItemGroup>
     <ClInclude Include="CardNameInfo.h" />
     <ClInclude Include="Contour.h" />
+    <ClInclude Include="Hierarchy.h" />
     <ClInclude Include="LetterArea.h" />
     <ClInclude Include="OcvAlgorithmHelper.h" />
     <ClInclude Include="OcvCardCollectionReader.h" />

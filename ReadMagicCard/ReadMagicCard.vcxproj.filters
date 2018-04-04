@@ -135,6 +135,9 @@
     <ClInclude Include="CardNameInfo.h">
       <Filter>Header Files\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Hierarchy.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

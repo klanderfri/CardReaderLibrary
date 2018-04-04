@@ -87,7 +87,7 @@ void OcvImageHelper::RotateImage(const Mat rawImage, Mat& outImage, const double
 	warpAffine(rawImage, outImage, r, Size(rawImage.cols, rawImage.rows), INTER_LANCZOS4);
 }
 
-Mat OcvImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRectangle, const Rect straightLimitRectangle, const vector<Point> limitContour)
+Mat OcvImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRectangle, const Rect straightLimitRectangle, const Contour limitContour)
 {
 	//Create a working RGB image so the border lines are colour even if the image isn't.
 	Mat workingImage = ToColourImage(image);
@@ -98,9 +98,9 @@ Mat OcvImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRe
 	Scalar colourRotatedRectangle = Scalar(180, 130, 70); //Blue
 														  //Scalar(BLUE, GREEN, RED)
 
-														  //Draw the contours.
+	//Draw the contours.
 	if (!limitContour.empty()) {
-		drawContours(workingImage, vector<vector<Point>>{ limitContour }, 0, colourContour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, vector<Vec4i>(), 0, Point());
+		drawContours(workingImage, Contours{ limitContour }, 0, colourContour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
 	}
 	//Draw the straight rectangle.
 	if (!straightLimitRectangle.empty()) {
@@ -116,7 +116,7 @@ Mat OcvImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRe
 	return workingImage;
 }
 
-Mat OcvImageHelper::DrawLimits(const Mat image, const vector<vector<Point>> contours, vector<Vec4i> hierarchy, bool useRandomColours) {
+Mat OcvImageHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy hierarchy, bool useRandomColours) {
 
 	RNG rng(time(0));
 	Mat drawing = ToColourImage(image);
@@ -217,4 +217,44 @@ void OcvImageHelper::SetBackgroundByInverting(Mat& image, bool setblackBackgroun
 		!setblackBackground && white < black) {
 		image = ~image;
 	}
+}
+
+float OcvImageHelper::SmallestDistanceCenterToLimit(RotatedRect rectangle) {
+
+	return min(rectangle.size.height, rectangle.size.width) / 2;
+}
+
+Mat OcvImageHelper::GetContourAreaFromImage(const Contour contour, const Mat rawImage, const int margins, const bool drawContour) {
+
+	//This method crashes when the cut area goes outside the image.
+	//But that probably won't happen often so we'll cross that bridge when we get to it.
+
+	Mat outImage;
+	rawImage.copyTo(outImage);
+
+	if (drawContour) {
+		Contours contours{ contour };
+		outImage = DrawLimits(outImage, contours, Hierarchy(), false);
+	}
+
+	Rect bounds = boundingRect(Mat(contour));
+	Rect cutArea(bounds.x - margins, bounds.y - margins, bounds.width + margins * 2, bounds.height + margins * 2);
+	CropImage(outImage, outImage, cutArea);
+
+	return outImage;
+}
+
+bool OcvImageHelper::IsIdenticalContours(Contour contour1, Contour contour2) {
+
+	if (contour1.size() != contour2.size()) { return false; }
+
+	for (size_t i = 0; i < contour1.size(); i++) {
+
+		Point point1 = contour1[i];
+		Point point2 = contour2[i];
+
+		if (point1 != point2) { return false; }
+	}
+
+	return true;
 }

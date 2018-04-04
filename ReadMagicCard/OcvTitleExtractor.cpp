@@ -66,8 +66,10 @@ bool OcvTitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 	findContours(canny, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 	LetterAreas letters = getPossibleLetterAreas(contours);
+	letters = filterOutDuplicates(letters);
 	letters = filterOutNoise(letters);
 	letters = filterOutTransformSymbol(letters);
+	letters = filterOutLetterHoles(letters);
 	letters = filterOutManaCost(letters);
 
 	if (letters.size() < (size_t)OcvMtgCardInfoHelper::LettersInShortestCardName()) { return false; }
@@ -148,9 +150,41 @@ LetterAreas OcvTitleExtractor::getPossibleLetterAreas(Contours contours) {
 		possibleLetterAreas.push_back(area);
 	}
 
-	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByXAscending);
+	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByBorderXAscending);
 
 	return possibleLetterAreas;
+}
+
+LetterAreas OcvTitleExtractor::filterOutDuplicates(LetterAreas lettersToFilter) {
+
+	if (lettersToFilter.size() < 2) { return lettersToFilter; }
+	
+	LetterAreas letters;
+
+	for (size_t i = 0; i < lettersToFilter.size(); i++) {
+
+		//The first letter is always the first letter of any group of identical letters.
+		if (i == 0) {
+			letters.push_back(lettersToFilter[i]);
+			continue;
+		}
+
+		//Bring out the last unique letter.
+		LetterArea letterA = letters[letters.size() - 1];
+		
+		//Bring out the next letter to check for duplication.
+		LetterArea letterB = lettersToFilter[i];
+
+		//Check if the letters are identical.
+		bool isDuplicates = OcvImageHelper::IsIdenticalContours(letterA.contour, letterB.contour);
+		if (!isDuplicates) {
+
+			//The were not identical so add the second letter to the collection of unique letters.
+			letters.push_back(letterB);
+		}
+	}
+
+	return letters;
 }
 
 LetterAreas OcvTitleExtractor::filterOutNoise(LetterAreas lettersToFilter) {
@@ -171,10 +205,41 @@ LetterAreas OcvTitleExtractor::filterOutNoise(LetterAreas lettersToFilter) {
 	return letters;
 }
 
+LetterAreas OcvTitleExtractor::filterOutLetterHoles(LetterAreas lettersToFilter) {
+
+	LetterAreas letters;
+
+	for (size_t i = 0; i < lettersToFilter.size(); i++) {
+
+		LetterAreas neighbours;
+		if (i != 0) {
+			neighbours.push_back(lettersToFilter[i - 1]);
+		}
+		if (i < lettersToFilter.size() - 1) {
+			neighbours.push_back(lettersToFilter[i + 1]);
+		}
+		//If there are several holes in a letter then the neighbours above might be other holes.
+		//Therefore, also check agains the last orphan letter to avoid 
+		//Usually letters dont have more than two holes, but fonts and noise could create more.
+		if (letters.size() > 0 && i > 1) { //The letter has already been added to the neighbours when i == 1.
+			neighbours.push_back(letters[letters.size() - 1]);
+		}
+		
+		LetterArea letter = lettersToFilter[i];
+		bool hasParent = LetterArea::HasParentLetter(letter, neighbours);
+		if (!hasParent) {
+
+			letters.push_back(letter);
+		}
+	}
+
+	return letters;
+}
+
 LetterAreas OcvTitleExtractor::filterOutManaCost(LetterAreas lettersToFilter) {
 
 	LetterAreas letters;
-	RotatedRect lastLetterBox;
+	LetterArea lastLetter;
 	bool hasFoundNameManaGap = false;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++) {
@@ -184,11 +249,11 @@ LetterAreas OcvTitleExtractor::filterOutManaCost(LetterAreas lettersToFilter) {
 		//Check if there is a wide distance between the centers.
 		//Since we have sorted the letters by the center X coordinate,
 		//all subsequent countours will be mana symbols or noise.
-		if (hasWideCenterDistance(letter.box, lastLetterBox)) {
+		if (hasWideLimitDistance(lastLetter.box, letter.box)) {
 			break;
 		}
 
-		lastLetterBox = letter.box;
+		lastLetter = letter;
 		letters.push_back(letter);
 	}
 
@@ -240,15 +305,22 @@ LetterAreas OcvTitleExtractor::filterOutTransformSymbol(LetterAreas lettersToFil
 	return lettersToFilter;
 }
 
-bool OcvTitleExtractor::hasWideCenterDistance(RotatedRect letterArea, RotatedRect lastLetterArea) {
+bool OcvTitleExtractor::hasWideLimitDistance(RotatedRect leftLetterArea, RotatedRect rightLetterArea) {
 
 	//The first letter probably isn't a mana symbol.
-	if (!isInitialized(lastLetterArea)) { return false; }
+	if (!isInitialized(leftLetterArea)) { return false; }
 
-	int wideDistance = (int)(WORKING_CARD_HEIGHT / 6.5); //104
-	float distance = letterArea.center.x - lastLetterArea.center.x;
+	float wideDistance = (float)(WORKING_CARD_HEIGHT / 13.062478); //52.0575-ish
 
-	bool isWideSpace = distance > wideDistance;
+	//The distance between the centers.
+	float centerDistance = rightLetterArea.center.x - leftLetterArea.center.x;
+
+	float halfWidthA = OcvImageHelper::SmallestDistanceCenterToLimit(leftLetterArea);
+	float halfWidthB = OcvImageHelper::SmallestDistanceCenterToLimit(rightLetterArea);
+	//The distance between the limits if the rectangles would stand up.
+	float limitDistance = centerDistance - halfWidthA - halfWidthB;
+
+	bool isWideSpace = limitDistance > wideDistance;
 	return isWideSpace;
 }
 

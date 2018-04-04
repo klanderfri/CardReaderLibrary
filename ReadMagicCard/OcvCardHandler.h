@@ -1,12 +1,10 @@
 #pragma once
 #include "OcvSystemDependencyClass.h"
+#include "Hierarchy.h"
 //Base class for classes that handles card or part of cards.
 class OcvCardHandler
 {
 public:
-	//Type used by OpenCV methods to represent hierarchies when finding contours.
-	typedef std::vector<cv::Vec4i> Hierarchy;
-
 	OcvCardHandler(std::wstring imageFileName, cv::Mat imageData, OcvSystemDependencyClass* systemMethods, bool doDebugging);
 	~OcvCardHandler();
 

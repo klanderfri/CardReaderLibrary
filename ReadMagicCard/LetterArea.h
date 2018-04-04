@@ -4,15 +4,24 @@
 class LetterArea
 {
 public:
+	typedef std::vector<LetterArea> LetterAreas;
+
 	LetterArea();
 	~LetterArea();
 
-	//Compares two letter areas by the box center point X-coordinate.
-	static bool CompareLetterAreaByXAscending(LetterArea area1, LetterArea area2);
+	//Compares two letter areas by the X-coordinate of the left border when the letters are standing stright up.
+	static bool CompareLetterAreaByBorderXAscending(LetterArea area1, LetterArea area2);
+	//Checks if a letter is a child to any other letter.
+	static bool HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents);
 
 	//The contour of the letter.
 	Contour contour;
 	//The box containing the letter.
 	cv::RotatedRect box;
+
+private:
+
+	//Checks if one letter is child to another letter.
+	static bool hasChildParentRelation(LetterArea child, LetterArea parent);
 };
-typedef std::vector<LetterArea> LetterAreas;
+typedef LetterArea::LetterAreas LetterAreas;

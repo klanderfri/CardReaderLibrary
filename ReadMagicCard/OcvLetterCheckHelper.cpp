@@ -23,6 +23,10 @@ bool OcvLetterCheckHelper::IsLetter(RotatedRect letterArea) {
 		return true;
 	}
 
+	if (isComma(letterArea)) {
+		return true;
+	}
+
 	if (!isLetterSize(letterArea)) {
 		return false;
 	}
@@ -30,19 +34,30 @@ bool OcvLetterCheckHelper::IsLetter(RotatedRect letterArea) {
 	return true;
 }
 
+int OcvLetterCheckHelper::getMaxTitleLetterCoordinateX() {
+	return (int)(WORKING_CARD_HEIGHT * 2.477941); //1685
+}
+
+int OcvLetterCheckHelper::getMinTitleLetterCoordinateX() {
+	return (int)(WORKING_CARD_HEIGHT / 13.6); //50
+}
+
+int OcvLetterCheckHelper::getMaxTitleLetterCoordinateY() {
+	return (int)(WORKING_CARD_HEIGHT / 4.689655); //145
+}
+
+int OcvLetterCheckHelper::getMinTitleLetterCoordinateY() {
+	return (int)(WORKING_CARD_HEIGHT / 17.0); //40
+}
+
 bool OcvLetterCheckHelper::isWithinTitleArea(RotatedRect letterArea) {
 
 	int approximateCoordinateX = (int)(letterArea.center.x - letterArea.size.width / 2);
 
-	int maxCoordinateX = (int)(WORKING_CARD_HEIGHT * 2.477941); //1685
-	int minCoordinateX = (int)(WORKING_CARD_HEIGHT / 13.6); //50
-	int minCoordinateY = (int)(WORKING_CARD_HEIGHT / 17.0); //40
-	int maxCoordinateY = (int)(WORKING_CARD_HEIGHT / 4.689655); //145
-
-	if (approximateCoordinateX > maxCoordinateX ||
-		approximateCoordinateX < minCoordinateX ||
-		letterArea.center.y < minCoordinateY ||
-		letterArea.center.y > maxCoordinateY) {
+	if (approximateCoordinateX > getMaxTitleLetterCoordinateX() ||
+		approximateCoordinateX < getMinTitleLetterCoordinateX() ||
+		letterArea.center.y < getMinTitleLetterCoordinateY() ||
+		letterArea.center.y > getMaxTitleLetterCoordinateY()) {
 
 		//To far off to be a letter!
 		return false;
@@ -71,6 +86,20 @@ bool OcvLetterCheckHelper::isIDot(RotatedRect letterArea) {
 	}
 
 	return false;
+}
+
+bool OcvLetterCheckHelper::isComma(RotatedRect letterArea) {
+
+	int titleAreaHeight = getMaxTitleLetterCoordinateY() - getMinTitleLetterCoordinateY();
+	int minCoordinateY = getMinTitleLetterCoordinateY() + titleAreaHeight / 2;
+	if (letterArea.center.y < minCoordinateY) { return false; }
+
+	int maxHeight = (int)(WORKING_CARD_HEIGHT / 20); //34
+	int minHeight = (int)(WORKING_CARD_HEIGHT / 34); //20
+	float height = max(letterArea.size.height, letterArea.size.width); //OpenCV doesn't allways set width and height logical.
+	if (height < minHeight || height > maxHeight) { return false; }
+
+	return true;
 }
 
 bool OcvLetterCheckHelper::isLetterSize(RotatedRect letterArea) {
