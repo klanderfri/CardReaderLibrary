@@ -2,6 +2,7 @@
 #include "OcvCardReaderApplication.h"
 #include "OcvFileHandling.h"
 #include "OcvWindows.h"
+#include "TestRunner.h"
 #include <iostream>
 #include "boost\filesystem.hpp"
 
@@ -33,24 +34,30 @@ int OcvCardReaderApplication::Run(const bool runParallelized, const bool doDebug
 	vector<wstring> filenamesOfImages = getMtgImageFileNames(systemMethods);
 
 	//Check if there are to many files to handle.
+	vector<CardNameInfo> result;
 	size_t numberOfFiles = filenamesOfImages.size();
 	if (numberOfFiles <= (size_t)OcvCardCollectionReader::MaxSize()) {
 
 		//Read the cards.
-		readAllCards(systemMethods, filenamesOfImages, runParallelized, doDebugging);
+		result = readAllCards(systemMethods, filenamesOfImages, runParallelized, doDebugging);
 	}
 	else {
 
 		//Tell the user that there was to many files for the reader to handle.
 		printToManyFilesMessage();
 	}
-
-	//Go memory! Be FREEEE!!
-	delete systemMethods;
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
 	printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
+
+	//Run tests to see if any code has been broken.
+	if (doDebugging) {
+		runTestCases(systemMethods, result);
+	}
+
+	//Go memory! Be FREEEE!!
+	delete systemMethods;
 
 	//Wait for a keystroke in the window.
 	system("pause");
@@ -108,7 +115,7 @@ void OcvCardReaderApplication::printResultMessage(int numberOfErrors) {
 	wcout << endl << message << endl;
 }
 
-void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
+vector<CardNameInfo> OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
 
 	//Create a reader for every card.
 	OcvCardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, runParallelized, doDebugging);
@@ -124,6 +131,8 @@ void OcvCardReaderApplication::readAllCards(OcvSystemDependencyClass* systemMeth
 
 	//Since we don't need the readers anymore...
 	delete readers;
+
+	return result;
 }
 
 void OcvCardReaderApplication::printToManyFilesMessage() {
@@ -148,4 +157,21 @@ void OcvCardReaderApplication::printExecutionTimeMessage(TimePoint startTime, Ti
 	wstring timeUnit = showTimeInSeconds ? L"seconds" : L"microseconds";
 	wcout << endl << L"The reading took " + exeTime + L" " + timeUnit + L" to execute." << endl;
 	wcout << L"That's " + to_wstring(executionDurationTime / (numberOfFilesExecuted * (float)1000000)) + L" seconds per card on average!" << endl << endl;
+}
+
+void OcvCardReaderApplication::runTestCases(OcvSystemDependencyClass* systemMethods, vector<CardNameInfo> result) {
+
+	TestRunner tester(systemMethods);
+	bool testsSucceded = tester.RunTests(result);
+
+	if (testsSucceded) {
+		systemMethods->SetCommandLineTextColour(Colour::Green);
+		wcout << L"All test cases still works!" << endl << endl;
+	}
+	else {
+		systemMethods->SetCommandLineTextColour(Colour::Red);
+		wcout << L"There are broken test cases!" << endl << endl;
+	}
+
+	systemMethods->ResetCommandLineTextColour();
 }

@@ -27,12 +27,14 @@ private:
 	//Prints a message telling the user how the execution went.
 	void printResultMessage(int numberOfErrors);
 	//Reads the title of the card in the provided image files.
-	void readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
+	std::vector<CardNameInfo> readAllCards(OcvSystemDependencyClass* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are to many files to successfully read them all.
 	void printToManyFilesMessage();
 	//Extracts the time (in milliseconds) that passed between two time points.
 	long long getexecutionTime(TimePoint startTime, TimePoint endTime);
 	//Prints a message telling the user the length of the execution time.
 	void printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
+	//Checks if any code has been broken.
+	void runTestCases(OcvSystemDependencyClass* systemMethods, std::vector<CardNameInfo> result);
 };
 

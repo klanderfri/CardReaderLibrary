@@ -17,6 +17,8 @@ public:
 	std::wstring GetPathToExeParentDirectory();
 	std::wstring GetPathToExeFile();
 	std::wstring GetExeFileName();
+	void SetCommandLineTextColour(Colour colour);
+	void ResetCommandLineTextColour();
 
 private:
 

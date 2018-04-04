@@ -173,3 +173,17 @@ wstring OcvWindows::GetExeFileName()
 	wstring tmp = path.filename().wstring();
 	return path.filename().wstring();
 }
+
+void OcvWindows::SetCommandLineTextColour(Colour colour) {
+
+	//Implemented as suggested at:
+	//https://stackoverflow.com/a/4053879/1997617
+
+	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(console, colour);
+}
+
+void OcvWindows::ResetCommandLineTextColour() {
+
+	SetCommandLineTextColour(Colour::FadedWhite);
+}

@@ -1,5 +1,6 @@
 #pragma once
-#include<string>
+#include <string>
+#include "Colour.h"
 //Class holding methods whose implementation depends on the operating system.
 class OcvSystemDependencyClass
 {
@@ -24,4 +25,8 @@ public:
 	virtual std::wstring GetPathToExeFile() = 0;
 	//Gets the fiulkname of the current running executable file (.exe in Windows).
 	virtual std::wstring GetExeFileName() = 0;
+	//Sets the command line text colour to the specified color.
+	virtual void SetCommandLineTextColour(Colour colour) = 0;
+	//Resets the command line text colour to the OS default one.
+	virtual void ResetCommandLineTextColour() = 0;
 };
