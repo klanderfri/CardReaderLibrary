@@ -46,6 +46,9 @@
     <Filter Include="Engine\ReaderData">
       <UniqueIdentifier>{71c71539-a35b-4f3e-82d7-ad10fab4acc9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Enums">
+      <UniqueIdentifier>{cb86f848-54bc-4bec-aa5a-300498ef7a72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Contour.h">
@@ -58,9 +61,6 @@
       <Filter>Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Hierarchy.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Colour.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
@@ -128,6 +128,12 @@
     </ClInclude>
     <ClInclude Include="WindowsMethods.h">
       <Filter>Libraries\SystemMethods</Filter>
+    </ClInclude>
+    <ClInclude Include="Colour.h">
+      <Filter>Core\Enums</Filter>
+    </ClInclude>
+    <ClInclude Include="CardTitleType.h">
+      <Filter>Core\Enums</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

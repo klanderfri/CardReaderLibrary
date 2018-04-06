@@ -166,6 +166,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CardNameInfo.h" />
+    <ClInclude Include="CardTitleType.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Contour.h" />
     <ClInclude Include="Hierarchy.h" />

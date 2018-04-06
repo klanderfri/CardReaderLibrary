@@ -82,7 +82,15 @@ pair<wstring, int> CardReader::readTitle(Mat cardImage, int numberOfTries) {
 
 	//Get the OCR ready title.
 	Mat ocrTitle;
-	bool success = extractOcrReadyTitle(cardImage, ocrTitle);
+	bool success = extractOcrReadyTitle(cardImage, ocrTitle, NormalTitle);
+
+	if (!success) {
+		//OK. Perhaps it's a split card?
+		Mat splitCard;
+		cardImage.copyTo(splitCard);
+		rotate(splitCard, splitCard, ROTATE_90_CLOCKWISE);
+		success = extractOcrReadyTitle(splitCard, ocrTitle, SplitCardTitle);
+	}
 
 	if (!success) {
 		//We couldn't extract the title so return failure.
@@ -99,12 +107,12 @@ pair<wstring, int> CardReader::readTitle(Mat cardImage, int numberOfTries) {
 	return result;
 }
 
-bool CardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage) {
+bool CardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage, CardTitleType type) {
 
 	//Extract the title part.
-	cropImageToTitleSection(cardImage, outImage);
+	cropImageToTitleSection(cardImage, outImage, type);
 
-	//Prepare the tile for OCR reading.
+	//Prepare the title for OCR reading.
 	TitleExtractor titleExtractor(imageFileName, outImage, systemMethods, doDebugging);
 	bool success = titleExtractor.ExtractTitle(outImage);
 
@@ -175,9 +183,17 @@ bool CardReader::containsInvalidCharacters(wstring title) {
 	return false;
 }
 
-void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage) {
+void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, CardTitleType type) {
 
-	Rect titleBox = MtgCardInfoHelper::GetNormalTitleSectionBox(rawCardImage.size());
+	Rect titleBox;
+	switch (type) {
+	case NormalTitle:
+		titleBox = MtgCardInfoHelper::GetNormalTitleSectionBox(rawCardImage.size());
+		break;
+	case SplitCardTitle:
+		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(rawCardImage.size());
+	}
+
 	ImageHelper::CropImage(rawCardImage, outImage, titleBox);
 
 	//Store result for debugging.

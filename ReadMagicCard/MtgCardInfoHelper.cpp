@@ -21,24 +21,36 @@ int MtgCardInfoHelper::LettersInShortestCardName() {
 
 Rect MtgCardInfoHelper::GetNormalTitleSectionBox(Size cardSize) {
 
-	double verticalFactor = 0.037;
-	double horizontalFactor = 0.045;
+	double xCoordinateFactor = 0.037;
+	double yCoordinateFactor = 0.045;
+	double widthFactor = 0.6485;
 	double heightFactor = 0.068;
 
-	return getSectionBox(cardSize, verticalFactor, horizontalFactor, heightFactor);
+	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);
 }
 
-Rect MtgCardInfoHelper::getSectionBox(Size cardSize, double verticalFactor, double horizontalFactor, double heightFactor) {
+
+Rect MtgCardInfoHelper::GetSplitTitleSectionBox(Size cardSize) {
+
+	double xCoordinateFactor = 0.0527;
+	double yCoordinateFactor = 0.073;
+	double widthFactor = 0.6085;
+	double heightFactor = 0.068;
+
+	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);
+}
+
+Rect MtgCardInfoHelper::getSectionBox(Size cardSize, double xCoordinateFactor, double yCoordinateFactor, double widthFactor, double heightFactor) {
 
 	int imgHeight = cardSize.height;
 	int imgWidth = cardSize.width;
 
-	int verticalMargins = (int)round(imgHeight * verticalFactor);
-	int horizontalMargins = (int)round(imgHeight * horizontalFactor);
+	int xCoordinate = (int)round(imgHeight * xCoordinateFactor);
+	int yCoordinate = (int)round(imgHeight * yCoordinateFactor);
+	int titleWidth = (int)round(imgHeight * widthFactor);
 	int titleHeight = (int)round(imgHeight * heightFactor);
-	int titleWidth = imgWidth - verticalMargins * 2;
 
-	Rect titleBox(verticalMargins, horizontalMargins, titleWidth, titleHeight);
+	Rect titleBox(xCoordinate, yCoordinate, titleWidth, titleHeight);
 	return titleBox;
 }
 
