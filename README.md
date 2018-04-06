@@ -13,7 +13,7 @@ BEFORE opening/installing/starting this project!
 
 ### Checklist
 Follow this checklist when setting up the project to avoid non-code problems.
- * Check that the folder C:\Users\<username>\Pictures\MtG-cards exists.
+ * Check that the folder C:\Users\\<username>\Pictures\MtG-cards exists.
  * It contains images with one (1) MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
  
