@@ -1,12 +1,12 @@
 #pragma once
-#include "OcvSystemDependencyClass.h"
+#include "SystemMethods.h"
 #include "CardNameInfo.h"
 #include <vector>
 #include <string>
 class TestRunner
 {
 public:
-	TestRunner(OcvSystemDependencyClass* systemMethods);
+	TestRunner(SystemMethods* systemMethods);
 	~TestRunner();
 	
 	//Runs tests checking if the result of the card read is as expected, indicating any broken code.
@@ -26,6 +26,6 @@ private:
 	std::vector<FileCardPair> getExpectedResult();
 
 	//An object holding OS-specific methods.
-	OcvSystemDependencyClass* systemMethods;
+	SystemMethods* systemMethods;
 };
 

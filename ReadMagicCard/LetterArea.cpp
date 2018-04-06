@@ -11,8 +11,8 @@ LetterArea::~LetterArea()
 
 bool LetterArea::CompareLetterAreaByBorderXAscending(LetterArea area1, LetterArea area2)
 {
-	float borderX1 = area1.box.center.x - OcvImageHelper::SmallestDistanceCenterToLimit(area1.box);
-	float borderX2 = area2.box.center.x - OcvImageHelper::SmallestDistanceCenterToLimit(area2.box);
+	float borderX1 = area1.box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area1.box);
+	float borderX2 = area2.box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area2.box);
 
 	return (borderX1 < borderX2);
 }

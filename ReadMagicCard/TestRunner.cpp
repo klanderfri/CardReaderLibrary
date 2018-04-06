@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "TestRunner.h"
-#include "OcvMtgCardInfoHelper.h"
+#include "MtgCardInfoHelper.h"
 #include "boost\algorithm\string.hpp"
 
 using namespace std;
 
-TestRunner::TestRunner(OcvSystemDependencyClass* systemMethods)
+TestRunner::TestRunner(SystemMethods* systemMethods)
 {
 	this->systemMethods = systemMethods;
 }
@@ -75,7 +75,7 @@ bool TestRunner::compareByCardName(FileCardPair pair1, FileCardPair pair2)
 	wstring firstName = pair1[1];
 	wstring secondName = pair2[1];
 
-	return OcvMtgCardInfoHelper::CompareCardNames(firstName, secondName) < 0;
+	return MtgCardInfoHelper::CompareCardNames(firstName, secondName) < 0;
 }
 
 vector<TestRunner::FileCardPair> TestRunner::getExpectedResult() {
