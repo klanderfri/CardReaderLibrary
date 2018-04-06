@@ -110,7 +110,8 @@ vector<TestRunner::FileCardPair> TestRunner::getExpectedResult() {
 		FileCardPair{ L"Giltgrove Stalker.jpg", L"Giltgrove Stalker" },
 		FileCardPair{ L"Secrets of the Golden City.jpg", L"Secrets of the Golden City" },
 		FileCardPair{ L"Dusk Charger.jpg", L"Dusk Charger" },
-		FileCardPair{ L"Flamecast Wheel.jpg", L"Flamecast Wheel" }
+		FileCardPair{ L"Flamecast Wheel.jpg", L"Flamecast Wheel" },
+		FileCardPair{ L"Far Away - Straight", L"Far // Away" }
 	};
 
 	return expectedResults;
