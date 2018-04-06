@@ -1,5 +1,5 @@
 # Read Magic Card
-A computer vision project for identifying Magic: the Gathering-cards.
+A computer vision project for identifying *Magic: the Gathering*-cards.
 
 ## I just want to run the code!
 Go to the page for releases and read the instructions for the latest release.
@@ -13,7 +13,7 @@ BEFORE opening/installing/starting this project!
 
 ### Checklist
 Follow this checklist when setting up the project to avoid non-code problems.
- * Check that the folder C:\Users\\&lt;username&gt;\Pictures\MtG-cards exists.
+ * Check that the folder *C:\Users\\&lt;username&gt;\Pictures\MtG-cards* exists.
  * It contains images with one (1) MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
  
@@ -59,7 +59,7 @@ If you add OS-specific code, make sure you use the WindowsMethods class or
 a similar class derived from the SystemMethods class!
 
 ### Test Data
-A zip files with test data (aka photos of MtG cards) can be downloaded from the link below.
+A zip files with test data (aka photos of *Magic: the Gathering*-cards) can be downloaded from the link below.
 http://tankarochkuriosa.se/documents/mtg-cards.zip (102 MB)
 
 ### About Compile Warnings
