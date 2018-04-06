@@ -49,6 +49,7 @@ Includes should be added in this order:
  * Boost headers.
  * Leptonica headers.
  * Tesseract headers.
+ 
  Make sure to use \ and not / when applicable.
 
 ### OS Specific Code
