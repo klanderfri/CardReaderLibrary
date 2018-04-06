@@ -43,7 +43,7 @@ The easiest way to get access to them is probably to install them with Vcpkg.
 Includes should be added in this order:
  * stdafx.h
  * The header file of the file.
- * Ocv-header files.
+ * Other solution header files.
  * &lt;include&gt; headers.
  * OpenCV headers.
  * Boost headers.
@@ -54,8 +54,8 @@ Includes should be added in this order:
 ### OS Specific Code
 The code is meant to run on Windows.
 
-If you add OS-specific code, make sure you use the OcvWindows class or
-a similar class derived from the OcvSystemDependencyClass class!
+If you add OS-specific code, make sure you use the WindowsMethods class or
+a similar class derived from the SystemMethods class!
 
 ### Test Data
 A zip files with test data (aka photos of MtG cards) can be downloaded from the link below.
