@@ -1,5 +1,5 @@
 # Read Magic Card
-A computer vision project for identifying Magic: the Gathering-cards.
+A computer vision project for identifying *Magic: the Gathering*-cards.
 
 ## I just want to run the code!
 Go to the page for releases and read the instructions for the latest release.
@@ -13,7 +13,7 @@ BEFORE opening/installing/starting this project!
 
 ### Checklist
 Follow this checklist when setting up the project to avoid non-code problems.
- * Check that the folder C:\Users\<username>\Pictures\MtG-cards exists.
+ * Check that the folder *C:\Users\\&lt;username&gt;\Pictures\MtG-cards* exists.
  * It contains images with one (1) MtG-card in each.
  * Remove all files that are neither folders nor jpg-files.
  
@@ -43,22 +43,23 @@ The easiest way to get access to them is probably to install them with Vcpkg.
 Includes should be added in this order:
  * stdafx.h
  * The header file of the file.
- * Ocv-header files.
+ * Other solution header files.
  * &lt;include&gt; headers.
  * OpenCV headers.
  * Boost headers.
  * Leptonica headers.
  * Tesseract headers.
+ 
  Make sure to use \ and not / when applicable.
 
 ### OS Specific Code
 The code is meant to run on Windows.
 
-If you add OS-specific code, make sure you use the OcvWindows class or
-a similar class derived from the OcvSystemDependencyClass class!
+If you add OS-specific code, make sure you use the WindowsMethods class or
+a similar class derived from the SystemMethods class!
 
 ### Test Data
-A zip files with test data (aka photos of MtG cards) can be downloaded from the link below.
+A zip files with test data (aka photos of *Magic: the Gathering*-cards) can be downloaded from the link below.
 http://tankarochkuriosa.se/documents/mtg-cards.zip (106 MB)
 
 ### About Compile Warnings
