@@ -2,7 +2,6 @@
 #include "TestRunner.h"
 #include "MtgCardInfoHelper.h"
 #include "boost\algorithm\string.hpp"
-#include "boost\algorithm\string\compare.hpp"
 
 using namespace std;
 

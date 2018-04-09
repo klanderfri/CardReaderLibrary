@@ -14,9 +14,9 @@ public:
 private:
 	//Checks if two result pairs corresponds, i.e if the actual result corresponds with the expected result.
 	bool resultsCorresponds(CardNameInfo expectedResult, CardNameInfo actualResult);
-	//Compares two result pairs by the card name.
+	//Compares two subresults by the card name.
 	static bool compareByCardName(CardNameInfo info1, CardNameInfo info2);
-	
+	//Compares two subresults by the file name.
 	static bool compareByFileName(CardNameInfo info1, CardNameInfo info2);
 	//Gets a vector containing the expected result.
 	std::vector<CardNameInfo> getExpectedResult();
