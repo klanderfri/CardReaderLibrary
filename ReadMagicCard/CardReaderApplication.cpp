@@ -171,16 +171,25 @@ void CardReaderApplication::printExecutionTimeMessage(SystemMethods* systemMetho
 
 void CardReaderApplication::runTestCases(SystemMethods* systemMethods, vector<CardNameInfo> result) {
 
+	vector<CardNameInfo> incorrectResults;
 	TestRunner tester(systemMethods);
-	bool testsSucceded = tester.RunTests(result);
+	bool testsSucceded = tester.RunTests(result, incorrectResults);
 
 	if (testsSucceded) {
 		systemMethods->SetCommandLineTextColour(Colour::Green);
 		wcout << L"All test cases still works!" << endl << endl;
 	}
+	if (!testsSucceded && incorrectResults.size() == 0) {
+		systemMethods->SetCommandLineTextColour(Colour::Red);
+		wcout << L"There are missing test cases!" << endl << endl;
+	}
 	else {
 		systemMethods->SetCommandLineTextColour(Colour::Red);
-		wcout << L"There are broken test cases!" << endl << endl;
+		wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken test cases!" << endl;
+		for (CardNameInfo subResult : incorrectResults) {
+			wcout << subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+		}
+		wcout << endl;
 	}
 
 	systemMethods->ResetCommandLineTextColour();

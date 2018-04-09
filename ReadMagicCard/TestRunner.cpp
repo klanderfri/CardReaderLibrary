@@ -2,6 +2,7 @@
 #include "TestRunner.h"
 #include "MtgCardInfoHelper.h"
 #include "boost\algorithm\string.hpp"
+#include "boost\algorithm\string\compare.hpp"
 
 using namespace std;
 
@@ -14,47 +15,38 @@ TestRunner::~TestRunner()
 {
 }
 
-bool TestRunner::RunTests(vector<CardNameInfo> result) {
+bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
 
-	vector<FileCardPair> expectedResults = getExpectedResult();
-
-	//Check for things that, even before the result is analysed, indicate broken code.
-	if (expectedResults.size() != result.size()) { return false; }
-	for (CardNameInfo info : result) {
-		if (!info.Success) { return false; }
-	}
+	vector<CardNameInfo> expectedResults = getExpectedResult();
 
 	//Edit the result format so it will be comparable.
-	vector<FileCardPair> actualResults = convertActualResultToPair(result);
-	sort(expectedResults.begin(), expectedResults.end(), TestRunner::compareByCardName);
-	sort(actualResults.begin(), actualResults.end(), TestRunner::compareByCardName);
+	sort(expectedResults.begin(), expectedResults.end(), TestRunner::compareByFileName);
+	sort(actualResults.begin(), actualResults.end(), TestRunner::compareByFileName);
 
 	//Check that the result corresponds with the expected result.
+	bool success = true;
 	for (size_t i = 0; i < expectedResults.size(); i++) {
 
-		if (!resultsCorresponds(expectedResults[i], actualResults[i])) { return false; }
-	}
-	return true;
-}
+		if (!actualResults[i].Success ||
+			!resultsCorresponds(expectedResults[i], actualResults[i])) {
 
-vector<TestRunner::FileCardPair> TestRunner::convertActualResultToPair(vector<CardNameInfo> result) {
-
-	vector<FileCardPair> actualResults;
-	for (CardNameInfo info : result) {
-
-		FileCardPair subresult{ info.FileName, info.CardName };
-		actualResults.push_back(subresult);
+			incorrectResults.push_back(actualResults[i]);
+			success = false;
+		}
 	}
 
-	return actualResults;
+	//Check that all test cases are acounted for.
+	if (expectedResults.size() != actualResults.size()) { success = false; }
+
+	return success;
 }
 
-bool TestRunner::resultsCorresponds(FileCardPair expectedResult, FileCardPair actualResult) {
+bool TestRunner::resultsCorresponds(CardNameInfo expectedResult, CardNameInfo actualResult) {
 
-	wstring exp_Filename = expectedResult[0];
-	wstring exp_Cardname = expectedResult[1];
-	wstring act_Filename = actualResult[0];
-	wstring act_Cardname = actualResult[1];
+	wstring exp_Filename = expectedResult.FileName;
+	wstring exp_Cardname = expectedResult.CardName;
+	wstring act_Filename = actualResult.FileName;
+	wstring act_Cardname = actualResult.CardName;
 
 	boost::algorithm::to_lower(exp_Filename);
 	boost::algorithm::to_lower(exp_Cardname);
@@ -70,48 +62,52 @@ bool TestRunner::resultsCorresponds(FileCardPair expectedResult, FileCardPair ac
 	return true;
 }
 
-bool TestRunner::compareByCardName(FileCardPair pair1, FileCardPair pair2)
+bool TestRunner::compareByCardName(CardNameInfo info1, CardNameInfo info2)
 {
-	wstring firstName = pair1[1];
-	wstring secondName = pair2[1];
-
-	return MtgCardInfoHelper::CompareCardNames(firstName, secondName) < 0;
+	return MtgCardInfoHelper::CompareCardNames(info1.CardName, info2.CardName) < 0;
 }
 
-vector<TestRunner::FileCardPair> TestRunner::getExpectedResult() {
+bool TestRunner::compareByFileName(CardNameInfo info1, CardNameInfo info2)
+{
+	//Yeah, I know. We are sorting the filename with the algorithm for comparing card names.
+	//But it should be fine as long as they are sorted in the same way.
+	return MtgCardInfoHelper::CompareCardNames(info1.FileName, info2.FileName) < 0;
+}
+
+vector<CardNameInfo> TestRunner::getExpectedResult() {
 
 	//The test data files, i.e the image files, can be downloaded from a third-party server.
 	//Check the ReadMe for information about the adress.
 
-	vector<FileCardPair> expectedResults {
+	vector<CardNameInfo> expectedResults {
 
-		FileCardPair{ L"Raptor Companion - Rotated.jpg", L"Raptor Companion" },
-		FileCardPair{ L"Enter the Unknown.jpg", L"Enter the Unknown" },
-		FileCardPair{ L"Hardy Veteran.jpg", L"Hardy Veteran" },
-		FileCardPair{ L"Arterial Flow.jpg", L"Arterial flow" },
-		FileCardPair{ L"Ravenous Chupacabra.jpg", L"Ravenous Chupacabra" },
-		FileCardPair{ L"Mountain - Foiled.jpg", L"Mountain" },
-		FileCardPair{ L"Snubhorn Sentry.jpg", L"Snubhorn Sentry" },
-		FileCardPair{ L"Frilled Deathspitter - Foiled.jpg", L"Frilled Deathspitter" },
-		FileCardPair{ L"Raptor Companion - Shifted.jpg", L"Raptor Companion" },
-		FileCardPair{ L"Buccaneer's Bravado.jpg", L"Buccaneer's Bravado" },
-		FileCardPair{ L"Hornswoggle.jpg", L"Hornswoggle" },
-		FileCardPair{ L"Evolving Wilds.jpg", L"Evolving Wilds" },
-		FileCardPair{ L"Nicol Bolas, Planeswalker.jpg", L"Nicol Bolas, Planeswalker" },
-		FileCardPair{ L"Zombie - Token.jpg", L"ZOMBIE" },
-		FileCardPair{ L"Saproling - Token.jpg", L"SAPROLING" },
-		FileCardPair{ L"Gatstaf Shepard.jpg", L"Gatstaf Shepherd" },
-		FileCardPair{ L"Swaggering Corsair.jpg", L"Swaggering Corsair" },
-		FileCardPair{ L"Progenitus.jpg", L"Progenitus" },
-		FileCardPair{ L"Raptor Companion - Straight.jpg", L"Raptor Companion" },
-		FileCardPair{ L"Daring Buccaneer.jpg", L"Daring Buccaneer" },
-		FileCardPair{ L"Martyr of Dusk.jpg", L"Martyr of Dusk" },
-		FileCardPair{ L"Fathom Fleet Boarder.jpg", L"Fathom Fleet Boarder" },
-		FileCardPair{ L"Giltgrove Stalker.jpg", L"Giltgrove Stalker" },
-		FileCardPair{ L"Secrets of the Golden City.jpg", L"Secrets of the Golden City" },
-		FileCardPair{ L"Dusk Charger.jpg", L"Dusk Charger" },
-		FileCardPair{ L"Flamecast Wheel.jpg", L"Flamecast Wheel" },
-		FileCardPair{ L"Far Away - Straight", L"Far // Away" }
+		CardNameInfo(L"Raptor Companion - Rotated.jpg", L"Raptor Companion"),
+		CardNameInfo(L"Enter the Unknown.jpg", L"Enter the Unknown"),
+		CardNameInfo(L"Hardy Veteran.jpg", L"Hardy Veteran"),
+		CardNameInfo(L"Arterial Flow.jpg", L"Arterial flow"),
+		CardNameInfo(L"Ravenous Chupacabra.jpg", L"Ravenous Chupacabra"),
+		CardNameInfo(L"Mountain - Foiled.jpg", L"Mountain"),
+		CardNameInfo(L"Snubhorn Sentry.jpg", L"Snubhorn Sentry"),
+		CardNameInfo(L"Frilled Deathspitter - Foiled.jpg", L"Frilled Deathspitter"),
+		CardNameInfo(L"Raptor Companion - Shifted.jpg", L"Raptor Companion"),
+		CardNameInfo(L"Buccaneer's Bravado.jpg", L"Buccaneer's Bravado"),
+		CardNameInfo(L"Hornswoggle.jpg", L"Hornswoggle"),
+		CardNameInfo(L"Evolving Wilds.jpg", L"Evolving Wilds"),
+		CardNameInfo(L"Nicol Bolas, Planeswalker.jpg", L"Nicol Bolas, Planeswalker"),
+		CardNameInfo(L"Zombie - Token.jpg", L"ZOMBIE"),
+		CardNameInfo(L"Saproling - Token.jpg", L"SAPROLING"),
+		CardNameInfo(L"Gatstaf Shepard.jpg", L"Gatstaf Shepherd"),
+		CardNameInfo(L"Swaggering Corsair.jpg", L"Swaggering Corsair"),
+		CardNameInfo(L"Progenitus.jpg", L"Progenitus"),
+		CardNameInfo(L"Raptor Companion - Straight.jpg", L"Raptor Companion"),
+		CardNameInfo(L"Daring Buccaneer.jpg", L"Daring Buccaneer"),
+		CardNameInfo(L"Martyr of Dusk.jpg", L"Martyr of Dusk"),
+		CardNameInfo(L"Fathom Fleet Boarder.jpg", L"Fathom Fleet Boarder"),
+		CardNameInfo(L"Giltgrove Stalker.jpg", L"Giltgrove Stalker"),
+		CardNameInfo(L"Secrets of the Golden City.jpg", L"Secrets of the Golden City"),
+		CardNameInfo(L"Dusk Charger.jpg", L"Dusk Charger"),
+		CardNameInfo(L"Flamecast Wheel.jpg", L"Flamecast Wheel"),
+		CardNameInfo(L"Far Away - Straight.jpg", L"Far // Away")
 	};
 
 	return expectedResults;

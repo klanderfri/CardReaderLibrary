@@ -1,8 +1,10 @@
 #pragma once
+#include <string>
 class CardNameInfo
 {
 public:
 	CardNameInfo();
+	CardNameInfo(std::wstring fileName, std::wstring cardName);
 	~CardNameInfo();
 
 	//Tells if the algorithm extracting the card name was successful.
