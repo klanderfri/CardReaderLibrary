@@ -2,6 +2,7 @@
 #include "BasicReaderData.h"
 #include "CardTitleType.h"
 #include "OcrDecodeResult.h"
+#include <mutex>
 //Class for reading a card.
 class CardReader :
 	BasicReaderData
@@ -44,4 +45,8 @@ private:
 	bool m_success = false;
 	//Tells how confident Tesseract was of decoding the title.
 	int m_confidence = 0;
+	//Lock preventing multiple threads from writing the header in the file storing the title decode confidence.
+	static std::mutex m_fileHeaderLock;
+	//Tells if the header in the file storing the title decode confidence has been written.
+	static bool m_hasWrittenConfidenceFileHeader;
 };
