@@ -30,6 +30,10 @@ Vcpkg makes the installations quick and easy.
  * https://docs.microsoft.com/en-us/cpp/vcpkg
 
 
+### Image Watch
+*Image Watch* is a tool for debugging and seeing the images when coding in Visual Studio.
+ * https://marketplace.visualstudio.com/items?itemName=VisualCPPTeam.ImageWatch2017
+
 ### Libraries
 This project uses several third-party libraries, listed below.
 
