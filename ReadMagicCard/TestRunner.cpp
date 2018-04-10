@@ -18,6 +18,9 @@ bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInf
 
 	vector<CardNameInfo> expectedResults = getExpectedResult();
 
+	//Check that all test cases are acounted for.
+	if (expectedResults.size() != actualResults.size()) { return false; }
+
 	//Edit the result format so it will be comparable.
 	sort(expectedResults.begin(), expectedResults.end(), TestRunner::compareByFileName);
 	sort(actualResults.begin(), actualResults.end(), TestRunner::compareByFileName);
@@ -33,9 +36,6 @@ bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInf
 			success = false;
 		}
 	}
-
-	//Check that all test cases are acounted for.
-	if (expectedResults.size() != actualResults.size()) { success = false; }
 
 	return success;
 }

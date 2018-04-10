@@ -179,7 +179,7 @@ void CardReaderApplication::runTestCases(SystemMethods* systemMethods, vector<Ca
 		systemMethods->SetCommandLineTextColour(Colour::Green);
 		wcout << L"All test cases still works!" << endl << endl;
 	}
-	if (!testsSucceded && incorrectResults.size() == 0) {
+	else if (incorrectResults.size() == 0) {
 		systemMethods->SetCommandLineTextColour(Colour::Red);
 		wcout << L"There are missing test cases!" << endl << endl;
 	}
