@@ -157,10 +157,11 @@ bool CardReader::hasResultFailed(OcrDecodeResult result) {
 OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 
 	OcrDecodeResult bestResult;
+	ImageOcrHelper ocrReader(systemMethods);
 	
 	for (Mat ocrTitle : ocrTitles) {
 
-		OcrDecodeResult result = ImageOcrHelper::DecodeTitle(ocrTitle, systemMethods);
+		OcrDecodeResult result = ocrReader.DecodeImage(ocrTitle);
 
 		if (bestResult.Confidence < result.Confidence) {
 			bestResult = result;
