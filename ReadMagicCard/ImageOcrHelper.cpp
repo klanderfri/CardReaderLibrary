@@ -13,7 +13,7 @@ ImageOcrHelper::~ImageOcrHelper()
 {
 }
 
-pair<wstring, int> ImageOcrHelper::DecodeTitle(Mat originalImageData, SystemMethods* systemMethods) {
+OcrDecodeResult ImageOcrHelper::DecodeTitle(Mat originalImageData, SystemMethods* systemMethods) {
 
 	string trainedDataFolderPath = systemMethods->ToString(systemMethods->GetPathToExeParentDirectory()) + "tessdata";
 	const char* path = trainedDataFolderPath.c_str();
@@ -22,14 +22,16 @@ pair<wstring, int> ImageOcrHelper::DecodeTitle(Mat originalImageData, SystemMeth
 	ocr.SetPageSegMode(PSM_SINGLE_LINE);
 	ocr.SetImage((uchar*)originalImageData.data, originalImageData.cols, originalImageData.rows, originalImageData.channels(), originalImageData.step1());
 
+	OcrDecodeResult result;
+
 	char* rawOutText = ocr.GetUTF8Text();
 	wstring outText = systemMethods->ToWString(string(rawOutText));
 	delete[] rawOutText; //As instructed by documentation in the GetUTF8Text method.
-	outText = removeTrailingNewline(outText);
 
-	int confidence = ocr.MeanTextConf();
+	result.Text = removeTrailingNewline(outText);
+	result.Confidence = ocr.MeanTextConf();
 
-	return make_pair(outText, confidence);
+	return result;
 }
 
 wstring ImageOcrHelper::removeTrailingNewline(wstring title) {

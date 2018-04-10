@@ -135,6 +135,9 @@
     <ClInclude Include="CardTitleType.h">
       <Filter>Core\Enums</Filter>
     </ClInclude>
+    <ClInclude Include="OcrDecodeResult.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">

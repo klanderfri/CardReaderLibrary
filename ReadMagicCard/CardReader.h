@@ -1,6 +1,7 @@
 #pragma once
 #include "BasicReaderData.h"
 #include "CardTitleType.h"
+#include "OcrDecodeResult.h"
 //Class for reading a card.
 class CardReader :
 	BasicReaderData
@@ -21,11 +22,17 @@ public:
 private:
 
 	//Crops out the card title.
-	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImage, CardTitleType type);
+	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImages, CardTitleType type);
 	//Reads the title of the card.
-	std::pair<std::wstring, int> readTitle(cv::Mat cardImage, int numberOfTries);
+	OcrDecodeResult readTitle(cv::Mat cardImage, int& numberOfTries, CardTitleType titleType);
+	//Splits a card into the two split card halves.
+	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage);
+	//Tells if a result is to be considered a failure.
+	bool hasResultFailed(OcrDecodeResult result);
+	//Reads the OCR preparied titles and returnes the best result.
+	OcrDecodeResult ocrReadTitle(std::vector<cv::Mat> ocrTitles);
 	//Extracts and preprocesses the title.
-	bool extractOcrReadyTitle(const cv::Mat cardImage, cv::Mat& outImage, CardTitleType type);
+	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, CardTitleType type);
 	//Store the confidence of the OCR read.
 	void storeConfidence(int numberOfTries, std::wstring ocrResult, int ocrConfidence);
 	//Checks if we got a confident decode of the title.

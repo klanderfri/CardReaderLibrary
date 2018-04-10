@@ -10,7 +10,7 @@ public:
 	static int LettersInShortestCardName();
 	//Gets the area of the card that normally contains the title section.
 	static cv::Rect GetNormalTitleSectionBox(cv::Size cardSize);
-	//Gets the area of the card that contains the title section on split cards (assumed that the card is rotated to have the text horizontal).
+	//Gets the area of the card that contains the title section on split cards (assumed that the card is cropped to look like a normal card).
 	static cv::Rect GetSplitTitleSectionBox(cv::Size cardSize);
 	//Compares two card names. Negative if 1st name comes first. Positive if 2nd name comes first. Zero if the names are equal.
 	static double CompareCardNames(std::wstring name1, std::wstring name2);

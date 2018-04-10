@@ -16,13 +16,13 @@ TitleExtractor::~TitleExtractor()
 {
 }
 
-bool TitleExtractor::ExtractTitle(Mat& outImage) {
+bool TitleExtractor::ExtractTitle(vector<Mat>& outImages) {
 
 	int amountOfGauss = (int)(originalImageData.size().height / 18.1818);
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
 
 	//Make the title grey scale.
-	outImage = ImageHelper::ToGreyImage(originalImageData);
+	Mat outImage = ImageHelper::ToGreyImage(originalImageData);
 
 	ImageHelper::ResizeImage(outImage, outImage, (int)(WORKING_CARD_HEIGHT / 3.67));
 
@@ -30,11 +30,13 @@ bool TitleExtractor::ExtractTitle(Mat& outImage) {
 	GaussianBlur(outImage, outImage, Size(amountOfGauss, amountOfGauss), 0, 0);
 
 	//Threshold the image to get the important pixels.
-	int thresh = 120; //Default: 120
-	threshold(outImage, outImage, thresh, 255, THRESH_BINARY);
+	Mat lowThreshImage, highThreshImage;
+	threshold(outImage, lowThreshImage, 80, 255, THRESH_BINARY);
+	threshold(outImage, highThreshImage, 120, 255, THRESH_BINARY);
 
 	//Extract a clean image containing the title.
-	bool success = getTitleText(outImage, outImage);
+	bool success = getTitleText(lowThreshImage, outImages);
+	success = getTitleText(highThreshImage, outImages) || success;
 
 	return success;
 }
@@ -54,14 +56,13 @@ int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {
 	return amountOfGauss;
 }
 
-bool TitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
-
-	int thresh = 120; //Default: 120
+bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages) {
 
 	Contours contours;
 	Hierarchy hierarchy;
 	Mat canny;
 
+	int thresh = 120; //Default: 120
 	Canny(titleImage, canny, thresh, thresh * 2, 3);
 	findContours(canny, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
 
@@ -86,9 +87,8 @@ bool TitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 
 		if (doDebugging) {
 
-			onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
-
 			//Draw the area.
+			onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
 			onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, letterBox, Rect(), letterContour);
 
 			//Draw the center.
@@ -105,31 +105,44 @@ bool TitleExtractor::getTitleText(const Mat titleImage, Mat& textImage) {
 	}
 
 	RotatedRect textArea = minAreaRect(combinedLetterContorus);
+	Rect boundTextArea = boundingRect(combinedLetterContorus);
 
 	//Store result for debugging.
 	if (doDebugging) {
 		SaveOcvImage::SaveImageData(systemMethods, onlyLettersBound, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles"), L"7 - Only Title Letters");
-		Mat possibleTitleArea = ImageHelper::DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
+		Mat possibleTitleArea = ImageHelper::DrawLimits(titleImage, textArea, boundTextArea, combinedLetterContorus);
 		SaveOcvImage::SaveImageData(systemMethods, possibleTitleArea, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle"), L"8 - Possible Title Area");
 	}
+
+	Mat straightenTextImage;
+	Mat boundedTextImage;
 
 	//Rotate the image so it is straight (as much as possible at least).
 	Rect2f straightTextArea;
 	if (textArea.size.height > textArea.size.width) {
 		swap(textArea.size.height, textArea.size.width);
 	}
-	ImageHelper::StraightenUpImage(titleImage, textImage, textArea, straightTextArea, false);
+	ImageHelper::StraightenUpImage(titleImage, straightenTextImage, textArea, straightTextArea, false);
+
+	//The bounded text image doesn't need any rotation.
+	titleImage.copyTo(boundedTextImage);
 
 	//Make black text on white background.
-	ImageHelper::SetBackgroundByInverting(textImage, false);
+	ImageHelper::SetBackgroundByInverting(straightenTextImage, false);
+	ImageHelper::SetBackgroundByInverting(boundedTextImage, false);
 
 	//Cut out the title text.
-	ImageHelper::CropImageWithSolidBorder(textImage, textImage, straightTextArea, 10);
+	ImageHelper::CropImageWithSolidBorder(straightenTextImage, straightenTextImage, straightTextArea, 10);
+	ImageHelper::CropImageWithSolidBorder(boundedTextImage, boundedTextImage, boundTextArea, 10);
 
 	//Store result for debugging.
 	if (doDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, textImage, imageFileName, L"9 - Title Text");
+		SaveOcvImage::SaveImageData(systemMethods, straightenTextImage, imageFileName, L"9a - Title Text (Straighten)");
+		SaveOcvImage::SaveImageData(systemMethods, boundedTextImage, imageFileName, L"9b - Title Text (Bounded)");
 	}
+
+	textImages.push_back(straightenTextImage);
+	textImages.push_back(boundedTextImage);
 
 	return true;
 }

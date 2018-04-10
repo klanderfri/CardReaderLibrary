@@ -183,6 +183,7 @@
     <ClInclude Include="LetterCheckHelper.h" />
     <ClInclude Include="LoadOcvImage.h" />
     <ClInclude Include="MtgCardInfoHelper.h" />
+    <ClInclude Include="OcrDecodeResult.h" />
     <ClInclude Include="SaveOcvImage.h" />
     <ClInclude Include="SectionExtractor.h" />
     <ClInclude Include="SystemMethods.h" />

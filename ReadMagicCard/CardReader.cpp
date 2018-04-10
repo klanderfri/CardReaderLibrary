@@ -53,68 +53,132 @@ wstring CardReader::ExtractCardName() {
 	}
 
 	//Try reading the title.
-	auto result = readTitle(cardImage, 1);
+	int numberOfTries = 0;
+	auto result = readTitle(cardImage, numberOfTries, NormalTitle);
 
 	//Check if the algorithm is confident enought of the decoding that we might return the title string.
-	if (isConfidentOfTitleDecode(result.first, result.second)) {
+	if (isConfidentOfTitleDecode(result.Text, result.Confidence)) {
 
 		m_success = true;
-		return result.first;
+		return result.Text;
 	}
 
 	//Try rotate the card. It might be that easy...
 	rotate(cardImage, cardImage, ROTATE_180);
 
 	//Try reading the title again.
-	result = readTitle(cardImage, 2);
+	result = readTitle(cardImage, numberOfTries, NormalTitle);
 
 	//Check if the algorithm is confident enought of the decoding that we might return the title string.
-	if (isConfidentOfTitleDecode(result.first, result.second)) {
+	if (isConfidentOfTitleDecode(result.Text, result.Confidence)) {
 
 		m_success = true;
-		return result.first;
+		return result.Text;
 	}
 
 	throw OperationException("ERROR: Could not OCR-read the title!");
 }
 
-pair<wstring, int> CardReader::readTitle(Mat cardImage, int numberOfTries) {
+OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTitleType titleType) {
 
-	//Get the OCR ready title.
-	Mat ocrTitle;
-	bool success = extractOcrReadyTitle(cardImage, ocrTitle, NormalTitle);
+	OcrDecodeResult result;
 
-	if (!success) {
+	//Get title assuming we got a normal card.
+	vector<Mat> ocrReadyTitles;
+	bool success = extractOcrReadyTitle(cardImage, ocrReadyTitles, titleType);
+	
+	if (success) {
+
+		//Read the title.
+		result = ocrReadTitle(ocrReadyTitles);
+	}
+	else if (titleType != SplitCardTitle) {
+
 		//OK. Perhaps it's a split card?
-		Mat splitCard;
-		cardImage.copyTo(splitCard);
-		rotate(splitCard, splitCard, ROTATE_90_CLOCKWISE);
-		success = extractOcrReadyTitle(splitCard, ocrTitle, SplitCardTitle);
+		
+		//Extract the both halves.
+		vector<Mat> halves = getSplitCardHalves(cardImage);
+		
+		//Read the titles.
+		OcrDecodeResult resultA = readTitle(halves[0], numberOfTries, SplitCardTitle);
+		OcrDecodeResult resultB = readTitle(halves[1], numberOfTries, SplitCardTitle);
+
+		//Check if we got success.
+		success = !hasResultFailed(resultA) && !hasResultFailed(resultB);
+
+		if (success) {
+			//Join the titles to a split card name.
+			result.Text = resultA.Text + L" // " + resultB.Text;
+			result.Confidence = min(resultA.Confidence, resultB.Confidence);
+		}
 	}
 
 	if (!success) {
 		//We couldn't extract the title so return failure.
-		return make_pair(L"", 0);
+		return OcrDecodeResult();
 	}
 
-	//Read the title.
-	auto result = ImageOcrHelper::DecodeTitle(ocrTitle, systemMethods);
-
 	//Store the confidence
-	storeConfidence(numberOfTries, result.first, result.second);
-	m_confidence = result.second;
+	storeConfidence(++numberOfTries, result.Text, result.Confidence);
+	m_confidence = result.Confidence;
 
 	return result;
 }
 
-bool CardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage, CardTitleType type) {
+vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage) {
+
+	Mat splitCard, halfA, halfB;
+
+	originalCardImage.copyTo(splitCard);
+	rotate(splitCard, splitCard, ROTATE_90_CLOCKWISE);
+
+	//The extra border limit is because the card border is bigger in relation to the split card half.
+	int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 17.0); //40
+
+	Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
+	Rect limitsHalfB((splitCard.cols / 2), 0, splitCard.cols / 2, splitCard.rows);
+
+	ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
+	ImageHelper::CropImage(splitCard, halfB, limitsHalfB);
+
+	vector<Mat> halves{ halfA, halfB };
+	return halves;
+}
+
+bool CardReader::hasResultFailed(OcrDecodeResult result) {
+
+	if (result.Confidence > 0) { return false; }
+	if (result.Text != L"") { return false; }
+
+	//Failure! We got a failure!
+	return true;
+}
+
+OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
+
+	OcrDecodeResult bestResult;
+	
+	for (Mat ocrTitle : ocrTitles) {
+
+		OcrDecodeResult result = ImageOcrHelper::DecodeTitle(ocrTitle, systemMethods);
+
+		if (bestResult.Confidence < result.Confidence) {
+			bestResult = result;
+		}
+	}
+
+	return bestResult;
+}
+
+bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, CardTitleType type) {
 
 	//Extract the title part.
-	cropImageToTitleSection(cardImage, outImage, type);
+	Mat titleSection;
+	cropImageToTitleSection(cardImage, titleSection, type);
 
 	//Prepare the title for OCR reading.
-	TitleExtractor titleExtractor(imageFileName, outImage, systemMethods, doDebugging);
-	bool success = titleExtractor.ExtractTitle(outImage);
+	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, doDebugging);
+	bool success = titleExtractor.ExtractTitle(outImages);
 
 	//See if we need to stop.
 	if (!success) {
@@ -122,11 +186,15 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, Mat& outImage, CardTi
 	}
 
 	//Make white text on black background.
-	ImageHelper::SetBackgroundByInverting(outImage, true);
+	for (size_t i = 0; i < outImages.size(); i++) {
 
-	//Store result for debugging.
-	if (doDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, outImage, imageFileName, L"10 - OCR Prepared Title");
+		ImageHelper::SetBackgroundByInverting(outImages[i], true);
+
+		//Store result for debugging.
+		if (doDebugging) {
+			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(i + 1));
+			SaveOcvImage::SaveImageData(systemMethods, outImages[i], filename, L"10 - OCR Prepared Title");
+		}
 	}
 
 	return true;
@@ -168,7 +236,7 @@ bool CardReader::containsInvalidCharacters(wstring title) {
 
 	vector<char> allowedCharacters
 	{
-		' ', '-', '\'', ',', 'æ',
+		' ', '-', '\'', ',', '/', 'æ',
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
 		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 	};
@@ -192,6 +260,7 @@ void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, 
 		break;
 	case SplitCardTitle:
 		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(rawCardImage.size());
+		break;
 	}
 
 	ImageHelper::CropImage(rawCardImage, outImage, titleBox);
