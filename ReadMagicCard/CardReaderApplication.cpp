@@ -105,7 +105,7 @@ void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int
 	wstring message;
 	if (numberOfErrors == 0) {
 		systemMethods->SetCommandLineTextColour(Colour::Green);
-		message = L"All images was successfully read! Yeay! :-)";
+		message = L"All images was successfully read! Yay! :-)";
 	}
 	else {
 		systemMethods->SetCommandLineTextColour(Colour::Red);
