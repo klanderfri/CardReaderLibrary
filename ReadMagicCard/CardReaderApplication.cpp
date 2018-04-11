@@ -17,7 +17,7 @@ CardReaderApplication::~CardReaderApplication()
 {
 }
 
-int CardReaderApplication::Run(const bool runParallelized, const bool doDebugging) {
+int CardReaderApplication::Run(const bool runSilent, const bool runParallelized, const bool doDebugging) {
 
 	//Store the start time for later check of efficiency.
 	auto startTime = chrono::high_resolution_clock::now();
@@ -37,7 +37,11 @@ int CardReaderApplication::Run(const bool runParallelized, const bool doDebuggin
 	//Check if there are to many files to handle.
 	vector<CardNameInfo> result;
 	size_t numberOfFiles = filenamesOfImages.size();
-	if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
+	if (numberOfFiles == 0) {
+		//Tell the user that no files was found.
+		printNoImagesMessage(systemMethods);
+	}
+	else if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
 
 		//Read the cards.
 		result = readAllCards(systemMethods, filenamesOfImages, runParallelized, doDebugging);
@@ -45,7 +49,7 @@ int CardReaderApplication::Run(const bool runParallelized, const bool doDebuggin
 	else {
 
 		//Tell the user that there was to many files for the reader to handle.
-		printToManyFilesMessage();
+		printToManyFilesMessage(systemMethods);
 	}
 	
 	//Print out how long the program took to execute.
@@ -143,14 +147,24 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	return result;
 }
 
-void CardReaderApplication::printToManyFilesMessage() {
+void CardReaderApplication::printNoImagesMessage(SystemMethods* systemMethods) {
 
+	systemMethods->SetCommandLineTextColour(Colour::Yellow);
 	wcout
-		<< endl
+		<< L"Hmm, it semms like there are no cards... :-|"
+		<< endl;
+	systemMethods->ResetCommandLineTextColour();
+}
+
+void CardReaderApplication::printToManyFilesMessage(SystemMethods* systemMethods) {
+
+	systemMethods->SetCommandLineTextColour(Colour::Red);
+	wcout
 		<< L"Glunck! There were to many cards for me to handle! Don't feed me more than "
 		+ to_wstring(CardCollectionReader::MaxSize())
 		+ L" card image files!"
 		<< endl;
+	systemMethods->ResetCommandLineTextColour();
 }
 
 long long CardReaderApplication::getexecutionTime(TimePoint startTime, TimePoint endTime) {
@@ -169,9 +183,13 @@ void CardReaderApplication::printExecutionTimeMessage(SystemMethods* systemMetho
 	wcout << endl << L"The reading took " + exeTime + L" " + timeUnit + L" to execute." << endl;
 
 	//Print card avarage execution time.
-	float executionTimePerCard = executionDurationTime / numberOfFilesExecuted / (float)1000000;
-	wstring avarageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
-	wcout << L"That's " + avarageExecutionTimePerCard + L" seconds per card on average!" << endl << endl;
+	if (numberOfFilesExecuted > 0) {
+		float executionTimePerCard = executionDurationTime / numberOfFilesExecuted / (float)1000000;
+		wstring avarageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
+		wcout << L"That's " + avarageExecutionTimePerCard + L" seconds per card on average!" << endl;
+	}
+
+	wcout << endl;
 }
 
 void CardReaderApplication::runTestCases(SystemMethods* systemMethods, vector<CardNameInfo> result) {

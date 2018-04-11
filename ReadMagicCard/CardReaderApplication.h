@@ -10,7 +10,7 @@ public:
 	~CardReaderApplication();
 
 	//Runs the card reader application.
-	int Run(const bool runParallelized, const bool doDebugging);
+	int Run(const bool runSilent, const bool runParallelized, const bool doDebugging);
 
 private:
 
@@ -29,8 +29,10 @@ private:
 	void printResultMessage(SystemMethods* systemMethods, int numberOfErrors);
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
+	//Prints a message telling the user that there are no files to read.
+	void printNoImagesMessage(SystemMethods* systemMethods);
 	//Prints a message telling the user that there are to many files to successfully read them all.
-	void printToManyFilesMessage();
+	void printToManyFilesMessage(SystemMethods* systemMethods);
 	//Extracts the time (in milliseconds) that passed between two time points.
 	long long getexecutionTime(TimePoint startTime, TimePoint endTime);
 	//Prints a message telling the user the length of the execution time.
