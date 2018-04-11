@@ -11,10 +11,14 @@ using namespace std;
 
 CardReaderApplication::CardReaderApplication()
 {
+	//Create an object handling the system dependent methods.
+	systemMethods = new WindowsMethods();
 }
 
 CardReaderApplication::~CardReaderApplication()
 {
+	//Go memory! Be FREEEE!!
+	delete systemMethods;
 }
 
 int CardReaderApplication::Run(const bool runSilent, const bool runParallelized, const bool doDebugging) {
@@ -25,21 +29,18 @@ int CardReaderApplication::Run(const bool runSilent, const bool runParallelized,
 	//Print a welcome message!
 	printWelcomeMessage();
 
-	//Create an object handling the system dependent methods.
-	SystemMethods* systemMethods = new WindowsMethods();
-
 	//Remove old data.
-	removeOldData(systemMethods);
+	removeOldData();
 
 	//Fetch all the file names of the card images.
-	vector<wstring> filenamesOfImages = getMtgImageFileNames(systemMethods);
+	vector<wstring> filenamesOfImages = getMtgImageFileNames();
 
 	//Check if there are to many files to handle.
 	vector<CardNameInfo> result;
 	size_t numberOfFiles = filenamesOfImages.size();
 	if (numberOfFiles == 0) {
 		//Tell the user that no files was found.
-		printNoImagesMessage(systemMethods);
+		printNoImagesMessage();
 	}
 	else if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
 
@@ -49,33 +50,30 @@ int CardReaderApplication::Run(const bool runSilent, const bool runParallelized,
 	else {
 
 		//Tell the user that there was to many files for the reader to handle.
-		printToManyFilesMessage(systemMethods);
+		printToManyFilesMessage();
 	}
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
-	printExecutionTimeMessage(systemMethods, startTime, endTime, numberOfFiles, !doDebugging);
+	printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
 
 	//Run tests to see if any code has been broken.
 	if (doDebugging) {
-		runTestCases(systemMethods, result);
+		runTestCases(result);
 	}
-
-	//Go memory! Be FREEEE!!
-	delete systemMethods;
 
 	//Wait for a keystroke in the window.
 	system("pause");
 	return 0;
 }
 
-void CardReaderApplication::removeOldData(SystemMethods* systemMethods) {
+void CardReaderApplication::removeOldData() {
 
 	wstring folderPath = FileHandling::GetSubFolderPath(systemMethods, StoreCardProcessingData::SubfolderName);
 	boost::filesystem::remove_all(folderPath);
 }
 
-vector<wstring> CardReaderApplication::getMtgImageFileNames(SystemMethods* systemMethods) {
+vector<wstring> CardReaderApplication::getMtgImageFileNames() {
 
 	wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(systemMethods);
 	printWorkingFolderMessage(mtgFolderPath);
@@ -159,7 +157,7 @@ void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int
 	wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
 }
 
-void CardReaderApplication::printNoImagesMessage(SystemMethods* systemMethods) {
+void CardReaderApplication::printNoImagesMessage() {
 
 	systemMethods->SetCommandLineTextColour(Colour::Yellow);
 	wcout
@@ -168,7 +166,7 @@ void CardReaderApplication::printNoImagesMessage(SystemMethods* systemMethods) {
 	systemMethods->ResetCommandLineTextColour();
 }
 
-void CardReaderApplication::printToManyFilesMessage(SystemMethods* systemMethods) {
+void CardReaderApplication::printToManyFilesMessage() {
 
 	systemMethods->SetCommandLineTextColour(Colour::Red);
 	wcout
@@ -179,7 +177,7 @@ void CardReaderApplication::printToManyFilesMessage(SystemMethods* systemMethods
 	systemMethods->ResetCommandLineTextColour();
 }
 
-void CardReaderApplication::printExecutionTimeMessage(SystemMethods* systemMethods, TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
+void CardReaderApplication::printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
 
 	auto executionDurationTime = getexecutionTime(startTime, endTime);
 
@@ -204,7 +202,7 @@ long long CardReaderApplication::getexecutionTime(TimePoint startTime, TimePoint
 	return chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
 }
 
-void CardReaderApplication::runTestCases(SystemMethods* systemMethods, vector<CardNameInfo> result) {
+void CardReaderApplication::runTestCases(vector<CardNameInfo> result) {
 
 	vector<CardNameInfo> incorrectResults;
 	TestRunner tester(systemMethods);

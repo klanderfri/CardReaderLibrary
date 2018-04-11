@@ -22,9 +22,9 @@ private:
 	//Prints a message telling the user where the program is looking for card image files.
 	void printWorkingFolderMessage(std::wstring mtgFolderPath);
 	//Removes lingering old data from previous runs.
-	void removeOldData(SystemMethods* systemMethods);
+	void removeOldData();
 	//Fetches the file names of the MtG image files.
-	std::vector<std::wstring> getMtgImageFileNames(SystemMethods* systemMethods);
+	std::vector<std::wstring> getMtgImageFileNames();
 	//Creates an collection holding a reader for evere card image.
 	CardCollectionReader* createCardReaderCollection(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
@@ -34,14 +34,16 @@ private:
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are no files to read.
-	void printNoImagesMessage(SystemMethods* systemMethods);
+	void printNoImagesMessage();
 	//Prints a message telling the user that there are to many files to successfully read them all.
-	void printToManyFilesMessage(SystemMethods* systemMethods);
+	void printToManyFilesMessage();
 	//Extracts the time (in milliseconds) that passed between two time points.
 	long long getexecutionTime(TimePoint startTime, TimePoint endTime);
 	//Prints a message telling the user the length of the execution time.
-	void printExecutionTimeMessage(SystemMethods* systemMethods, TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
+	void printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
 	//Checks if any code has been broken.
-	void runTestCases(SystemMethods* systemMethods, std::vector<CardNameInfo> result);
+	void runTestCases(std::vector<CardNameInfo> result);
+
+	SystemMethods* systemMethods;
 };
 
