@@ -8,4 +8,4 @@ https://github.com/klanderfri/ReadMagicCard/releases
 ## What else to know?
 Not much. This program should be quite straightforward.
 
-Developers and curious useres might want to head for the CONTRIBUTING.md file though.
+Developers and curious users might want to head for the CONTRIBUTING.md file though.
