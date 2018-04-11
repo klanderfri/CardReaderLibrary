@@ -6,11 +6,10 @@
 using namespace std;
 using namespace cv;
 
-CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, bool runParallelized, bool doDebugging)
+CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool doDebugging)
+	: m_runSilent(runSilent), m_runParallelized(runParallelized), m_doDebugging(doDebugging)
 {
 	m_systemMethods = systemMethods;
-	m_doDebugging = doDebugging;
-	m_runParallelized = runParallelized;
 	m_currentSize = 0;
 	m_readers = vector<CardReader>();
 	m_longestFilename = L"";
@@ -66,7 +65,9 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 	m_amountOfErrors = 0;
 	int lengthOfLongestFilename = LengthOfLongestFilename();
 
-	wcout << L"Reading cards . . ." << endl;
+	if (!m_runSilent) {
+		wcout << L"Reading cards . . ." << endl;
+	}
 
 	if (m_runParallelized) {
 		parallel_for_(range, [&](const Range& internalRange) {
@@ -80,10 +81,10 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 	return result;
 }
 
-void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNameInfo>& result, const int amountOfCardsRead, const int lengthOfLongestFilename)
-{
-	for (int i = range.start; i < range.end; i++)
-	{
+void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNameInfo>& result, const int amountOfCardsRead, const int lengthOfLongestFilename) {
+	
+	for (int i = range.start; i < range.end; i++) {
+
 		CardNameInfo info;
 
 		try {
@@ -100,7 +101,9 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		}
 
 		//Print that we have read the image.
-		printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
+		if (!m_runSilent) {
+			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
+		}
 
 		if (!info.Success) {
 			m_amountOfErrors++;
@@ -118,8 +121,8 @@ Range CardCollectionReader::getRange() {
 	return range;
 }
 
-void CardCollectionReader::printProgressMessage(const wstring fileName, const wstring cardName, const int amountOfCardsRead, const int lengthOfLongestFilename)
-{
+void CardCollectionReader::printProgressMessage(const wstring fileName, const wstring cardName, const int amountOfCardsRead, const int lengthOfLongestFilename) {
+
 	m_consoleLock.lock();
 
 	size_t spaceForCardAmount = to_string(amountOfCardsRead).length();

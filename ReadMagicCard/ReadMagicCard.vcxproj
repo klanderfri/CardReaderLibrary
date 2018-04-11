@@ -165,6 +165,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ApplicationMessages.h" />
     <ClInclude Include="CardNameInfo.h" />
     <ClInclude Include="CardTitleType.h" />
     <ClInclude Include="Colour.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="SectionExtractor.h" />
     <ClInclude Include="StoreCardProcessingData.h" />
     <ClInclude Include="SystemMethods.h" />
+    <ClInclude Include="TimePoint.h" />
     <ClInclude Include="TitleExtractor.h" />
     <ClInclude Include="ImageOcrHelper.h" />
     <ClInclude Include="WindowsMethods.h" />
@@ -197,6 +199,7 @@
     <ClInclude Include="TestRunner.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ApplicationMessages.cpp" />
     <ClCompile Include="CardNameInfo.cpp" />
     <ClCompile Include="LetterArea.cpp" />
     <ClCompile Include="AlgorithmHelper.cpp" />
@@ -213,6 +216,7 @@
     <ClCompile Include="SaveOcvImage.cpp" />
     <ClCompile Include="SectionExtractor.cpp" />
     <ClCompile Include="StoreCardProcessingData.cpp" />
+    <ClCompile Include="TimePoint.cpp" />
     <ClCompile Include="TitleExtractor.cpp" />
     <ClCompile Include="ImageOcrHelper.cpp" />
     <ClCompile Include="WindowsMethods.cpp" />

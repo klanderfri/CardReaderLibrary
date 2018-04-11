@@ -9,10 +9,13 @@
 
 using namespace std;
 
-CardReaderApplication::CardReaderApplication()
+CardReaderApplication::CardReaderApplication(const bool runSilent, const bool runParallelized, const bool doDebugging)
+	: runSilent(runSilent),
+	  runParallelized(runParallelized),
+	  doDebugging(doDebugging),
+	  systemMethods(new WindowsMethods()),
+	  messages(ApplicationMessages(systemMethods, runSilent))
 {
-	//Create an object handling the system dependent methods.
-	systemMethods = new WindowsMethods();
 }
 
 CardReaderApplication::~CardReaderApplication()
@@ -21,13 +24,13 @@ CardReaderApplication::~CardReaderApplication()
 	delete systemMethods;
 }
 
-int CardReaderApplication::Run(const bool runSilent, const bool runParallelized, const bool doDebugging) {
+int CardReaderApplication::Run() {
 
 	//Store the start time for later check of efficiency.
-	auto startTime = chrono::high_resolution_clock::now();
+	TimePoint startTime = chrono::high_resolution_clock::now();
 
 	//Print a welcome message!
-	printWelcomeMessage();
+	messages.printWelcomeMessage();
 
 	//Remove old data.
 	removeOldData();
@@ -40,22 +43,22 @@ int CardReaderApplication::Run(const bool runSilent, const bool runParallelized,
 	size_t numberOfFiles = filenamesOfImages.size();
 	if (numberOfFiles == 0) {
 		//Tell the user that no files was found.
-		printNoImagesMessage();
+		messages.printNoImagesMessage();
 	}
 	else if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
 
 		//Read the cards.
-		result = readAllCards(systemMethods, filenamesOfImages, runParallelized, doDebugging);
+		result = readAllCards(systemMethods, filenamesOfImages);
 	}
 	else {
 
 		//Tell the user that there was to many files for the reader to handle.
-		printToManyFilesMessage();
+		messages.printToManyFilesMessage();
 	}
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
-	printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
+	messages.printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
 
 	//Run tests to see if any code has been broken.
 	if (doDebugging) {
@@ -63,7 +66,10 @@ int CardReaderApplication::Run(const bool runSilent, const bool runParallelized,
 	}
 
 	//Wait for a keystroke in the window.
-	system("pause");
+	if (!runSilent) {
+		system("pause");
+	}
+
 	return 0;
 }
 
@@ -76,15 +82,15 @@ void CardReaderApplication::removeOldData() {
 vector<wstring> CardReaderApplication::getMtgImageFileNames() {
 
 	wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(systemMethods);
-	printWorkingFolderMessage(mtgFolderPath);
+	messages.printWorkingFolderMessage(mtgFolderPath);
 	vector<wstring> filenamesOfImages = FileHandling::GetMtgImageFileNames(mtgFolderPath);
 
 	return filenamesOfImages;
 }
 
-CardCollectionReader* CardReaderApplication::createCardReaderCollection(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
+CardCollectionReader* CardReaderApplication::createCardReaderCollection(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages) {
 
-	CardCollectionReader *readers = new CardCollectionReader(systemMethods, runParallelized, doDebugging);
+	CardCollectionReader* readers = new CardCollectionReader(systemMethods, runSilent, runParallelized, doDebugging);
 
 	//Add the cards to the reader collection
 	for (size_t i = 0; i < filenamesOfImages.size(); i++) {
@@ -102,10 +108,10 @@ void CardReaderApplication::reziseCommandWindow(size_t numberOfFiles, int length
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
+vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages) {
 
 	//Create a reader for every card.
-	CardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, runParallelized, doDebugging);
+	CardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages);
 
 	//Resize console window to avoid line breaks.
 	reziseCommandWindow(filenamesOfImages.size(), readers->LengthOfLongestFilename());
@@ -118,88 +124,12 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	wstring pathToResultFile = storer.StoreFinalResult(result);
 
 	//Give a reassuring message... or not.
-	printResultMessage(readers->AmountOfErrors(), pathToResultFile);
+	messages.printResultMessage(readers->AmountOfErrors(), pathToResultFile);
 
 	//Since we don't need the readers anymore...
 	delete readers;
 
 	return result;
-}
-
-void CardReaderApplication::printWelcomeMessage() {
-
-	wcout << L"Welcome to the eminent MtG card reader! Let's read some cards! :-D" << endl << endl;
-}
-
-void CardReaderApplication::printWorkingFolderMessage(wstring mtgFolderPath) {
-
-	wcout << L"Looking for card images in folders . . ." << endl;
-	wcout << mtgFolderPath << endl << endl;
-}
-
-void CardReaderApplication::printResultMessage(int numberOfErrors, wstring pathToResultFile) {
-
-	wstring message;
-
-	if (numberOfErrors == 0) {
-		systemMethods->SetCommandLineTextColour(Colour::Green);
-		message = L"All images was successfully read! Yay! :-)";
-	}
-	else {
-		systemMethods->SetCommandLineTextColour(Colour::Red);
-		wstring amountOfErrorsStr = to_wstring(numberOfErrors);
-		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
-		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
-	}
-	wcout << endl << message << endl;
-	systemMethods->ResetCommandLineTextColour();
-
-	wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
-}
-
-void CardReaderApplication::printNoImagesMessage() {
-
-	systemMethods->SetCommandLineTextColour(Colour::Yellow);
-	wcout
-		<< L"Hmm, it semms like there are no cards... :-|"
-		<< endl;
-	systemMethods->ResetCommandLineTextColour();
-}
-
-void CardReaderApplication::printToManyFilesMessage() {
-
-	systemMethods->SetCommandLineTextColour(Colour::Red);
-	wcout
-		<< L"Glunck! There were to many cards for me to handle! Don't feed me more than "
-		+ to_wstring(CardCollectionReader::MaxSize())
-		+ L" card image files!"
-		<< endl;
-	systemMethods->ResetCommandLineTextColour();
-}
-
-void CardReaderApplication::printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
-
-	auto executionDurationTime = getexecutionTime(startTime, endTime);
-
-	//Print total execution time.
-	float totalExecutionTime = executionDurationTime / (float)(showTimeInSeconds ? 1000000 : 1);
-	wstring exeTime = systemMethods->ToWString(totalExecutionTime, showTimeInSeconds ? 1 : 0);
-	wstring timeUnit = showTimeInSeconds ? L"seconds" : L"microseconds";
-	wcout << endl << L"The reading took " + exeTime + L" " + timeUnit + L" to execute." << endl;
-
-	//Print card avarage execution time.
-	if (numberOfFilesExecuted > 0) {
-		float executionTimePerCard = executionDurationTime / numberOfFilesExecuted / (float)1000000;
-		wstring avarageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
-		wcout << L"That's " + avarageExecutionTimePerCard + L" seconds per card on average!" << endl;
-	}
-
-	wcout << endl;
-}
-
-long long CardReaderApplication::getexecutionTime(TimePoint startTime, TimePoint endTime) {
-
-	return chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
 }
 
 void CardReaderApplication::runTestCases(vector<CardNameInfo> result) {

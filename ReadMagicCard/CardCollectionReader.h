@@ -6,7 +6,7 @@
 class CardCollectionReader
 {
 public:
-	CardCollectionReader(SystemMethods* systemMethods, bool runParallelized, bool doDebugging);
+	CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool doDebugging);
 	~CardCollectionReader();
 
 	//Adds a card to the collection.
@@ -32,11 +32,13 @@ private:
 	cv::Range getRange();
 
 	//Pointer to object handling the system dependent methods.
-	SystemMethods * m_systemMethods;
-	//Telling if the program should do debugging such as exporting the images to files.
-	bool m_doDebugging;
+	SystemMethods* m_systemMethods;
+	//Telling if the program should run without any prints to the command line.
+	const bool m_runSilent;
 	//Telling if the extraction should be done parallelized.
-	bool m_runParallelized;
+	const bool m_runParallelized;
+	//Telling if the program should do debugging such as exporting the images to files.
+	const bool m_doDebugging;
 	//The container holding all the card readers.
 	std::vector<CardReader> m_readers;
 	//The current amount of readers in the collection.
