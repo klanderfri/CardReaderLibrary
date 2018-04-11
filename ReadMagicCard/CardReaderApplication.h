@@ -2,12 +2,10 @@
 #include "SystemMethods.h"
 #include "CardCollectionReader.h"
 #include <chrono>
+//Class holding the card reader application.
 class CardReaderApplication
 {
 public:
-	//A chrono time point for steady clock.
-	typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
-
 	CardReaderApplication();
 	~CardReaderApplication();
 
@@ -15,6 +13,9 @@ public:
 	int Run(const bool runParallelized, const bool doDebugging);
 
 private:
+
+	//A chrono time point for steady clock.
+	typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 
 	//Removes lingering old data from previous runs.
 	void removeOldData(SystemMethods* systemMethods);
