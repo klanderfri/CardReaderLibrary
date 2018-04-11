@@ -9,7 +9,7 @@ using namespace cv;
 CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool runDebugging)
 	: runSilent(runSilent), runParallelized(runParallelized), runDebugging(runDebugging)
 {
-	systemMethods = systemMethods;
+	this->systemMethods = systemMethods;
 	currentAmountOfReaders = 0;
 	readers = vector<CardReader>();
 	longestFilename = L"";
