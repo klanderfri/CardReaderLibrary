@@ -6,6 +6,7 @@ using namespace std;
 
 bool StoreCardProcessingData::hasSetSystemMethods = false;
 SystemMethods* StoreCardProcessingData::systemMethods;
+wstring StoreCardProcessingData::subfolderName = L"Image Data";
 mutex StoreCardProcessingData::fl_OcrConfidence;
 mutex StoreCardProcessingData::fl_SideRelations;
 bool StoreCardProcessingData::hwfh_OcrConfidence = false;
@@ -21,6 +22,18 @@ StoreCardProcessingData::StoreCardProcessingData(SystemMethods* systemMethods)
 
 StoreCardProcessingData::~StoreCardProcessingData()
 {
+}
+
+void StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
+
+	wstring textToAdd = L"Image file name\tCard name\tOCR confidence\tSuccess\n";
+	for (CardNameInfo info : result) {
+
+		textToAdd += info.FileName + L"\t" + info.CardName + L"\t" + to_wstring(info.Confidence) + L"\t" + to_wstring(info.Success) + L"\n";
+	}
+	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
+
+	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", subfolderName);
 }
 
 void StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfTries, wstring ocrResult, int ocrConfidence) {
@@ -40,8 +53,6 @@ void StoreCardProcessingData::StoreSideRelations(wstring imageFileName, float si
 }
 
 void StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock, bool& hasWrittenFileHeader, vector<wstring> headers, vector<wstring> rowData) {
-
-	wstring subfolderName = L"Image Data";
 
 	//Make sure the header can't be written by two different threads.
 	fileLock.lock();

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CardReaderApplication.h"
 #include "FileHandling.h"
+#include "StoreCardProcessingData.h"
 #include "WindowsMethods.h"
 #include "TestRunner.h"
 #include <iostream>
@@ -128,6 +129,10 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 
 	//Fetch the card names.
 	vector<CardNameInfo> result = readers->ExtractCardNames();
+
+	//Write the card names to a separate file.
+	StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+	storer.StoreFinalResult(result);
 
 	//Give a reassuring message... or not.
 	printResultMessage(systemMethods, readers->AmountOfErrors());
