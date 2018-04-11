@@ -32,23 +32,23 @@ private:
 	cv::Range getRange();
 
 	//Pointer to object handling the system dependent methods.
-	SystemMethods* m_systemMethods;
+	SystemMethods* systemMethods;
 	//Telling if the program should run without any prints to the command line.
-	const bool m_runSilent;
+	const bool runSilent;
 	//Telling if the extraction should be done parallelized.
-	const bool m_runParallelized;
+	const bool runParallelized;
 	//Telling if the program should do debugging such as exporting the images to files.
-	const bool m_doDebugging;
+	const bool doDebugging;
 	//The container holding all the card readers.
-	std::vector<CardReader> m_readers;
+	std::vector<CardReader> readers;
 	//The current amount of readers in the collection.
-	int m_currentSize;
+	int currentAmountOfReaders;
 	//This counter shows the user how many cards of which card name extraction has been initialized.
-	int m_counterForCardExtractionMessage;
+	int counterForCardExtractionMessage;
 	//Lock to prevent several threads print to the console line simultaneously.
-	std::mutex m_consoleLock;
+	std::mutex consoleLock;
 	//The longest filename among the readers.
-	std::wstring m_longestFilename;
+	std::wstring longestFilename;
 	//The amount of card that couldn't be read.
-	int m_amountOfErrors;
+	int amountOfErrors;
 };

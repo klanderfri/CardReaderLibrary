@@ -7,12 +7,12 @@ using namespace std;
 using namespace cv;
 
 CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool doDebugging)
-	: m_runSilent(runSilent), m_runParallelized(runParallelized), m_doDebugging(doDebugging)
+	: runSilent(runSilent), runParallelized(runParallelized), doDebugging(doDebugging)
 {
-	m_systemMethods = systemMethods;
-	m_currentSize = 0;
-	m_readers = vector<CardReader>();
-	m_longestFilename = L"";
+	systemMethods = systemMethods;
+	currentAmountOfReaders = 0;
+	readers = vector<CardReader>();
+	longestFilename = L"";
 }
 
 CardCollectionReader::~CardCollectionReader()
@@ -21,14 +21,14 @@ CardCollectionReader::~CardCollectionReader()
 
 void CardCollectionReader::AddCard(wstring imageFileName) {
 
-	if (m_currentSize < MaxSize()) {
+	if (currentAmountOfReaders < MaxSize()) {
 
-		m_readers.push_back(CardReader(imageFileName, m_systemMethods, m_doDebugging));
-		m_currentSize++;
+		readers.push_back(CardReader(imageFileName, systemMethods, doDebugging));
+		currentAmountOfReaders++;
 
 		//Check if the new card has the longest filename.
-		if (m_longestFilename.length() < imageFileName.length()) {
-			m_longestFilename = imageFileName;
+		if (longestFilename.length() < imageFileName.length()) {
+			longestFilename = imageFileName;
 		}
 	}
 	else {
@@ -44,32 +44,32 @@ int CardCollectionReader::MaxSize() {
 
 int CardCollectionReader::Size() {
 
-	return m_currentSize;
+	return currentAmountOfReaders;
 }
 
 int CardCollectionReader::LengthOfLongestFilename() {
 
-	return (int)(m_longestFilename.length()); //Cast should be fine. Hard to thinkt that any OS would allow filenames longer than INT_MAX!
+	return (int)(longestFilename.length()); //Cast should be fine. Hard to thinkt that any OS would allow filenames longer than INT_MAX!
 }
 
 int CardCollectionReader::AmountOfErrors() {
 
-	return m_amountOfErrors;
+	return amountOfErrors;
 }
 
 vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 
 	vector<CardNameInfo> result = vector<CardNameInfo>();
 	Range range = getRange();
-	m_counterForCardExtractionMessage = 0;
-	m_amountOfErrors = 0;
+	counterForCardExtractionMessage = 0;
+	amountOfErrors = 0;
 	int lengthOfLongestFilename = LengthOfLongestFilename();
 
-	if (!m_runSilent) {
+	if (!runSilent) {
 		wcout << L"Reading cards . . ." << endl;
 	}
 
-	if (m_runParallelized) {
+	if (runParallelized) {
 		parallel_for_(range, [&](const Range& internalRange) {
 			cardNameExtraction(internalRange, result, range.end, lengthOfLongestFilename);
 		});
@@ -90,23 +90,23 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		try {
 
 			//Extract the card name.
-			info.FileName = m_readers[i].GetImageFileName();
-			info.CardName = m_readers[i].ExtractCardName();
-			info.Confidence = m_readers[i].GetConfidence();
-			info.Success = m_readers[i].GetSuccess();
+			info.FileName = readers[i].GetImageFileName();
+			info.CardName = readers[i].ExtractCardName();
+			info.Confidence = readers[i].GetConfidence();
+			info.Success = readers[i].GetSuccess();
 		}
 		catch (exception& ex) {
 
-			info.CardName = m_systemMethods->ToWString((string)ex.what());
+			info.CardName = systemMethods->ToWString((string)ex.what());
 		}
 
 		//Print that we have read the image.
-		if (!m_runSilent) {
+		if (!runSilent) {
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 
 		if (!info.Success) {
-			m_amountOfErrors++;
+			amountOfErrors++;
 		}
 
 		result.push_back(info);
@@ -115,7 +115,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 
 Range CardCollectionReader::getRange() {
 
-	int readerSize = (int)m_readers.size(); //The AddCard method should throw exception if more than INT_MAX cards are added!
+	int readerSize = (int)readers.size(); //The AddCard method should throw exception if more than INT_MAX cards are added!
 	Range range = Range(0, readerSize);
 
 	return range;
@@ -123,16 +123,16 @@ Range CardCollectionReader::getRange() {
 
 void CardCollectionReader::printProgressMessage(const wstring fileName, const wstring cardName, const int amountOfCardsRead, const int lengthOfLongestFilename) {
 
-	m_consoleLock.lock();
+	consoleLock.lock();
 
 	size_t spaceForCardAmount = to_string(amountOfCardsRead).length();
 	wcout << L"Done reading image "
-		<< setw(spaceForCardAmount) << to_wstring(m_counterForCardExtractionMessage + 1) << L" of "
+		<< setw(spaceForCardAmount) << to_wstring(counterForCardExtractionMessage + 1) << L" of "
 		<< setw(spaceForCardAmount + 2) << to_wstring(amountOfCardsRead) + L": "
 		<< left << setw(lengthOfLongestFilename + 3) << L"'" + fileName + L"'"
 		<< L"'" + cardName + L"'"
 		<< right << endl;
-	m_counterForCardExtractionMessage++;
+	counterForCardExtractionMessage++;
 
-	m_consoleLock.unlock();
+	consoleLock.unlock();
 }
