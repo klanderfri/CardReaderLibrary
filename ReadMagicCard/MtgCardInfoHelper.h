@@ -19,6 +19,8 @@ public:
 	static void RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName, std::wstring& result);
 	//Checks if there are any illeagal characters in the title.
 	static bool ContainsInvalidCharacters(SystemMethods* systemMethods, std::wstring title);
+	//Changes numbers in a title to letters (0 to O, 1 to l or I and so on).
+	static std::string ChangeNumbersToLetters(const std::string title);
 
 private:
 

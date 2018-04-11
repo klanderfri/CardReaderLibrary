@@ -127,3 +127,15 @@ bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, 
 
 	return false;
 }
+
+string MtgCardInfoHelper::ChangeNumbersToLetters(const string rawText) {
+
+	string outText = rawText;
+
+	size_t index = outText.find('0');
+	if (index != string::npos) {
+		outText.replace(index, 1, 1, 'O');
+	}
+
+	return outText;
+}

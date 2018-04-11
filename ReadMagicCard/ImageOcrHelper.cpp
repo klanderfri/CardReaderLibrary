@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "ImageOcrHelper.h"
+#include "MtgCardInfoHelper.h"
 
 using namespace std;
 using namespace cv;
@@ -50,7 +51,8 @@ void ImageOcrHelper::setImage(Mat originalImageData) {
 wstring ImageOcrHelper::getUTF8Text(SystemMethods* systemMethods) {
 
 	char* rawOutText = ocr.GetUTF8Text();
-	wstring outText = systemMethods->ToWString(string(rawOutText));
+	string outTextStr = MtgCardInfoHelper::ChangeNumbersToLetters(string(rawOutText));
+	wstring outText = systemMethods->ToWString(outTextStr);
 	outText = removeTrailingNewline(outText);
 
 	delete[] rawOutText; //As instructed by documentation in the GetUTF8Text method.
