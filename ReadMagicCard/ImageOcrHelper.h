@@ -13,6 +13,7 @@ public:
 	OcrDecodeResult DecodeImage(cv::Mat originalImageData);
 
 private:
+
 	//Gets the path to the folder containing the trained language data files.
 	std::string getTrainedDataPath();
 	//Sets up the OCR API so it can be used for reading images.

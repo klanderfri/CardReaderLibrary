@@ -2,6 +2,7 @@
 #include "SystemMethods.h"
 #include "CardNameInfo.h"
 #include <vector>
+//Class running tests of the program.
 class TestRunner
 {
 public:

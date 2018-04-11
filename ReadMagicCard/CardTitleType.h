@@ -1,4 +1,5 @@
 #pragma once
+//Enum specifying the kind of title a card has.
 enum CardTitleType {
 
 	//The normal titel position

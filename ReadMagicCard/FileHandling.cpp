@@ -7,7 +7,6 @@ namespace fs = std::experimental::filesystem;
 using namespace std;
 
 const wstring FileHandling::MTG_IMAGES_WORKING_FOLDER = L"MtG-cards";
-
 mutex FileHandling::m_fileLock;
 
 FileHandling::FileHandling()

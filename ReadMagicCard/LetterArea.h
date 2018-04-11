@@ -1,6 +1,6 @@
 #pragma once
 #include "Contour.h"
-//The area of a letter.
+//Class holding information about the area of a letter.
 class LetterArea
 {
 public:

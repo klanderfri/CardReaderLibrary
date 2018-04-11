@@ -1,4 +1,5 @@
 #pragma once
+//Enum specifying colour.
 enum Colour {
 	//For examples, see
 	//https://stackoverflow.com/a/4053879/1997617

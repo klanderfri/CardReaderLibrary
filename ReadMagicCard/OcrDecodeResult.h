@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+//Class holding information about the OCR decoding result.
 class OcrDecodeResult
 {
 public:

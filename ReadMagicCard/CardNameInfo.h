@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+//Class holding information about a card.
 class CardNameInfo
 {
 public:
