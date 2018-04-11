@@ -9,11 +9,11 @@ public:
 	~StoreCardProcessingData();
 
 	//Stores the final result.
-	void StoreFinalResult(std::vector<CardNameInfo> result);
+	std::wstring StoreFinalResult(std::vector<CardNameInfo> result);
 	//Store the confidence of the OCR read in an external file.
-	void StoreOcrConfidence(std::wstring imageFileName, int numberOfTries, std::wstring ocrResult, int ocrConfidence);
+	std::wstring StoreOcrConfidence(std::wstring imageFileName, int numberOfTries, std::wstring ocrResult, int ocrConfidence);
 	//Store the side relations of the card in an external file.
-	void StoreSideRelations(std::wstring imageFileName, float sideFactor);
+	std::wstring StoreSideRelations(std::wstring imageFileName, float sideFactor);
 
 	//The name of the subfolder the external files should be stored in.
 	static const std::wstring SubfolderName;
@@ -27,7 +27,7 @@ private:
 	*/
 
 	//Writes the card information data to an external file.
-	void writeToFile(std::wstring textfileName, std::mutex& fileLock, bool& hasWrittenFileHeader, std::vector<std::wstring> headers, std::vector<std::wstring> rowData);
+	std::wstring writeToFile(std::wstring textfileName, std::mutex& fileLock, bool& hasWrittenFileHeader, std::vector<std::wstring> headers, std::vector<std::wstring> rowData);
 	
 	//Tells if the object handling the system dependent methods has been set.
 	static bool hasSetSystemMethods;

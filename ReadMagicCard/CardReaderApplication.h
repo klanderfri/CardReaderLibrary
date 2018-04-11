@@ -26,7 +26,7 @@ private:
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(SystemMethods* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
-	void printResultMessage(SystemMethods* systemMethods, int numberOfErrors);
+	void printResultMessage(SystemMethods* systemMethods, int numberOfErrors, std::wstring pathToResultFile);
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are no files to read.

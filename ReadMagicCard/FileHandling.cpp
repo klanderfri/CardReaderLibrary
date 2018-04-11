@@ -47,12 +47,12 @@ vector<wstring> FileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
 	return filenames;
 }
 
-void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder) {
+wstring FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder) {
 
-	AddRowToFile(systemMethods, textToWrite, fileName, subFolder, m_fileLock);
+	return AddRowToFile(systemMethods, textToWrite, fileName, subFolder, m_fileLock);
 }
 
-void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
+wstring FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
 
 	wstring folderPath = GetSubFolderPath(systemMethods, subFolder);
 	wstring fullFilePath = folderPath + fileName;
@@ -76,6 +76,8 @@ void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrit
 		//Failed to create directory.
 		throw SaveException("Could not create file directory: " + systemMethods->ToString(folderPath));
 	}
+
+	return fullFilePath;
 }
 
 wstring FileHandling::GetSubFolderPath(SystemMethods* systemMethods, wstring subFolder)

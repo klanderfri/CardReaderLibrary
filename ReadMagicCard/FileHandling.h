@@ -13,9 +13,9 @@ public:
 	//Gets the names of the image files with the MtG-cards that are to be read.
 	static std::vector<std::wstring> GetMtgImageFileNames(std::wstring fullFolderPath);
 	//Adds a row to the specified file.
-	static void AddRowToFile(SystemMethods* systemMethods, std::wstring textToWrite, std::wstring fileName, std::wstring subFolder);
+	static std::wstring AddRowToFile(SystemMethods* systemMethods, std::wstring textToWrite, std::wstring fileName, std::wstring subFolder);
 	//Adds a row to the specified file.
-	static void AddRowToFile(SystemMethods* systemMethods, std::wstring textToWrite, std::wstring fileName, std::wstring subFolder, std::mutex& fileLock);
+	static std::wstring AddRowToFile(SystemMethods* systemMethods, std::wstring textToWrite, std::wstring fileName, std::wstring subFolder, std::mutex& fileLock);
 	//Gets the path to the specified subfolder in the folder containing the MtG-card images.
 	static std::wstring GetSubFolderPath(SystemMethods* systemMethods, std::wstring subFolder);
 	//Creates a file directory.

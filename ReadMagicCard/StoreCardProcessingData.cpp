@@ -24,7 +24,7 @@ StoreCardProcessingData::~StoreCardProcessingData()
 {
 }
 
-void StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
+wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 
 	wstring textToAdd = L"Image file name\tCard name\tOCR confidence\tSuccess\n";
 	for (CardNameInfo info : result) {
@@ -33,26 +33,26 @@ void StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
 
-	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
+	return FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
 }
 
-void StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfTries, wstring ocrResult, int ocrConfidence) {
+wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfTries, wstring ocrResult, int ocrConfidence) {
 
 	vector<wstring> headers{ L"Image file name", L"Number of tries", L"OCR result", L"OCR confidence" };
 	vector<wstring> rowData{ imageFileName, to_wstring(numberOfTries), ocrResult, to_wstring(ocrConfidence) };
 
-	writeToFile(L"TitleDecodeConfidence.txt", fl_OcrConfidence, hwfh_OcrConfidence, headers, rowData);
+	return writeToFile(L"TitleDecodeConfidence.txt", fl_OcrConfidence, hwfh_OcrConfidence, headers, rowData);
 }
 
-void StoreCardProcessingData::StoreSideRelations(wstring imageFileName, float sideFactor) {
+wstring StoreCardProcessingData::StoreSideRelations(wstring imageFileName, float sideFactor) {
 
 	vector<wstring> headers{ L"Image file name", L"Long side to short side" };
 	vector<wstring> rowData{ imageFileName, systemMethods->ToWString(sideFactor) };
 
-	writeToFile(L"CardSidesRelations.txt", fl_SideRelations, hwfh_SideRelations, headers, rowData);
+	return writeToFile(L"CardSidesRelations.txt", fl_SideRelations, hwfh_SideRelations, headers, rowData);
 }
 
-void StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock, bool& hasWrittenFileHeader, vector<wstring> headers, vector<wstring> rowData) {
+wstring StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock, bool& hasWrittenFileHeader, vector<wstring> headers, vector<wstring> rowData) {
 
 	//Make sure the header can't be written by two different threads.
 	fileLock.lock();
@@ -74,5 +74,5 @@ void StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock,
 		rowToAdd += L"\t" + rowData[i];
 	}
 
-	FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName, fileLock);
+	return FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName, fileLock);
 }

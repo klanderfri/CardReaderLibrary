@@ -105,9 +105,10 @@ void CardReaderApplication::reziseCommandWindow(SystemMethods* systemMethods, si
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int numberOfErrors) {
+void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int numberOfErrors, wstring pathToResultFile) {
 
 	wstring message;
+
 	if (numberOfErrors == 0) {
 		systemMethods->SetCommandLineTextColour(Colour::Green);
 		message = L"All images was successfully read! Yay! :-)";
@@ -118,9 +119,10 @@ void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int
 		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
 		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
 	}
-
 	wcout << endl << message << endl;
 	systemMethods->ResetCommandLineTextColour();
+
+	wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
 }
 
 vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
@@ -136,10 +138,10 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 
 	//Write the card names to a separate file.
 	StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
-	storer.StoreFinalResult(result);
+	wstring pathToResultFile = storer.StoreFinalResult(result);
 
 	//Give a reassuring message... or not.
-	printResultMessage(systemMethods, readers->AmountOfErrors());
+	printResultMessage(systemMethods, readers->AmountOfErrors(), pathToResultFile);
 
 	//Since we don't need the readers anymore...
 	delete readers;
