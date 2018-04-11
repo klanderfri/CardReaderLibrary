@@ -13,9 +13,10 @@ Follow this checklist to set up the folder the application reads and writes data
  * Remove all files that are neither folders nor jpg-files.
  
 ### Command Arguments
-The program accepts two command arguments.
- * The first one is runParallelized. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to "true" makes the program run faster but also makes it harder to debug.
- * The second on is doDebugging. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true makes the program output image- and text-files representing the progress of the reading, but makes the program slower.
+The program accepts three command arguments.
+ * The first one is runSilent. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true will prevent any outputs from the program to the command line window.
+ * The second one is runParallelized. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to "true" makes the program run faster but also makes it harder to debug.
+ * The third on is runDebugging. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true makes the program output image- and text-files representing the progress of the reading, but makes the program slower.
 
 ## Environment
 This project is written with the C++17 standard.
