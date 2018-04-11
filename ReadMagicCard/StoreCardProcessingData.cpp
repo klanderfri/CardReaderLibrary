@@ -4,9 +4,9 @@
 
 using namespace std;
 
+const wstring StoreCardProcessingData::SubfolderName = L"Image Data";
 bool StoreCardProcessingData::hasSetSystemMethods = false;
 SystemMethods* StoreCardProcessingData::systemMethods;
-wstring StoreCardProcessingData::subfolderName = L"Image Data";
 mutex StoreCardProcessingData::fl_OcrConfidence;
 mutex StoreCardProcessingData::fl_SideRelations;
 bool StoreCardProcessingData::hwfh_OcrConfidence = false;
@@ -33,7 +33,7 @@ void StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
 
-	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", subfolderName);
+	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
 }
 
 void StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfTries, wstring ocrResult, int ocrConfidence) {
@@ -63,7 +63,7 @@ void StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock,
 			rowToAdd += L"\t" + headers[i];
 		}
 
-		FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, subfolderName);
+		FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName);
 
 		hasWrittenFileHeader = true;
 	}
@@ -74,5 +74,5 @@ void StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLock,
 		rowToAdd += L"\t" + rowData[i];
 	}
 
-	FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, subfolderName, fileLock);
+	FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName, fileLock);
 }

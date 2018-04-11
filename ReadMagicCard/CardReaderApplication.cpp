@@ -67,7 +67,7 @@ int CardReaderApplication::Run(const bool runParallelized, const bool doDebuggin
 
 void CardReaderApplication::removeOldData(SystemMethods* systemMethods) {
 
-	wstring folderPath = FileHandling::GetSubFolderPath(systemMethods, L"Image Data");
+	wstring folderPath = FileHandling::GetSubFolderPath(systemMethods, StoreCardProcessingData::SubfolderName);
 	boost::filesystem::remove_all(folderPath);
 }
 

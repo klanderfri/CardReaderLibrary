@@ -15,6 +15,9 @@ public:
 	//Store the side relations of the card in an external file.
 	void StoreSideRelations(std::wstring imageFileName, float sideFactor);
 
+	//The name of the subfolder the external files should be stored in.
+	static const std::wstring SubfolderName;
+
 private:
 
 	/* Abbreviations:
@@ -30,8 +33,6 @@ private:
 	static bool hasSetSystemMethods;
 	//Pointer to object handling the system dependent methods.
 	static SystemMethods* systemMethods;
-	//The name of the subfolder the externa files should be stored in.
-	static std::wstring subfolderName;
 	//Lock preventing multiple threads from writing the header in the file storing the title OCR confidence.
 	static std::mutex fl_OcrConfidence;
 	//Lock preventing multiple threads from writing the header in the file storing the card side relations.
