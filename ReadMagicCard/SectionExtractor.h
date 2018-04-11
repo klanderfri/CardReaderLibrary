@@ -6,7 +6,7 @@ class SectionExtractor :
 	protected BasicReaderData
 {
 public:
-	SectionExtractor(std::wstring imageFileName, cv::Mat imageData, SystemMethods* systemMethods, bool doDebugging);
+	SectionExtractor(std::wstring imageFileName, cv::Mat imageData, SystemMethods* systemMethods, bool runDebugging);
 	~SectionExtractor();
 
 protected:

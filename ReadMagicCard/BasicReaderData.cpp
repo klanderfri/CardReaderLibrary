@@ -4,13 +4,13 @@
 using namespace cv;
 using namespace std;
 
-BasicReaderData::BasicReaderData(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool doDebugging)
+BasicReaderData::BasicReaderData(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
 	: WORKING_CARD_HEIGHT(680)
 {
 	this->imageFileName = imageFileName;
 	this->originalImageData = originalImageData;
 	this->systemMethods = systemMethods;
-	this->doDebugging = doDebugging;
+	this->runDebugging = runDebugging;
 }
 
 BasicReaderData::~BasicReaderData()

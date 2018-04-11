@@ -9,10 +9,10 @@
 
 using namespace std;
 
-CardReaderApplication::CardReaderApplication(const bool runSilent, const bool runParallelized, const bool doDebugging)
+CardReaderApplication::CardReaderApplication(const bool runSilent, const bool runParallelized, const bool runDebugging)
 	: runSilent(runSilent),
 	  runParallelized(runParallelized),
-	  doDebugging(doDebugging),
+	  runDebugging(runDebugging),
 	  systemMethods(new WindowsMethods()),
 	  messages(ApplicationMessages(systemMethods, runSilent))
 {
@@ -58,10 +58,10 @@ int CardReaderApplication::Run() {
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
-	messages.printExecutionTimeMessage(startTime, endTime, numberOfFiles, !doDebugging);
+	messages.printExecutionTimeMessage(startTime, endTime, numberOfFiles, !runDebugging);
 
 	//Run tests to see if any code has been broken.
-	if (doDebugging) {
+	if (runDebugging) {
 		runTestCases(result);
 	}
 
@@ -90,7 +90,7 @@ vector<wstring> CardReaderApplication::getMtgImageFileNames() {
 
 CardCollectionReader* CardReaderApplication::createCardReaderCollection(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages) {
 
-	CardCollectionReader* readers = new CardCollectionReader(systemMethods, runSilent, runParallelized, doDebugging);
+	CardCollectionReader* readers = new CardCollectionReader(systemMethods, runSilent, runParallelized, runDebugging);
 
 	//Add the cards to the reader collection
 	for (size_t i = 0; i < filenamesOfImages.size(); i++) {

@@ -5,7 +5,7 @@ class CardExtractor :
 	public SectionExtractor
 {
 public:
-	CardExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool doDebugging);
+	CardExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
 	~CardExtractor();
 
 	//Extracts an image containing the card.

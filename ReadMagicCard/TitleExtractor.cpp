@@ -7,8 +7,8 @@
 using namespace cv;
 using namespace std;
 
-TitleExtractor::TitleExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool doDebugging)
-	: SectionExtractor(imageFileName, originalImageData, systemMethods, doDebugging)
+TitleExtractor::TitleExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
+	: SectionExtractor(imageFileName, originalImageData, systemMethods, runDebugging)
 {
 }
 
@@ -85,7 +85,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages)
 
 		combinedLetterContorus.insert(combinedLetterContorus.end(), letterContour.begin(), letterContour.end());
 
-		if (doDebugging) {
+		if (runDebugging) {
 
 			//Draw the area.
 			onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
@@ -108,7 +108,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages)
 	Rect boundTextArea = boundingRect(combinedLetterContorus);
 
 	//Store result for debugging.
-	if (doDebugging) {
+	if (runDebugging) {
 		SaveOcvImage::SaveImageData(systemMethods, onlyLettersBound, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles"), L"7 - Only Title Letters");
 		Mat possibleTitleArea = ImageHelper::DrawLimits(titleImage, textArea, boundTextArea, combinedLetterContorus);
 		SaveOcvImage::SaveImageData(systemMethods, possibleTitleArea, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle"), L"8 - Possible Title Area");
@@ -136,7 +136,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages)
 	ImageHelper::CropImageWithSolidBorder(boundedTextImage, boundedTextImage, boundTextArea, 10);
 
 	//Store result for debugging.
-	if (doDebugging) {
+	if (runDebugging) {
 		SaveOcvImage::SaveImageData(systemMethods, straightenTextImage, imageFileName, L"9a - Title Text (Straighten)");
 		SaveOcvImage::SaveImageData(systemMethods, boundedTextImage, imageFileName, L"9b - Title Text (Bounded)");
 	}

@@ -13,8 +13,8 @@
 using namespace cv;
 using namespace std;
 
-CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool doDebugging)
-	: BasicReaderData(imageFileName, Mat(), systemMethods, doDebugging)
+CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool runDebugging)
+	: BasicReaderData(imageFileName, Mat(), systemMethods, runDebugging)
 {
 }
 
@@ -43,7 +43,7 @@ wstring CardReader::ExtractCardName() {
 	Mat originalImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
 
 	//Extract the card part.
-	CardExtractor cardExtractor(imageFileName, originalImage, systemMethods, doDebugging);
+	CardExtractor cardExtractor(imageFileName, originalImage, systemMethods, runDebugging);
 	Mat cardImage;
 	bool success = cardExtractor.ExtractCard(cardImage);
 
@@ -119,7 +119,7 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 	}
 
 	//Store the confidence
-	if (doDebugging) {
+	if (runDebugging) {
 		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
 		storer.StoreOcrConfidence(imageFileName, ++numberOfTries, result.Text, result.Confidence);
 	}
@@ -181,7 +181,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	cropImageToTitleSection(cardImage, titleSection, type);
 
 	//Prepare the title for OCR reading.
-	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, doDebugging);
+	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
 	bool success = titleExtractor.ExtractTitle(outImages);
 
 	//See if we need to stop.
@@ -195,7 +195,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 		ImageHelper::SetBackgroundByInverting(outImages[i], true);
 
 		//Store result for debugging.
-		if (doDebugging) {
+		if (runDebugging) {
 			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(i + 1));
 			SaveOcvImage::SaveImageData(systemMethods, outImages[i], filename, L"10 - OCR Prepared Title");
 		}
@@ -233,7 +233,7 @@ void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, 
 	ImageHelper::CropImage(rawCardImage, outImage, titleBox);
 
 	//Store result for debugging.
-	if (doDebugging) {
+	if (runDebugging) {
 		SaveOcvImage::SaveImageData(systemMethods, outImage, imageFileName, L"6 - Title Section");
 	}
 }

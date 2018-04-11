@@ -6,7 +6,7 @@
 class CardCollectionReader
 {
 public:
-	CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool doDebugging);
+	CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool runDebugging);
 	~CardCollectionReader();
 
 	//Adds a card to the collection.
@@ -38,7 +38,7 @@ private:
 	//Telling if the extraction should be done parallelized.
 	const bool runParallelized;
 	//Telling if the program should do debugging such as exporting the images to files.
-	const bool doDebugging;
+	const bool runDebugging;
 	//The container holding all the card readers.
 	std::vector<CardReader> readers;
 	//The current amount of readers in the collection.

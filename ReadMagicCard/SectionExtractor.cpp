@@ -4,8 +4,8 @@
 using namespace cv;
 using namespace std;
 
-SectionExtractor::SectionExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool doDebugging)
-	: BasicReaderData(imageFileName, originalImageData, systemMethods, doDebugging)
+SectionExtractor::SectionExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
+	: BasicReaderData(imageFileName, originalImageData, systemMethods, runDebugging)
 {
 }
 

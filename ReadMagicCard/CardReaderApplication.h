@@ -7,7 +7,7 @@
 class CardReaderApplication
 {
 public:
-	CardReaderApplication(const bool runSilent, const bool runParallelized, const bool doDebugging);
+	CardReaderApplication(const bool runSilent, const bool runParallelized, const bool runDebugging);
 	~CardReaderApplication();
 
 	//Runs the card reader application.
@@ -37,6 +37,6 @@ private:
 	//Telling if the extraction should be done parallelized.
 	const bool runParallelized;
 	//Telling if the program should do debugging such as exporting the images to files.
-	const bool doDebugging;
+	const bool runDebugging;
 };
 

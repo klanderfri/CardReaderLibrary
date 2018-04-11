@@ -5,7 +5,7 @@
 class BasicReaderData
 {
 public:
-	BasicReaderData(std::wstring imageFileName, cv::Mat imageData, SystemMethods* systemMethods, bool doDebugging);
+	BasicReaderData(std::wstring imageFileName, cv::Mat imageData, SystemMethods* systemMethods, bool runDebugging);
 	~BasicReaderData();
 
 protected:
@@ -18,7 +18,7 @@ protected:
 	//The image data of the image containing the card.
 	cv::Mat originalImageData;
 	//Telling if the program should do debugging such as exporting the images to files.
-	bool doDebugging;
+	bool runDebugging;
 	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;
 };

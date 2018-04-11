@@ -6,7 +6,7 @@ class TitleExtractor :
 	public SectionExtractor
 {
 public:
-	TitleExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool doDebugging);
+	TitleExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
 	~TitleExtractor();
 
 	//Extracts an image containing the card title.

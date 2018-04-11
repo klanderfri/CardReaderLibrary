@@ -6,8 +6,8 @@
 using namespace std;
 using namespace cv;
 
-CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool doDebugging)
-	: runSilent(runSilent), runParallelized(runParallelized), doDebugging(doDebugging)
+CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool runDebugging)
+	: runSilent(runSilent), runParallelized(runParallelized), runDebugging(runDebugging)
 {
 	systemMethods = systemMethods;
 	currentAmountOfReaders = 0;
@@ -23,7 +23,7 @@ void CardCollectionReader::AddCard(wstring imageFileName) {
 
 	if (currentAmountOfReaders < MaxSize()) {
 
-		readers.push_back(CardReader(imageFileName, systemMethods, doDebugging));
+		readers.push_back(CardReader(imageFileName, systemMethods, runDebugging));
 		currentAmountOfReaders++;
 
 		//Check if the new card has the longest filename.
