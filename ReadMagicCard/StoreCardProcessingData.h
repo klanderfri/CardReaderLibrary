@@ -23,8 +23,9 @@ private:
 	* fl - file lock.
 	*/
 
+	//Writes the card information data to an external file.
 	void writeToFile(std::wstring textfileName, std::mutex& fileLock, bool& hasWrittenFileHeader, std::vector<std::wstring> headers, std::vector<std::wstring> rowData);
-
+	//Tells if the object handling the system dependent methods has been set.
 	static bool hasSetSystemMethods;
 	//Pointer to object handling the system dependent methods.
 	static SystemMethods* systemMethods;
