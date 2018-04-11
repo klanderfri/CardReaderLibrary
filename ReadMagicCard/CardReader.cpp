@@ -8,13 +8,11 @@
 #include "SaveOcvImage.h"
 #include "TitleExtractor.h"
 #include "ImageOcrHelper.h"
+#include "StoreCardProcessingData.h"
 #include "boost\algorithm\string.hpp"
 
 using namespace cv;
 using namespace std;
-
-bool CardReader::m_hasWrittenConfidenceFileHeader = false;
-mutex CardReader::m_fileHeaderLock;
 
 CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool doDebugging)
 	: BasicReaderData(imageFileName, Mat(), systemMethods, doDebugging)
@@ -122,7 +120,10 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 	}
 
 	//Store the confidence
-	storeConfidence(++numberOfTries, result.Text, result.Confidence);
+	if (doDebugging) {
+		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+		storer.StoreOcrConfidence(imageFileName, ++numberOfTries, result.Text, result.Confidence);
+	}
 	m_confidence = result.Confidence;
 
 	return result;
@@ -202,32 +203,6 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	}
 
 	return true;
-}
-
-void CardReader::storeConfidence(int numberOfTries, wstring ocrResult, int ocrConfidence) {
-
-	if (doDebugging) {
-
-		wstring textfileName = L"TitleDecodeConfidence.txt";
-		wstring subfolderName = L"Image Data";
-
-		//Make sure the header can't be written by two different threads.
-		m_fileHeaderLock.lock();
-		bool writeHeader = !m_hasWrittenConfidenceFileHeader;
-		m_hasWrittenConfidenceFileHeader = true;
-		m_fileHeaderLock.unlock();
-
-		if (writeHeader) {
-
-			wstring rowToAdd = L"Number of tries\tImage file name\tOCR result\tOCR confidence";
-			FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, subfolderName);
-		}
-
-		wstring numberOfTriesStr = systemMethods->ToWString(to_string(numberOfTries));
-		wstring confidenceStr = systemMethods->ToWString(to_string(ocrConfidence));
-		wstring rowToAdd = numberOfTriesStr + L"\t" + imageFileName + L"\t" + ocrResult + L"\t" + confidenceStr;
-		FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, subfolderName);
-	}
 }
 
 bool CardReader::isConfidentOfTitleDecode(wstring title, int confidence) {

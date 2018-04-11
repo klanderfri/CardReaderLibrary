@@ -138,6 +138,9 @@
     <ClInclude Include="OcrDecodeResult.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="StoreCardProcessingData.h">
+      <Filter>Libraries\FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -202,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="WindowsMethods.cpp">
       <Filter>Libraries\SystemMethods</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreCardProcessingData.cpp">
+      <Filter>Libraries\FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

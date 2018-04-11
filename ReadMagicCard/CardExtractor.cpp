@@ -2,6 +2,7 @@
 #include "CardExtractor.h"
 #include "FileHandling.h"
 #include "SaveOcvImage.h"
+#include "StoreCardProcessingData.h"
 
 using namespace cv;
 using namespace std;
@@ -49,8 +50,8 @@ RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size 
 	float sideFactor = longSide / shortSide;
 
 	if (doDebugging) {
-		wstring rowToAdd = imageFileName + L"\t" + systemMethods->ToWString(sideFactor);
-		FileHandling::AddRowToFile(systemMethods, rowToAdd, L"CardSidesRelations.txt", L"Image Data");
+		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+		storer.StoreSideRelations(imageFileName, sideFactor);
 	}
 
 	//The sides relative size indicate if we got the card or just parts of it.

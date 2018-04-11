@@ -50,12 +50,17 @@ vector<wstring> FileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
 
 void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder) {
 
+	AddRowToFile(systemMethods, textToWrite, fileName, subFolder, m_fileLock);
+}
+
+void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
+
 	wstring folderPath = GetSubFolderPath(systemMethods, subFolder);
 	wstring fullFilePath = folderPath + fileName;
 
 	if (CreateFileDirectory(folderPath))
 	{
-		m_fileLock.lock();
+		fileLock.lock();
 
 		//Implemented as suggested at
 		//http://www.publicstaticfinal.com/2015/12/18/converting-stdwstring-to-utf-8-in-c-x11-and-writing-utf-8-files-with-fstream/
@@ -65,7 +70,7 @@ void FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrit
 		out << textToWrite << endl;
 		file.close();
 
-		m_fileLock.unlock();
+		fileLock.unlock();
 	}
 	else
 	{

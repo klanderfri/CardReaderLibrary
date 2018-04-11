@@ -2,7 +2,6 @@
 #include "BasicReaderData.h"
 #include "CardTitleType.h"
 #include "OcrDecodeResult.h"
-#include <mutex>
 //Class for reading a card.
 class CardReader :
 	BasicReaderData
@@ -34,8 +33,6 @@ private:
 	OcrDecodeResult ocrReadTitle(std::vector<cv::Mat> ocrTitles);
 	//Extracts and preprocesses the title.
 	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, CardTitleType type);
-	//Store the confidence of the OCR read.
-	void storeConfidence(int numberOfTries, std::wstring ocrResult, int ocrConfidence);
 	//Checks if we got a confident decode of the title.
 	bool isConfidentOfTitleDecode(std::wstring title, int confidence);
 	//Checks if there are any illeagal characters in the title.
@@ -45,8 +42,4 @@ private:
 	bool m_success = false;
 	//Tells how confident Tesseract was of decoding the title.
 	int m_confidence = 0;
-	//Lock preventing multiple threads from writing the header in the file storing the title decode confidence.
-	static std::mutex m_fileHeaderLock;
-	//Tells if the header in the file storing the title decode confidence has been written.
-	static bool m_hasWrittenConfidenceFileHeader;
 };
