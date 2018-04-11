@@ -11,6 +11,11 @@ Follow this checklist to set up the folder the application reads and writes data
  * Check that the folder *C:\Users\\&lt;username&gt;\Pictures\MtG-cards* exists.
  * It contains images with one (1) MtG-card in each (see *Testing*).
  * Remove all files that are neither folders nor jpg-files.
+ 
+### Command Arguments
+The program accepts two command arguments.
+ * The first one is runParallelized. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to "true" makes the program run faster but also makes it harder to debug.
+ * The second on is doDebugging. It's a boolean and can be entered as 0/1 or "true"/"false". Setting it to true makes the program output image- and text-files representing the progress of the reading, but makes the program slower.
 
 ## Environment
 This project is written with the C++17 standard.
