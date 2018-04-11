@@ -17,6 +17,10 @@ private:
 	//A chrono time point for steady clock.
 	typedef std::chrono::time_point<std::chrono::steady_clock> TimePoint;
 
+	//Prints a welcome message for the user.
+	void printWelcomeMessage();
+	//Prints a message telling the user where the program is looking for card image files.
+	void printWorkingFolderMessage(std::wstring mtgFolderPath);
 	//Removes lingering old data from previous runs.
 	void removeOldData(SystemMethods* systemMethods);
 	//Fetches the file names of the MtG image files.

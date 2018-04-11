@@ -23,7 +23,7 @@ int CardReaderApplication::Run(const bool runSilent, const bool runParallelized,
 	auto startTime = chrono::high_resolution_clock::now();
 
 	//Print a welcome message!
-	wcout << L"Welcome to the eminent MtG card reader! Let's read some cards! :-D" << endl << endl;
+	printWelcomeMessage();
 
 	//Create an object handling the system dependent methods.
 	SystemMethods* systemMethods = new WindowsMethods();
@@ -78,8 +78,7 @@ void CardReaderApplication::removeOldData(SystemMethods* systemMethods) {
 vector<wstring> CardReaderApplication::getMtgImageFileNames(SystemMethods* systemMethods) {
 
 	wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(systemMethods);
-	wcout << L"Looking for card images in folders . . ." << endl;
-	wcout << mtgFolderPath << endl << endl;
+	printWorkingFolderMessage(mtgFolderPath);
 	vector<wstring> filenamesOfImages = FileHandling::GetMtgImageFileNames(mtgFolderPath);
 
 	return filenamesOfImages;
@@ -103,26 +102,6 @@ void CardReaderApplication::reziseCommandWindow(SystemMethods* systemMethods, si
 
 	int lettersToAccommodate = to_string(numberOfFiles).length() * 2 + lengthOfLongestFilename + 75;
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
-}
-
-void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int numberOfErrors, wstring pathToResultFile) {
-
-	wstring message;
-
-	if (numberOfErrors == 0) {
-		systemMethods->SetCommandLineTextColour(Colour::Green);
-		message = L"All images was successfully read! Yay! :-)";
-	}
-	else {
-		systemMethods->SetCommandLineTextColour(Colour::Red);
-		wstring amountOfErrorsStr = to_wstring(numberOfErrors);
-		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
-		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
-	}
-	wcout << endl << message << endl;
-	systemMethods->ResetCommandLineTextColour();
-
-	wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
 }
 
 vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMethods, const vector<wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging) {
@@ -149,6 +128,37 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	return result;
 }
 
+void CardReaderApplication::printWelcomeMessage() {
+
+	wcout << L"Welcome to the eminent MtG card reader! Let's read some cards! :-D" << endl << endl;
+}
+
+void CardReaderApplication::printWorkingFolderMessage(wstring mtgFolderPath) {
+
+	wcout << L"Looking for card images in folders . . ." << endl;
+	wcout << mtgFolderPath << endl << endl;
+}
+
+void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int numberOfErrors, wstring pathToResultFile) {
+
+	wstring message;
+
+	if (numberOfErrors == 0) {
+		systemMethods->SetCommandLineTextColour(Colour::Green);
+		message = L"All images was successfully read! Yay! :-)";
+	}
+	else {
+		systemMethods->SetCommandLineTextColour(Colour::Red);
+		wstring amountOfErrorsStr = to_wstring(numberOfErrors);
+		wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
+		message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
+	}
+	wcout << endl << message << endl;
+	systemMethods->ResetCommandLineTextColour();
+
+	wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
+}
+
 void CardReaderApplication::printNoImagesMessage(SystemMethods* systemMethods) {
 
 	systemMethods->SetCommandLineTextColour(Colour::Yellow);
@@ -169,11 +179,6 @@ void CardReaderApplication::printToManyFilesMessage(SystemMethods* systemMethods
 	systemMethods->ResetCommandLineTextColour();
 }
 
-long long CardReaderApplication::getexecutionTime(TimePoint startTime, TimePoint endTime) {
-	
-	return chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
-}
-
 void CardReaderApplication::printExecutionTimeMessage(SystemMethods* systemMethods, TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds) {
 
 	auto executionDurationTime = getexecutionTime(startTime, endTime);
@@ -192,6 +197,11 @@ void CardReaderApplication::printExecutionTimeMessage(SystemMethods* systemMetho
 	}
 
 	wcout << endl;
+}
+
+long long CardReaderApplication::getexecutionTime(TimePoint startTime, TimePoint endTime) {
+
+	return chrono::duration_cast<chrono::microseconds>(endTime - startTime).count();
 }
 
 void CardReaderApplication::runTestCases(SystemMethods* systemMethods, vector<CardNameInfo> result) {
