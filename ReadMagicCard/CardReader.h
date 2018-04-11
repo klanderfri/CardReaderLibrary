@@ -35,8 +35,6 @@ private:
 	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, CardTitleType type);
 	//Checks if we got a confident decode of the title.
 	bool isConfidentOfTitleDecode(std::wstring title, int confidence);
-	//Checks if there are any illeagal characters in the title.
-	bool containsInvalidCharacters(std::wstring title);
 
 	//Tells if the extraction was successfull.
 	bool m_success = false;

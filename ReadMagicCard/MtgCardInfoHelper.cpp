@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MtgCardInfoHelper.h"
+#include "AlgorithmHelper.h"
 #include <cwchar>
 #include "boost\algorithm\string.hpp"
 
@@ -102,4 +103,27 @@ void MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring 
 	cleanedName.push_back(L'\0');
 	wchar_t* resultPtr = &cleanedName[0];
 	result = wstring(resultPtr);
+}
+
+bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, wstring title) {
+
+	//Make the title lowercase to make it easier to work with.
+	string titleStr = systemMethods->ToString(title);
+	boost::algorithm::to_lower(titleStr);
+
+	vector<char> allowedCharacters
+	{
+		' ', '-', '\'', ',', '/', 'æ',
+		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+	};
+
+	//Check for illegal characters.
+	for (char letter : titleStr) {
+		if (!AlgorithmHelper::VectorContains(allowedCharacters, letter)) {
+			return true;
+		}
+	}
+
+	return false;
 }

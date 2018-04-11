@@ -1,4 +1,5 @@
 #pragma once
+#include "SystemMethods.h"
 //Class holding methods giving information about the MtG card environment.
 class MtgCardInfoHelper
 {
@@ -16,6 +17,8 @@ public:
 	static double CompareCardNames(std::wstring name1, std::wstring name2);
 	//Removes characters, that are not relevant for sorting, from a card name.
 	static void RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName, std::wstring& result);
+	//Checks if there are any illeagal characters in the title.
+	static bool ContainsInvalidCharacters(SystemMethods* systemMethods, std::wstring title);
 
 private:
 
