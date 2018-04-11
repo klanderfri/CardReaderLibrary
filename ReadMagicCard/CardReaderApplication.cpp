@@ -96,7 +96,7 @@ CardCollectionReader* CardReaderApplication::createCardReaderCollection(SystemMe
 	return readers;
 }
 
-void CardReaderApplication::reziseCommandWindow(SystemMethods* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename) {
+void CardReaderApplication::reziseCommandWindow(size_t numberOfFiles, int lengthOfLongestFilename) {
 
 	int lettersToAccommodate = to_string(numberOfFiles).length() * 2 + lengthOfLongestFilename + 75;
 	systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
@@ -108,7 +108,7 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	CardCollectionReader* readers = createCardReaderCollection(systemMethods, filenamesOfImages, runParallelized, doDebugging);
 
 	//Resize console window to avoid line breaks.
-	reziseCommandWindow(systemMethods, filenamesOfImages.size(), readers->LengthOfLongestFilename());
+	reziseCommandWindow(filenamesOfImages.size(), readers->LengthOfLongestFilename());
 
 	//Fetch the card names.
 	vector<CardNameInfo> result = readers->ExtractCardNames();
@@ -118,7 +118,7 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	wstring pathToResultFile = storer.StoreFinalResult(result);
 
 	//Give a reassuring message... or not.
-	printResultMessage(systemMethods, readers->AmountOfErrors(), pathToResultFile);
+	printResultMessage(readers->AmountOfErrors(), pathToResultFile);
 
 	//Since we don't need the readers anymore...
 	delete readers;
@@ -137,7 +137,7 @@ void CardReaderApplication::printWorkingFolderMessage(wstring mtgFolderPath) {
 	wcout << mtgFolderPath << endl << endl;
 }
 
-void CardReaderApplication::printResultMessage(SystemMethods* systemMethods, int numberOfErrors, wstring pathToResultFile) {
+void CardReaderApplication::printResultMessage(int numberOfErrors, wstring pathToResultFile) {
 
 	wstring message;
 

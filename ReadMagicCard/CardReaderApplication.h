@@ -28,9 +28,9 @@ private:
 	//Creates an collection holding a reader for evere card image.
 	CardCollectionReader* createCardReaderCollection(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
-	void reziseCommandWindow(SystemMethods* systemMethods, size_t numberOfFiles, int lengthOfLongestFilename);
+	void reziseCommandWindow(size_t numberOfFiles, int lengthOfLongestFilename);
 	//Prints a message telling the user how the execution went.
-	void printResultMessage(SystemMethods* systemMethods, int numberOfErrors, std::wstring pathToResultFile);
+	void printResultMessage(int numberOfErrors, std::wstring pathToResultFile);
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages, const bool runParallelized, const bool doDebugging);
 	//Prints a message telling the user that there are no files to read.
@@ -44,6 +44,7 @@ private:
 	//Checks if any code has been broken.
 	void runTestCases(std::vector<CardNameInfo> result);
 
+	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;
 };
 
