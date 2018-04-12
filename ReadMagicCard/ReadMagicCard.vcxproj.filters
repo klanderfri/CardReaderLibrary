@@ -147,6 +147,9 @@
     <ClInclude Include="TimePoint.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="LetterFilter.h">
+      <Filter>Engine\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="TimePoint.cpp">
       <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="LetterFilter.cpp">
+      <Filter>Engine\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

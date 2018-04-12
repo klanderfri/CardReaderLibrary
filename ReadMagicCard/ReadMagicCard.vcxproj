@@ -182,6 +182,7 @@
     <ClInclude Include="FileHandling.h" />
     <ClInclude Include="ImageHelper.h" />
     <ClInclude Include="LetterCheckHelper.h" />
+    <ClInclude Include="LetterFilter.h" />
     <ClInclude Include="LoadOcvImage.h" />
     <ClInclude Include="MtgCardInfoHelper.h" />
     <ClInclude Include="OcrDecodeResult.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="FileHandling.cpp" />
     <ClCompile Include="ImageHelper.cpp" />
     <ClCompile Include="LetterCheckHelper.cpp" />
+    <ClCompile Include="LetterFilter.cpp" />
     <ClCompile Include="LoadOcvImage.cpp" />
     <ClCompile Include="MtgCardInfoHelper.cpp" />
     <ClCompile Include="SaveOcvImage.cpp" />

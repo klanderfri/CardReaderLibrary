@@ -8,9 +8,4 @@ class SectionExtractor :
 public:
 	SectionExtractor(std::wstring imageFileName, cv::Mat imageData, SystemMethods* systemMethods, bool runDebugging);
 	~SectionExtractor();
-
-protected:
-
-	//Finds the convex hull of multiple contours.
-	Contour ContoursConvexHull(const Contours contours);
 };

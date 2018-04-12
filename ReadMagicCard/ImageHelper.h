@@ -1,5 +1,5 @@
 #pragma once
-#include "Contour.h"
+#include "LetterArea.h"
 #include "Hierarchy.h"
 #include <opencv2\imgproc.hpp>
 //Class holding image processing methods.
@@ -29,7 +29,7 @@ public:
 	static double GetAnglesToStrightenUp(const cv::RotatedRect rotatedRectangle, bool enforcePortraitMode = true);
 	//Gets the center point of an image.
 	static cv::Point2f GetImageCenter(const cv::Mat image);
-	//Straighten up an image so it won't be slightly rotated.
+	//Straighten up an image so it won't be slightly rotated (it can still be upside down or on the side).
 	static void StraightenUpImage(const cv::Mat rawImage, cv::Mat& outImage, const cv::RotatedRect rawCardArea, cv::Rect2f& outCardArea, bool enforcePortraitMode = true);
 	//Crops the image.
 	static void CropImage(const cv::Mat rawImage, cv::Mat& outImage, const cv::Rect cropArea);
@@ -43,8 +43,16 @@ public:
 	static float SmallestDistanceCenterToLimit(cv::RotatedRect rectangle);
 	//Cuts out an area of an image that contains the contour.
 	static cv::Mat GetContourAreaFromImage(const Contour contour, const cv::Mat rawImage, const int margins, const bool drawContour = false);
+	//Gives the contours of an image using the Canny method.
+	static Contours GetCannyContours(const cv::Mat greyScaleImage, int thresh);
 	//Checks if two contours are identical.
 	static bool IsIdenticalContours(Contour contour1, Contour contour2);
+	//Checks if a rotated rectangle has been initialized.
+	static bool IsInitialized(cv::RotatedRect rectangle);
+	//Finds the convex hull of multiple contours.
+	static Contour ContoursConvexHull(const Contours contours);
+	//Gives the combined contour of several letters.
+	static Contour GetCombinedLetterContorus(LetterAreas letters);
 
 private:
 

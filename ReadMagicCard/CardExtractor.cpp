@@ -155,7 +155,7 @@ Contour CardExtractor::findMaxContour(const Contours contours, const Mat working
 	//Try convex hull if no outer contour was valid.
 	if (!foundMaxContour) {
 
-		maxContour = ContoursConvexHull(contours);
+		maxContour = ImageHelper::ContoursConvexHull(contours);
 	}
 
 	return maxContour;

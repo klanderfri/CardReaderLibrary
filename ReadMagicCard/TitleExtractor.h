@@ -17,21 +17,8 @@ private:
 	//Makes sure the amount of gauss is valid to use when adding Gaussian blur.
 	int errorProtectGaussAmount(int amountOfGauss);
 	//Extracts the title text area out of an image containing the entire title area.
-	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages);
-	//Gets the areas that might contain a title letter.
-	LetterAreas getPossibleLetterAreas(Contours contours);
-	//Filter out letter areas that are identical, ie letter areas pointing at the same letter.
-	LetterAreas filterOutDuplicates(LetterAreas lettersToFilter);
-	//Removes the areas that are noise.
-	LetterAreas filterOutNoise(LetterAreas lettersToFilter);
-	//Filter out the holes inside the letters. Like the hole in 'o' and 'P'.
-	LetterAreas filterOutLetterHoles(LetterAreas lettersToFilter);
-	//Removes the areas that belongs to the mana cost.
-	LetterAreas filterOutManaCost(LetterAreas lettersToFilter);
-	//Removes the areas that belongs to the transform symbol.
-	LetterAreas filterOutTransformSymbol(LetterAreas lettersToFilter);
-	//Checks if to letter areas has a "wide" distance between its' centers, indicating that one is a title letter and the other a mana cost.
-	bool hasWideLimitDistance(cv::RotatedRect leftLetterArea, cv::RotatedRect rightLetterArea);
-	//Checks if a rotated rectangle has been initialized.
-	bool isInitialized(cv::RotatedRect rectangle);
+	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages, int numberOfTries);
+	//Creates an image showing the limits of the individual letters.
+	cv::Mat createLetterLimitsImage(cv::Mat titleImage, LetterAreas letters);
+
 };

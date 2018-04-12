@@ -56,8 +56,8 @@ wstring CardReader::ExtractCardName() {
 	int numberOfTries = 0;
 	auto result = readTitle(cardImage, numberOfTries, NormalTitle);
 
-	//Check if the algorithm is confident enought of the decoding that we might return the title string.
-	if (isConfidentOfTitleDecode(result.Text, result.Confidence)) {
+	//The method reading the title returns an empty result if it failed.
+	if (result.Confidence > 0) {
 
 		m_success = true;
 		return result.Text;
@@ -69,8 +69,8 @@ wstring CardReader::ExtractCardName() {
 	//Try reading the title again.
 	result = readTitle(cardImage, numberOfTries, NormalTitle);
 
-	//Check if the algorithm is confident enought of the decoding that we might return the title string.
-	if (isConfidentOfTitleDecode(result.Text, result.Confidence)) {
+	//The method reading the title returns an empty result if it failed.
+	if (result.Confidence > 0) {
 
 		m_success = true;
 		return result.Text;
@@ -91,8 +91,10 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 
 		//Read the title.
 		result = ocrReadTitle(ocrReadyTitles);
+		success = isConfidentOfTitleDecode(result.Text, result.Confidence);
 	}
-	else if (titleType != SplitCardTitle) {
+
+	if (!success && titleType != SplitCardTitle) {
 
 		//OK. Perhaps it's a split card?
 		
@@ -110,6 +112,8 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 			//Join the titles to a split card name.
 			result.Text = resultA.Text + L" // " + resultB.Text;
 			result.Confidence = min(resultA.Confidence, resultB.Confidence);
+
+			success = isConfidentOfTitleDecode(result.Text, result.Confidence);
 		}
 	}
 
