@@ -51,8 +51,7 @@ void ImageOcrHelper::setImage(Mat originalImageData) {
 wstring ImageOcrHelper::getUTF8Text(SystemMethods* systemMethods) {
 
 	char* rawOutText = ocr.GetUTF8Text();
-	string outTextStr = MtgCardInfoHelper::ChangeNumbersToLetters(string(rawOutText));
-	wstring outText = systemMethods->ToWString(outTextStr);
+	wstring outText = systemMethods->ToWString(rawOutText);
 	outText = removeTrailingNewline(outText);
 
 	delete[] rawOutText; //As instructed by documentation in the GetUTF8Text method.

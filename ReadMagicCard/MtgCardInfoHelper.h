@@ -18,12 +18,14 @@ public:
 	//Removes characters, that are not relevant for sorting, from a card name.
 	static void RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName, std::wstring& result);
 	//Checks if there are any illeagal characters in the title.
-	static bool ContainsInvalidCharacters(SystemMethods* systemMethods, std::wstring title);
+	static bool ContainsInvalidCharacters(SystemMethods* systemMethods, const std::wstring title);
 	//Changes numbers in a title to letters (0 to O, 1 to l or I and so on).
-	static std::string ChangeNumbersToLetters(const std::string title);
+	static std::wstring ChangeNumbersToLetters(SystemMethods* systemMethods, const std::wstring title);
 
 private:
 
 	//Gets the section specified by the factors.
 	static cv::Rect getSectionBox(cv::Size cardSize, double xCoordinateFactor, double yCoordinateFactor, double widthFactor, double heightFactor);
+	//Method replacing a specified character with another.
+	static std::string replaceCharacters(const std::string text, char toReplace, char replaceWithUpper, char replaceWithLower);
 };

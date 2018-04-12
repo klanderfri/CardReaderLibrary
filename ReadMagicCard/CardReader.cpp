@@ -165,6 +165,7 @@ OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 	for (Mat ocrTitle : ocrTitles) {
 
 		OcrDecodeResult result = ocrReader.DecodeImage(ocrTitle);
+		result.Text = MtgCardInfoHelper::ChangeNumbersToLetters(systemMethods, result.Text);
 
 		if (bestResult.Confidence < result.Confidence) {
 			bestResult = result;

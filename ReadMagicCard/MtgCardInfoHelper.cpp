@@ -105,7 +105,7 @@ void MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring 
 	result = wstring(resultPtr);
 }
 
-bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, wstring title) {
+bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, const wstring title) {
 
 	//Make the title lowercase to make it easier to work with.
 	string titleStr = systemMethods->ToString(title);
@@ -128,13 +128,30 @@ bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, 
 	return false;
 }
 
-string MtgCardInfoHelper::ChangeNumbersToLetters(const string rawText) {
+wstring MtgCardInfoHelper::ChangeNumbersToLetters(SystemMethods* systemMethods, const wstring title) {
 
-	string outText = rawText;
+	string outText = systemMethods->ToString(title);
 
-	size_t index = outText.find('0');
-	if (index != string::npos) {
-		outText.replace(index, 1, 1, 'O');
+	outText = replaceCharacters(outText, '0', 'O', 'o');
+	outText = replaceCharacters(outText, '1', 'I', 'l');
+	outText = replaceCharacters(outText, '2', 'Z', 'z');
+	outText = replaceCharacters(outText, '5', 'S', 's');
+
+	return systemMethods->ToWString(outText);
+}
+
+string MtgCardInfoHelper::replaceCharacters(const string text, char toReplace, char replaceWithUpper, char replaceWithLower) {
+
+	string outText = text;
+	size_t index = outText.find(toReplace);
+
+	while (index != string::npos) {
+
+		bool isCapitalLetter = (index == 0 || outText[index - 1] == ' ');
+		char replaceWith = isCapitalLetter ? replaceWithUpper : replaceWithLower;
+		outText.replace(index, 1, 1, replaceWith);
+
+		index = outText.find(toReplace);
 	}
 
 	return outText;
