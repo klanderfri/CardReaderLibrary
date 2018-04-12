@@ -1,11 +1,13 @@
 #pragma once
 #include "LetterArea.h"
+//Class for filtering out image parts that are noise.
 class LetterFilter
 {
 public:
 	LetterFilter(int workingCardHeight, int currentTitleWidth, cv::Mat currentTitleImage);
 	~LetterFilter();
 
+	//Runs the filter and returns the letters.
 	LetterAreas RunFilter(Contours contours);
 
 private:
