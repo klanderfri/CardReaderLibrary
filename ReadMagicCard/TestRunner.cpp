@@ -106,7 +106,15 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 		CardNameInfo(L"Secrets of the Golden City.jpg", L"Secrets of the Golden City"),
 		CardNameInfo(L"Dusk Charger.jpg", L"Dusk Charger"),
 		CardNameInfo(L"Flamecast Wheel.jpg", L"Flamecast Wheel"),
-		CardNameInfo(L"Far Away - Straight.jpg", L"Far // Away")
+		CardNameInfo(L"Far Away - Straight.jpg", L"Far // Away"),
+		CardNameInfo(L"Emblem - Huatli.jpg", L"Emblem"),
+		CardNameInfo(L"Forest.jpg", L"Forest"),
+		CardNameInfo(L"Island - Foiled.jpg", L"Island"),
+		CardNameInfo(L"Pillar of Origins.jpg", L"Pillar of Origins"),
+		CardNameInfo(L"Plant - Token.jpg", L"Plant"),
+		CardNameInfo(L"Thaumatic Compass.jpg", L"Thaumatic Compass"),
+		CardNameInfo(L"Treasure Map.jpg", L"Treasure Map"),
+		CardNameInfo(L"Dire Fleet Captain - Foiled.jpg", L"Dire Fleet Captain")
 	};
 
 	return expectedResults;
