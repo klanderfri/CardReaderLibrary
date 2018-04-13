@@ -11,7 +11,7 @@ public:
 	//Stores the final result.
 	std::wstring StoreFinalResult(std::vector<CardNameInfo> result);
 	//Store the confidence of the OCR read in an external file.
-	std::wstring StoreOcrConfidence(std::wstring imageFileName, int numberOfTries, std::wstring ocrResult, int ocrConfidence);
+	std::wstring StoreOcrConfidence(std::wstring imageFileName, int numberOfCardReadTries, std::wstring ocrResult, int ocrConfidence);
 	//Store the side relations of the card in an external file.
 	std::wstring StoreSideRelations(std::wstring imageFileName, float sideFactor);
 

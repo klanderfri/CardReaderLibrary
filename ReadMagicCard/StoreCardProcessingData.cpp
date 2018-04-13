@@ -36,10 +36,10 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 	return FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
 }
 
-wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfTries, wstring ocrResult, int ocrConfidence) {
+wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfCardReadTries, wstring ocrResult, int ocrConfidence) {
 
 	vector<wstring> headers{ L"Image file name", L"Number of tries", L"OCR result", L"OCR confidence" };
-	vector<wstring> rowData{ imageFileName, to_wstring(numberOfTries), ocrResult, to_wstring(ocrConfidence) };
+	vector<wstring> rowData{ imageFileName, to_wstring(numberOfCardReadTries), ocrResult, to_wstring(ocrConfidence) };
 
 	return writeToFile(L"TitleDecodeConfidence.txt", fl_OcrConfidence, hwfh_OcrConfidence, headers, rowData);
 }

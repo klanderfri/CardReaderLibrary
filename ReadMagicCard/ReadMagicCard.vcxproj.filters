@@ -227,6 +227,9 @@
     <ClCompile Include="LetterFilter.cpp">
       <Filter>Engine\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="OcrDecodeResult.cpp">
+      <Filter>Core\Containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tessdata\eng.traineddata">

@@ -8,7 +8,6 @@
 #include "TitleExtractor.h"
 #include "ImageOcrHelper.h"
 #include "StoreCardProcessingData.h"
-#include "boost\algorithm\string.hpp"
 
 using namespace cv;
 using namespace std;
@@ -43,8 +42,19 @@ wstring CardReader::ExtractCardName() {
 	Mat originalImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
 
 	//Extract the card part.
-	CardExtractor cardExtractor(imageFileName, originalImage, systemMethods, runDebugging);
+	Mat cardImage = extractCardImage(originalImage);
+
+	//Extract the title text.
+	wstring title = readTitle(cardImage);
+
+	//Return the extracted card name.
+	return title;
+}
+
+Mat CardReader::extractCardImage(Mat originalImage) {
+
 	Mat cardImage;
+	CardExtractor cardExtractor(imageFileName, originalImage, systemMethods, runDebugging);
 	bool success = cardExtractor.ExtractCard(cardImage);
 
 	//See if we need to stop.
@@ -52,9 +62,15 @@ wstring CardReader::ExtractCardName() {
 		throw OperationException("ERROR: Could not extract the card section!");
 	}
 
+	return cardImage;
+}
+
+wstring CardReader::readTitle(Mat cardImage) {
+
 	//Try reading the title.
-	int numberOfTries = 0;
-	auto result = readTitle(cardImage, numberOfTries, NormalTitle);
+	numberOfOcrTitlesStoredForDebug = 0;
+	int numberOfCardReadTries = 0;
+	auto result = readTitle(cardImage, numberOfCardReadTries, NormalTitle);
 
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
@@ -67,7 +83,7 @@ wstring CardReader::ExtractCardName() {
 	rotate(cardImage, cardImage, ROTATE_180);
 
 	//Try reading the title again.
-	result = readTitle(cardImage, numberOfTries, NormalTitle);
+	result = readTitle(cardImage, numberOfCardReadTries, NormalTitle);
 
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
@@ -79,7 +95,7 @@ wstring CardReader::ExtractCardName() {
 	throw OperationException("ERROR: Could not OCR-read the title!");
 }
 
-OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTitleType titleType) {
+OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries, CardTitleType titleType) {
 
 	OcrDecodeResult result;
 
@@ -91,27 +107,28 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 
 		//Read the title.
 		result = ocrReadTitle(ocrReadyTitles);
-		success = isConfidentOfTitleDecode(result.Text, result.Confidence);
+		success = result.IsConfidentMtgTitle(systemMethods);
 
 		if (success && titleType == NormalTitle) {
 
 			//Great! But could it be an Amonkhet split card?
 
 			vector<Mat> halves = getSplitCardHalves(cardImage, AkhSplitCardTitle);
-			OcrDecodeResult splitResultB = readTitle(halves[1], numberOfTries, AkhSplitCardTitle);
+			OcrDecodeResult splitResultB = readTitle(halves[1], numberOfCardReadTries, AkhSplitCardTitle);
 
 			if (!hasResultFailed(splitResultB)) {
 
 				//Join the titles to a split card name.
-				OcrDecodeResult splitResult;
-				splitResult.Text = result.Text + L" // " + splitResultB.Text;
-				splitResult.Confidence = min(result.Confidence, splitResultB.Confidence);
+				OcrDecodeResult splitResult = joinSplitCardTitles(result, splitResultB);
 
-				bool splitSuccess = isConfidentOfTitleDecode(splitResult.Text, splitResult.Confidence);
+				bool splitSuccess = splitResult.IsConfidentMtgTitle(systemMethods);
 				if (splitSuccess) {
-					return splitResult;
+					result = splitResult;
 				}
 			}
+
+			//Store the confidence
+			storeOcrConfidence(++numberOfCardReadTries, result);
 		}
 	}
 
@@ -121,19 +138,24 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 		
 		//Read the titles of the both halves.
 		vector<Mat> halves = getSplitCardHalves(cardImage, SplitCardTitle);
-		OcrDecodeResult resultA = readTitle(halves[0], numberOfTries, SplitCardTitle);
-		OcrDecodeResult resultB = readTitle(halves[1], numberOfTries, SplitCardTitle);
+		OcrDecodeResult resultA, resultB;
+		resultA = readTitle(halves[0], numberOfCardReadTries, SplitCardTitle);
+
+		//Result B is useless if result A has failed.
+		if (!hasResultFailed(resultA)) {
+			resultB = readTitle(halves[1], numberOfCardReadTries, SplitCardTitle);
+		}
 
 		//Check if we got success.
-		success = !hasResultFailed(resultA) && !hasResultFailed(resultB);
+		if (!hasResultFailed(resultB)) {
 
-		if (success) {
 			//Join the titles to a split card name.
-			result.Text = resultA.Text + L" // " + resultB.Text;
-			result.Confidence = min(resultA.Confidence, resultB.Confidence);
-
-			success = isConfidentOfTitleDecode(result.Text, result.Confidence);
+			result = joinSplitCardTitles(resultA, resultB);
+			success = result.IsConfidentMtgTitle(systemMethods);
 		}
+
+		//Store the confidence
+		storeOcrConfidence(++numberOfCardReadTries, result);
 	}
 
 	if (!success) {
@@ -141,14 +163,26 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 		return OcrDecodeResult();
 	}
 
-	//Store the confidence
-	if (runDebugging) {
-		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
-		storer.StoreOcrConfidence(imageFileName, ++numberOfTries, result.Text, result.Confidence);
-	}
-	m_confidence = result.Confidence;
+	return result;
+}
+
+OcrDecodeResult CardReader::joinSplitCardTitles(OcrDecodeResult resultA, OcrDecodeResult resultB) {
+
+	OcrDecodeResult result;
+	result.Text = resultA.Text + L" // " + resultB.Text;
+	result.Confidence = min(resultA.Confidence, resultB.Confidence);
 
 	return result;
+}
+
+void CardReader::storeOcrConfidence(int numberOfCardReadTries, OcrDecodeResult result) {
+
+	if (runDebugging) {
+		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+		storer.StoreOcrConfidence(imageFileName, numberOfCardReadTries, result.Text, result.Confidence);
+	}
+
+	m_confidence = result.Confidence;
 }
 
 vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTitleType titleType) {
@@ -224,24 +258,10 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 		//Store result for debugging.
 		if (runDebugging) {
-			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(i + 1));
+			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(++numberOfOcrTitlesStoredForDebug));
 			SaveOcvImage::SaveImageData(systemMethods, outImages[i], filename, L"10 - OCR Prepared Title");
 		}
 	}
-
-	return true;
-}
-
-bool CardReader::isConfidentOfTitleDecode(wstring title, int confidence) {
-
-	//The Tesseract algorithm needs to be confident with the result otherwise we shouldn't either.
-	if (confidence < 75) { return false; }
-
-	//The shortest card name is three letters.
-	if (title.length() < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) { return false; }
-
-	//Check for illegal characters.
-	if (MtgCardInfoHelper::ContainsInvalidCharacters(systemMethods, title)) { return false; }
 
 	return true;
 }

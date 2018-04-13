@@ -21,10 +21,16 @@ public:
 
 private:
 
-	//Crops out the card title.
-	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImages, CardTitleType type);
+	//Extracts the part of the image containing the card.
+	cv::Mat extractCardImage(cv::Mat originalImage);
 	//Reads the title of the card.
-	OcrDecodeResult readTitle(cv::Mat cardImage, int& numberOfTries, CardTitleType titleType);
+	std::wstring readTitle(cv::Mat cardImage);
+	//Reads the title of the card.
+	OcrDecodeResult readTitle(cv::Mat cardImage, int& numberOfCardReadTries, CardTitleType titleType);
+	//Joins the titles of two halves of a split card into one title.
+	OcrDecodeResult joinSplitCardTitles(OcrDecodeResult resultA, OcrDecodeResult resultB);
+	//Store the confidence of the OCR read.
+	void storeOcrConfidence(int numberOfCardReadTries, OcrDecodeResult result);
 	//Splits a card into the two split card halves.
 	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage, CardTitleType titleType);
 	//Tells if a result is to be considered a failure.
@@ -33,11 +39,13 @@ private:
 	OcrDecodeResult ocrReadTitle(std::vector<cv::Mat> ocrTitles);
 	//Extracts and preprocesses the title.
 	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, CardTitleType type);
-	//Checks if we got a confident decode of the title.
-	bool isConfidentOfTitleDecode(std::wstring title, int confidence);
+	//Crops out the card title.
+	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImages, CardTitleType type);
 
 	//Tells if the extraction was successfull.
 	bool m_success = false;
 	//Tells how confident Tesseract was of decoding the title.
 	int m_confidence = 0;
+	//The number of title images of the card the debug algorithm has stored to disk.
+	int numberOfOcrTitlesStoredForDebug = 0;
 };

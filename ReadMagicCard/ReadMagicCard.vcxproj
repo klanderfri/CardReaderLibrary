@@ -215,6 +215,7 @@
     <ClCompile Include="LetterFilter.cpp" />
     <ClCompile Include="LoadOcvImage.cpp" />
     <ClCompile Include="MtgCardInfoHelper.cpp" />
+    <ClCompile Include="OcrDecodeResult.cpp" />
     <ClCompile Include="SaveOcvImage.cpp" />
     <ClCompile Include="SectionExtractor.cpp" />
     <ClCompile Include="StoreCardProcessingData.cpp" />
