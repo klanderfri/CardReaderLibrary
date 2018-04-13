@@ -116,7 +116,9 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 		CardNameInfo(L"Thaumatic Compass.jpg", L"Thaumatic Compass"),
 		CardNameInfo(L"Treasure Map.jpg", L"Treasure Map"),
 		CardNameInfo(L"Dire Fleet Captain - Foiled.jpg", L"Dire Fleet Captain"),
-		CardNameInfo(L"Treasure Cove.jpg", L"Treasure Cove")
+		CardNameInfo(L"Treasure Cove.jpg", L"Treasure Cove"),
+		CardNameInfo(L"Spring Mind.jpg", L"Spring // Mind"),
+		CardNameInfo(L"Start Finish.jpg", L"Start // Finish")
 	};
 
 	return expectedResults;
