@@ -26,11 +26,11 @@ private:
 	//Reads the title of the card.
 	std::wstring readTitle(cv::Mat cardImage);
 	//Reads the title of the card.
-	OcrDecodeResult readTitle(cv::Mat cardImage, int& numberOfCardReadTries, CardTitleType titleType);
+	OcrDecodeResult readTitle(cv::Mat cardImage, CardTitleType titleType);
 	//Joins the titles of two halves of a split card into one title.
 	OcrDecodeResult joinSplitCardTitles(OcrDecodeResult resultA, OcrDecodeResult resultB);
 	//Store the confidence of the OCR read.
-	void storeOcrConfidence(int numberOfCardReadTries, OcrDecodeResult result);
+	void storeOcrConfidence(OcrDecodeResult result);
 	//Splits a card into the two split card halves.
 	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage, CardTitleType titleType);
 	//Tells if a result is to be considered a failure.
@@ -47,5 +47,7 @@ private:
 	//Tells how confident Tesseract was of decoding the title.
 	int m_confidence = 0;
 	//The number of title images of the card the debug algorithm has stored to disk.
-	int numberOfOcrTitlesStoredForDebug = 0;
+	int numberOfOcrTitlesStoredForDebug;
+	//The number of times the algorithm has tried to read the card.
+	int numberOfCardReadTries;
 };

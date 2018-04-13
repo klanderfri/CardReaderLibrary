@@ -69,8 +69,8 @@ wstring CardReader::readTitle(Mat cardImage) {
 
 	//Try reading the title.
 	numberOfOcrTitlesStoredForDebug = 0;
-	int numberOfCardReadTries = 0;
-	auto result = readTitle(cardImage, numberOfCardReadTries, NormalTitle);
+	numberOfCardReadTries = 0;
+	auto result = readTitle(cardImage, NormalTitle);
 
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
@@ -83,7 +83,7 @@ wstring CardReader::readTitle(Mat cardImage) {
 	rotate(cardImage, cardImage, ROTATE_180);
 
 	//Try reading the title again.
-	result = readTitle(cardImage, numberOfCardReadTries, NormalTitle);
+	result = readTitle(cardImage, NormalTitle);
 
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
@@ -95,7 +95,7 @@ wstring CardReader::readTitle(Mat cardImage) {
 	throw OperationException("ERROR: Could not OCR-read the title!");
 }
 
-OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries, CardTitleType titleType) {
+OcrDecodeResult CardReader::readTitle(Mat cardImage, CardTitleType titleType) {
 
 	OcrDecodeResult result;
 
@@ -114,7 +114,7 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries,
 			//Great! But could it be an Amonkhet split card?
 
 			vector<Mat> halves = getSplitCardHalves(cardImage, AkhSplitCardTitle);
-			OcrDecodeResult splitResultB = readTitle(halves[1], numberOfCardReadTries, AkhSplitCardTitle);
+			OcrDecodeResult splitResultB = readTitle(halves[1], AkhSplitCardTitle);
 
 			if (!hasResultFailed(splitResultB)) {
 
@@ -128,7 +128,7 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries,
 			}
 
 			//Store the confidence
-			storeOcrConfidence(++numberOfCardReadTries, result);
+			storeOcrConfidence(result);
 		}
 	}
 
@@ -139,11 +139,11 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries,
 		//Read the titles of the both halves.
 		vector<Mat> halves = getSplitCardHalves(cardImage, SplitCardTitle);
 		OcrDecodeResult resultA, resultB;
-		resultA = readTitle(halves[0], numberOfCardReadTries, SplitCardTitle);
+		resultA = readTitle(halves[0], SplitCardTitle);
 
 		//Result B is useless if result A has failed.
 		if (!hasResultFailed(resultA)) {
-			resultB = readTitle(halves[1], numberOfCardReadTries, SplitCardTitle);
+			resultB = readTitle(halves[1], SplitCardTitle);
 		}
 
 		//Check if we got success.
@@ -155,7 +155,7 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfCardReadTries,
 		}
 
 		//Store the confidence
-		storeOcrConfidence(++numberOfCardReadTries, result);
+		storeOcrConfidence(result);
 	}
 
 	if (!success) {
@@ -175,9 +175,11 @@ OcrDecodeResult CardReader::joinSplitCardTitles(OcrDecodeResult resultA, OcrDeco
 	return result;
 }
 
-void CardReader::storeOcrConfidence(int numberOfCardReadTries, OcrDecodeResult result) {
+void CardReader::storeOcrConfidence(OcrDecodeResult result) {
 
 	if (runDebugging) {
+
+		numberOfCardReadTries++;
 		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
 		storer.StoreOcrConfidence(imageFileName, numberOfCardReadTries, result.Text, result.Confidence);
 	}
