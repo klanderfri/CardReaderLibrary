@@ -11,8 +11,8 @@ LetterArea::~LetterArea()
 
 bool LetterArea::CompareLetterAreaByBorderXAscending(LetterArea area1, LetterArea area2)
 {
-	float borderX1 = area1.box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area1.box);
-	float borderX2 = area2.box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area2.box);
+	float borderX1 = area1.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area1.Box);
+	float borderX2 = area2.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area2.Box);
 
 	return (borderX1 < borderX2);
 }
@@ -30,12 +30,12 @@ bool LetterArea::HasParentLetter(LetterArea letterToCheck, LetterAreas possibleP
 bool LetterArea::hasChildParentRelation(LetterArea child, LetterArea parent) {
 
 	//A child will have its' center inside the parent.
-	bool parentContainsChildCenter = pointPolygonTest(parent.contour, child.box.center, false) > 0;
+	bool parentContainsChildCenter = pointPolygonTest(parent.OuterContour, child.Box.center, false) > 0;
 	if (!parentContainsChildCenter) { return false; }
 
 	//The child will have an area less than its' parents' area.
-	double parentArea = contourArea(parent.contour);
-	double childArea = contourArea(child.contour);
+	double parentArea = contourArea(parent.OuterContour);
+	double childArea = contourArea(child.OuterContour);
 	if (childArea > parentArea) { return false; }
 
 	//Close enough to be a child.

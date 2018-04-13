@@ -310,8 +310,22 @@ Contour ImageHelper::GetCombinedLetterContorus(LetterAreas letters) {
 
 		LetterArea area = letters[i];
 
-		combinedLetterContorus.insert(combinedLetterContorus.end(), area.contour.begin(), area.contour.end());
+		combinedLetterContorus.insert(combinedLetterContorus.end(), area.OuterContour.begin(), area.OuterContour.end());
 	}
 
 	return combinedLetterContorus;
+}
+
+Mat ImageHelper::GetContourDrawing(const Contour contour) {
+
+	Rect2i bounds = boundingRect(contour);
+	int margins = (int)ceil(min(bounds.width, bounds.height) * 0.1);
+
+	Mat contourImage;
+	contourImage.create(bounds.y + bounds.height + 1, bounds.x + bounds.width + 1, 0);
+	contourImage = DrawLimits(contourImage, Contours{ contour }, Hierarchy(), false);
+
+	CropImage(contourImage, contourImage, bounds);
+	
+	return contourImage;
 }

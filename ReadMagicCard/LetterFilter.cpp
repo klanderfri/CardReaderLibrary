@@ -37,8 +37,9 @@ LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
 		RotatedRect letterBox = minAreaRect(letterContour);
 
 		LetterArea area;
-		area.contour = letterContour;
-		area.box = letterBox;
+		area.TightContour = contours[i];
+		area.OuterContour = letterContour;
+		area.Box = letterBox;
 
 		possibleLetterAreas.push_back(area);
 	}
@@ -69,7 +70,7 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 		LetterArea letterB = lettersToFilter[i];
 
 		//Check if the letters are identical.
-		bool isDuplicates = ImageHelper::IsIdenticalContours(letterA.contour, letterB.contour);
+		bool isDuplicates = ImageHelper::IsIdenticalContours(letterA.OuterContour, letterB.OuterContour);
 		if (!isDuplicates) {
 
 			//The were not identical so add the second letter to the collection of unique letters.
@@ -89,7 +90,7 @@ LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
 	{
 		LetterArea letter = lettersToFilter[i];
 
-		if (letterCheck.IsLetter(letter.box)) {
+		if (letterCheck.IsLetter(letter.Box)) {
 
 			letters.push_back(letter);
 		}
@@ -194,16 +195,16 @@ LetterAreas LetterFilter::filterOutTransformSymbol(LetterAreas lettersToFilter) 
 		LetterArea letter = lettersToFilter[i];
 
 		if (i == 0) {
-			lastLetterBox = letter.box;
+			lastLetterBox = letter.Box;
 			continue;
 		}
 
-		if (letter.box.angle < -30 && letter.box.angle > -60) {
+		if (letter.Box.angle < -30 && letter.Box.angle > -60) {
 			hasOneRotated = true;
 		}
 
-		float xDistance = abs(lastLetterBox.center.x - letter.box.center.x);
-		float yDistance = abs(lastLetterBox.center.y - letter.box.center.y);
+		float xDistance = abs(lastLetterBox.center.x - letter.Box.center.x);
+		float yDistance = abs(lastLetterBox.center.y - letter.Box.center.y);
 		float distance = sqrt(xDistance*xDistance + yDistance * yDistance);
 		biggestCenterDistance = max(biggestCenterDistance, distance);
 	}
@@ -236,7 +237,7 @@ vector<LetterAreas> LetterFilter::groupLettersBySection(LetterAreas lettersToFil
 		//Check if there is a wide distance between the centers.
 		//Since we have sorted the letters by the center X coordinate,
 		//all subsequent countours will be mana symbols or noise.
-		if (hasWideLimitDistance(lastLetter.box, letter.box)) {
+		if (hasWideLimitDistance(lastLetter.Box, letter.Box)) {
 
 			letters.push_back(LetterAreas());
 			sectionIndex++;
@@ -256,7 +257,7 @@ bool LetterFilter::hasWideLimitDistance(RotatedRect leftLetterArea, RotatedRect 
 
 	float wideDistance = (float)(WORKING_CARD_HEIGHT / 13.062478); //52.0575-ish
 
-																   //The distance between the centers.
+	//The distance between the centers.
 	float centerDistance = rightLetterArea.center.x - leftLetterArea.center.x;
 
 	float halfWidthA = ImageHelper::SmallestDistanceCenterToLimit(leftLetterArea);

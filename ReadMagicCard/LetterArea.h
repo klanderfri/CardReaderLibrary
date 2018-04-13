@@ -14,10 +14,12 @@ public:
 	//Checks if a letter is a child to any other letter.
 	static bool HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents);
 
-	//The contour of the letter.
-	Contour contour;
+	//The outer contour which wraps the outer limits of the letter.
+	Contour OuterContour;
+	//The contour that only wraps the actual letter part.
+	Contour TightContour;
 	//The box containing the letter.
-	cv::RotatedRect box;
+	cv::RotatedRect Box;
 
 private:
 

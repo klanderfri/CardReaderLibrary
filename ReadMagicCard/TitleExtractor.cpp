@@ -138,12 +138,12 @@ Mat TitleExtractor::createLetterLimitsImage(Mat titleImage, LetterAreas letters)
 
 		//Draw the area.
 		onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
-		onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, area.box, Rect(), area.contour);
+		onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, area.Box, Rect(), area.OuterContour);
 
 		//Draw the center.
 		int radius = (int)(WORKING_CARD_HEIGHT / 226.5); //3
 		Scalar colour = Scalar(255, 0, 0); //Blue
-		onlyLettersBound = ImageHelper::DrawCenterPoint(onlyLettersBound, area.box.center, colour, radius);
+		onlyLettersBound = ImageHelper::DrawCenterPoint(onlyLettersBound, area.Box.center, colour, radius);
 	}
 
 	return onlyLettersBound;

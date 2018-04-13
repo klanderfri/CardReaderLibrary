@@ -53,6 +53,8 @@ public:
 	static Contour ContoursConvexHull(const Contours contours);
 	//Gives the combined contour of several letters.
 	static Contour GetCombinedLetterContorus(LetterAreas letters);
+	//Creates an image containing the contour.
+	static cv::Mat GetContourDrawing(const Contour contour);
 
 private:
 
