@@ -232,6 +232,9 @@
     <ClCompile Include="TestRunner.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\CONTRIBUTING.md" />
+    <None Include="..\LICENSE.md" />
+    <None Include="..\README.md" />
     <None Include="tessdata\eng.traineddata" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

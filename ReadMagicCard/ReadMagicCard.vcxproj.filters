@@ -232,5 +232,8 @@
     <None Include="tessdata\eng.traineddata">
       <Filter>Engine\LanguageData</Filter>
     </None>
+    <None Include="..\CONTRIBUTING.md" />
+    <None Include="..\LICENSE.md" />
+    <None Include="..\README.md" />
   </ItemGroup>
 </Project>
