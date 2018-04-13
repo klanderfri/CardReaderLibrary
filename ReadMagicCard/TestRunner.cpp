@@ -107,6 +107,7 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 		CardNameInfo(L"Dusk Charger.jpg", L"Dusk Charger"),
 		CardNameInfo(L"Flamecast Wheel.jpg", L"Flamecast Wheel"),
 		CardNameInfo(L"Far Away - Straight.jpg", L"Far // Away"),
+		CardNameInfo(L"Far Away - Rotated.jpg", L"Far // Away"),
 		CardNameInfo(L"Emblem - Huatli.jpg", L"Emblem"),
 		CardNameInfo(L"Forest.jpg", L"Forest"),
 		CardNameInfo(L"Island - Foiled.jpg", L"Island"),
