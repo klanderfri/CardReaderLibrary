@@ -159,13 +159,16 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTit
 	int rotation = (titleType == AkhSplitCardTitle) ? ROTATE_90_COUNTERCLOCKWISE : ROTATE_90_CLOCKWISE;
 	rotate(splitCard, splitCard, rotation);
 
-	//The extra border limit is because the card border is bigger in relation to the split card half.
-	int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 17.0); //40
+	//The first half is not needed for Amonkhet split cards.
+	if (titleType != AkhSplitCardTitle) {
 
-	Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
+		//The extra border limit is because the card border is bigger in relation to the split card half.
+		int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 17.0); //40
+		Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
+		ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
+	}
+
 	Rect limitsHalfB((splitCard.cols / 2), 0, splitCard.cols / 2, splitCard.rows);
-
-	ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
 	ImageHelper::CropImage(splitCard, halfB, limitsHalfB);
 
 	vector<Mat> halves{ halfA, halfB };
