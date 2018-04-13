@@ -28,12 +28,12 @@ wstring CardReader::GetImageFileName() {
 
 bool CardReader::GetSuccess() {
 
-	return m_success;
+	return finalTitleExtractionSuccess;
 }
 
 int CardReader::GetConfidence() {
 
-	return m_confidence;
+	return finalTitleOcrConfidence;
 }
 
 wstring CardReader::ExtractCardName() {
@@ -75,7 +75,7 @@ wstring CardReader::readTitle(Mat cardImage) {
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
 
-		m_success = true;
+		finalTitleExtractionSuccess = true;
 		return result.Text;
 	}
 
@@ -88,7 +88,7 @@ wstring CardReader::readTitle(Mat cardImage) {
 	//The method reading the title returns an empty result if it failed.
 	if (result.Confidence > 0) {
 
-		m_success = true;
+		finalTitleExtractionSuccess = true;
 		return result.Text;
 	}
 
@@ -186,7 +186,7 @@ void CardReader::storeOcrConfidence(OcrDecodeResult result, int numberOfTries) {
 		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.Text, result.Confidence);
 	}
 
-	m_confidence = result.Confidence;
+	finalTitleOcrConfidence = result.Confidence;
 }
 
 vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTitleType titleType) {

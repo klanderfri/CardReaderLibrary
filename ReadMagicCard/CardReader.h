@@ -43,9 +43,9 @@ private:
 	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImages, CardTitleType type);
 
 	//Tells if the extraction was successfull.
-	bool m_success = false;
+	bool finalTitleExtractionSuccess = false;
 	//Tells how confident Tesseract was of decoding the title.
-	int m_confidence = 0;
+	int finalTitleOcrConfidence = 0;
 	//The number of title images of the card the debug algorithm has stored to disk.
 	int numberOfOcrTitlesStoredForDebug;
 	//The number of times the algorithm has tried to read the card.
