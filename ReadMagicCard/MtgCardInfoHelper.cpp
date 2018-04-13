@@ -30,12 +30,21 @@ Rect MtgCardInfoHelper::GetNormalTitleSectionBox(Size cardSize) {
 	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);
 }
 
-
 Rect MtgCardInfoHelper::GetSplitTitleSectionBox(Size cardSize) {
 
 	double xCoordinateFactor = 0.005;
 	double yCoordinateFactor = 0.081;
 	double widthFactor = 0.6085;
+	double heightFactor = 0.088;
+
+	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);
+}
+
+Rect MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(Size cardSize) {
+
+	double xCoordinateFactor = 0.065;
+	double yCoordinateFactor = 0.061;
+	double widthFactor = 0.540;
 	double heightFactor = 0.088;
 
 	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);

@@ -26,7 +26,7 @@ private:
 	//Reads the title of the card.
 	OcrDecodeResult readTitle(cv::Mat cardImage, int& numberOfTries, CardTitleType titleType);
 	//Splits a card into the two split card halves.
-	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage);
+	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage, CardTitleType titleType);
 	//Tells if a result is to be considered a failure.
 	bool hasResultFailed(OcrDecodeResult result);
 	//Reads the OCR preparied titles and returnes the best result.

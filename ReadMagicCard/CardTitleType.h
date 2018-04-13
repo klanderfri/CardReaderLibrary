@@ -9,7 +9,7 @@ enum CardTitleType {
 	SplitCardTitle = 2,
 	
 	//The card is split, with one title in the regular place.
-	HouSplitCardTitle = 3,
+	AkhSplitCardTitle = 3,
 	
 	//The card has been transformed.
 	TransformedTitle = 4,

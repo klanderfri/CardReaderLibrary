@@ -92,16 +92,35 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 		//Read the title.
 		result = ocrReadTitle(ocrReadyTitles);
 		success = isConfidentOfTitleDecode(result.Text, result.Confidence);
+
+		if (success && titleType == NormalTitle) {
+
+			//Great! But could it be an Amonkhet split card?
+
+			vector<Mat> halves = getSplitCardHalves(cardImage, AkhSplitCardTitle);
+			OcrDecodeResult splitResultB = readTitle(halves[1], numberOfTries, AkhSplitCardTitle);
+
+			if (!hasResultFailed(splitResultB)) {
+
+				//Join the titles to a split card name.
+				OcrDecodeResult splitResult;
+				splitResult.Text = result.Text + L" // " + splitResultB.Text;
+				splitResult.Confidence = min(result.Confidence, splitResultB.Confidence);
+
+				bool splitSuccess = isConfidentOfTitleDecode(splitResult.Text, splitResult.Confidence);
+				if (splitSuccess) {
+					return splitResult;
+				}
+			}
+		}
 	}
 
-	if (!success && titleType != SplitCardTitle) {
+	if (!success && titleType == NormalTitle) {
 
 		//OK. Perhaps it's a split card?
 		
-		//Extract the both halves.
-		vector<Mat> halves = getSplitCardHalves(cardImage);
-		
-		//Read the titles.
+		//Read the titles of the both halves.
+		vector<Mat> halves = getSplitCardHalves(cardImage, SplitCardTitle);
 		OcrDecodeResult resultA = readTitle(halves[0], numberOfTries, SplitCardTitle);
 		OcrDecodeResult resultB = readTitle(halves[1], numberOfTries, SplitCardTitle);
 
@@ -132,12 +151,13 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, int& numberOfTries, CardTit
 	return result;
 }
 
-vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage) {
+vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTitleType titleType) {
 
 	Mat splitCard, halfA, halfB;
 
 	originalCardImage.copyTo(splitCard);
-	rotate(splitCard, splitCard, ROTATE_90_CLOCKWISE);
+	int rotation = (titleType == AkhSplitCardTitle) ? ROTATE_90_COUNTERCLOCKWISE : ROTATE_90_CLOCKWISE;
+	rotate(splitCard, splitCard, rotation);
 
 	//The extra border limit is because the card border is bigger in relation to the split card half.
 	int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 17.0); //40
@@ -232,6 +252,9 @@ void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, 
 		break;
 	case SplitCardTitle:
 		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(rawCardImage.size());
+		break;
+	case AkhSplitCardTitle:
+		titleBox = MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(rawCardImage.size());
 		break;
 	}
 
