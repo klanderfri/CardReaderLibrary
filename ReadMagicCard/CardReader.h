@@ -30,7 +30,7 @@ private:
 	//Joins the titles of two halves of a split card into one title.
 	OcrDecodeResult joinSplitCardTitles(OcrDecodeResult resultA, OcrDecodeResult resultB);
 	//Store the confidence of the OCR read.
-	void storeOcrConfidence(OcrDecodeResult result);
+	void storeOcrConfidence(OcrDecodeResult result, int numberOfTries);
 	//Splits a card into the two split card halves.
 	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage, CardTitleType titleType);
 	//Tells if a result is to be considered a failure.

@@ -127,8 +127,10 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, CardTitleType titleType) {
 				}
 			}
 
-			//Store the confidence
-			storeOcrConfidence(result);
+			//If the main title has been successfully read then we consider the card read one time
+			//no matter if the Amonkhet split card part was successfully read or not.
+			//That is because most of the times we read the split part just to see if it is a split card.
+			storeOcrConfidence(result, ++numberOfCardReadTries);
 		}
 	}
 
@@ -154,8 +156,9 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, CardTitleType titleType) {
 			success = result.IsConfidentMtgTitle(systemMethods);
 		}
 
-		//Store the confidence
-		storeOcrConfidence(result);
+		//It should be considered as another try to read the card
+		//if we have tried to read it as a split card.
+		storeOcrConfidence(result, ++numberOfCardReadTries);
 	}
 
 	if (!success) {
@@ -175,13 +178,12 @@ OcrDecodeResult CardReader::joinSplitCardTitles(OcrDecodeResult resultA, OcrDeco
 	return result;
 }
 
-void CardReader::storeOcrConfidence(OcrDecodeResult result) {
+void CardReader::storeOcrConfidence(OcrDecodeResult result, int numberOfTries) {
 
 	if (runDebugging) {
 
-		numberOfCardReadTries++;
 		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
-		storer.StoreOcrConfidence(imageFileName, numberOfCardReadTries, result.Text, result.Confidence);
+		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.Text, result.Confidence);
 	}
 
 	m_confidence = result.Confidence;
