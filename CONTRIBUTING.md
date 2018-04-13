@@ -21,7 +21,7 @@ The program accepts three command arguments.
 ## Environment
 This project is written with the C++17 standard.
 
-This project is created in Microsoft Visual Studio Community 2017 version 15.6.4
+This project is created in *Microsoft Visual Studio Community 2017* version 15.6.4 on a Windows 10 x64 computer.
 
 ### Image Watch
 *Image Watch* is a tool for debugging and seeing the images when coding in Visual Studio.
