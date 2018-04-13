@@ -62,7 +62,7 @@ int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {
 bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages, int numberOfTries) {
 
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
-	LetterFilter filter(WORKING_CARD_HEIGHT, titleImage.cols, titleImage);
+	LetterFilter filter(WORKING_CARD_HEIGHT, titleImage);
 	LetterAreas letters = filter.RunFilter(contours);
 	
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.

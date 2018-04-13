@@ -4,7 +4,7 @@
 class LetterFilter
 {
 public:
-	LetterFilter(int workingCardHeight, int currentTitleWidth, cv::Mat currentTitleImage);
+	LetterFilter(int workingCardHeight, cv::Mat currentLetterImage);
 	~LetterFilter();
 
 	//Runs the filter and returns the letters.
@@ -14,8 +14,8 @@ private:
 
 	//The height of the shrinked card image we work with to maximize performance.
 	const int WORKING_CARD_HEIGHT;
-	//The actual height of the card title section the letters belongs to.
-	const int CURRENT_TITLE_WIDTH;
+	//The image the letters belongs to.
+	const cv::Mat CURRENT_LETTER_IMAGE; //We really just need the width but bringing the enttire image makes debugging easier.
 
 	//Gets the areas that might contain a title letter.
 	LetterAreas getPossibleLetterAreas(Contours contours);

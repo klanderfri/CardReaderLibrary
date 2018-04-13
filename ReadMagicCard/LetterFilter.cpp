@@ -6,8 +6,8 @@
 using namespace cv;
 using namespace std;
 
-LetterFilter::LetterFilter(int workingCardHeight, int currentTitleWidth, Mat currentTitleImage)
-	: WORKING_CARD_HEIGHT(workingCardHeight), CURRENT_TITLE_WIDTH(currentTitleWidth)
+LetterFilter::LetterFilter(int workingCardHeight, Mat currentLetterImage)
+	: WORKING_CARD_HEIGHT(workingCardHeight), CURRENT_LETTER_IMAGE(currentLetterImage)
 {
 }
 
@@ -155,9 +155,10 @@ LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) 
 	}
 
 	//It's probably the title if it's centered.
-	int middleAreaWidth = CURRENT_TITLE_WIDTH / 5;
-	int minCoordinateX = (CURRENT_TITLE_WIDTH / 2) - middleAreaWidth / 2;
-	int maxCoordinateX = (CURRENT_TITLE_WIDTH / 2) + middleAreaWidth / 2;
+	int titleWidth = CURRENT_LETTER_IMAGE.cols;
+	int middleAreaWidth = titleWidth / 5;
+	int minCoordinateX = (titleWidth / 2) - middleAreaWidth / 2;
+	int maxCoordinateX = (titleWidth / 2) + middleAreaWidth / 2;
 	for (LetterAreas letters : letterSections) {
 
 		Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
