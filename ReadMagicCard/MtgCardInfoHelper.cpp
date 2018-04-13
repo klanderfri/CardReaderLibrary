@@ -33,10 +33,10 @@ Rect MtgCardInfoHelper::GetNormalTitleSectionBox(Size cardSize) {
 
 Rect MtgCardInfoHelper::GetSplitTitleSectionBox(Size cardSize) {
 
-	double xCoordinateFactor = 0.0387;
+	double xCoordinateFactor = 0.005;
 	double yCoordinateFactor = 0.081;
 	double widthFactor = 0.6085;
-	double heightFactor = 0.068;
+	double heightFactor = 0.088;
 
 	return getSectionBox(cardSize, xCoordinateFactor, yCoordinateFactor, widthFactor, heightFactor);
 }
