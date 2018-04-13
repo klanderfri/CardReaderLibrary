@@ -139,7 +139,8 @@
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"</Command>
+      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"
+xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -236,6 +237,7 @@
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\LICENSE.md" />
     <None Include="..\README.md" />
+    <None Include="deployment\vcredist_x86.exe" />
     <None Include="tessdata\eng.traineddata" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

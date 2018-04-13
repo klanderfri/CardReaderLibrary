@@ -49,6 +49,9 @@
     <Filter Include="Core\Enums">
       <UniqueIdentifier>{cb86f848-54bc-4bec-aa5a-300498ef7a72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Deployment">
+      <UniqueIdentifier>{b69851ff-db45-49c8-83b1-b3c3f2139085}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Contour.h">
@@ -238,5 +241,8 @@
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\LICENSE.md" />
     <None Include="..\README.md" />
+    <None Include="deployment\vcredist_x86.exe">
+      <Filter>Deployment</Filter>
+    </None>
   </ItemGroup>
 </Project>
