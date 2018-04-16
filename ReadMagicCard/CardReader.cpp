@@ -8,6 +8,7 @@
 #include "TitleExtractor.h"
 #include "ImageOcrHelper.h"
 #include "StoreCardProcessingData.h"
+#include "TitleLetterFixer.h"
 
 using namespace cv;
 using namespace std;
@@ -226,11 +227,12 @@ OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 
 	OcrDecodeResult bestResult;
 	ImageOcrHelper ocrReader(systemMethods);
+	TitleLetterFixer titleFixer(systemMethods);
 	
 	for (Mat ocrTitle : ocrTitles) {
 
 		OcrDecodeResult result = ocrReader.DecodeImage(ocrTitle);
-		result.Text = MtgCardInfoHelper::ChangeNumbersToLetters(systemMethods, result.Text);
+		result.Text = titleFixer.FixTitleLetters(result.Text);
 
 		if (bestResult.Confidence < result.Confidence) {
 			bestResult = result;

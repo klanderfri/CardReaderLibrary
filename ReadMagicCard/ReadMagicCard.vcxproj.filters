@@ -153,6 +153,9 @@
     <ClInclude Include="LetterFilter.h">
       <Filter>Engine\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="TitleLetterFixer.h">
+      <Filter>Engine\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="OcrDecodeResult.cpp">
       <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLetterFixer.cpp">
+      <Filter>Engine\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

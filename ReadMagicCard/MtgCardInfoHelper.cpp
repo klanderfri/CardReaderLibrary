@@ -136,32 +136,3 @@ bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, 
 
 	return false;
 }
-
-wstring MtgCardInfoHelper::ChangeNumbersToLetters(SystemMethods* systemMethods, const wstring title) {
-
-	string outText = systemMethods->ToString(title);
-
-	outText = replaceCharacters(outText, '0', 'O', 'o');
-	outText = replaceCharacters(outText, '1', 'I', 'l');
-	outText = replaceCharacters(outText, '2', 'Z', 'z');
-	outText = replaceCharacters(outText, '5', 'S', 's');
-
-	return systemMethods->ToWString(outText);
-}
-
-string MtgCardInfoHelper::replaceCharacters(const string text, char toReplace, char replaceWithUpper, char replaceWithLower) {
-
-	string outText = text;
-	size_t index = outText.find(toReplace);
-
-	while (index != string::npos) {
-
-		bool isCapitalLetter = (index == 0 || outText[index - 1] == ' ');
-		char replaceWith = isCapitalLetter ? replaceWithUpper : replaceWithLower;
-		outText.replace(index, 1, 1, replaceWith);
-
-		index = outText.find(toReplace);
-	}
-
-	return outText;
-}

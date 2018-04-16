@@ -194,6 +194,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="TimePoint.h" />
     <ClInclude Include="TitleExtractor.h" />
     <ClInclude Include="ImageOcrHelper.h" />
+    <ClInclude Include="TitleLetterFixer.h" />
     <ClInclude Include="WindowsMethods.h" />
     <ClInclude Include="ReadMagicCard.h" />
     <ClInclude Include="stdafx.h" />
@@ -223,6 +224,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="TimePoint.cpp" />
     <ClCompile Include="TitleExtractor.cpp" />
     <ClCompile Include="ImageOcrHelper.cpp" />
+    <ClCompile Include="TitleLetterFixer.cpp" />
     <ClCompile Include="WindowsMethods.cpp" />
     <ClCompile Include="ReadMagicCard.cpp" />
     <ClCompile Include="stdafx.cpp">
