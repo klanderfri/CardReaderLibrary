@@ -239,6 +239,9 @@
     <ClCompile Include="TitleLetterFixer.cpp">
       <Filter>Engine\Helpers</Filter>
     </ClCompile>
+    <ClCompile Include="SystemMethods.cpp">
+      <Filter>Libraries\SystemMethods</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="tessdata\eng.traineddata">

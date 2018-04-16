@@ -30,7 +30,8 @@ string TitleLetterFixer::changeNumbersToLetters(const string title) {
 	outText = replaceCharacters(outText, '1', 'I', 'l');
 	outText = replaceCharacters(outText, '2', 'Z', 'z');
 	outText = replaceCharacters(outText, '5', 'S', 's');
-
+	outText = replaceCharacters(outText, '—', '-', '-');
+	
 	return outText;
 }
 
@@ -41,7 +42,7 @@ string TitleLetterFixer::replaceCharacters(const string text, char toReplace, ch
 
 	while (index != string::npos) {
 
-		bool isCapitalLetter = (index == 0 || outText[index - 1] == ' ');
+		bool isCapitalLetter = isFirstWordLetter(index, outText);
 		char replaceWith = isCapitalLetter ? replaceWithUpper : replaceWithLower;
 		outText.replace(index, 1, 1, replaceWith);
 
@@ -59,7 +60,7 @@ string TitleLetterFixer::fixLtoIJ(const string title) {
 
 		char letter = outText[i];
 		if (letter != 'l') { continue; }
-		if (!isFirstWordLetter(letter, i, outText)) { continue; }
+		if (!isFirstWordLetter(i, outText)) { continue; }
 
 		//Fix single letter word last in title.
 		if (i == outText.length() - 1) {
@@ -106,14 +107,13 @@ string TitleLetterFixer::fixLtoIJ(const string title) {
 	return outText;
 }
 
-bool TitleLetterFixer::isFirstWordLetter(char letter, size_t index, string text) {
+bool TitleLetterFixer::isFirstWordLetter(size_t indexOfLetter, string text) {
 
-	if (index == 0) { return true; }
-	if (index >= text.length() - 1) { return false; }
+	if (indexOfLetter == 0) { return true; }
 
-	char previousLetter = text[index - 1];
-	bool isFirst = (previousLetter == ' ');
+	char previousLetter = text[indexOfLetter - 1];
+	bool isFirstInWord = (previousLetter == ' ');
 
-	return isFirst;
+	return isFirstInWord;
 }
 

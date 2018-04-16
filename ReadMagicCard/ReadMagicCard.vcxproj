@@ -221,6 +221,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="SaveOcvImage.cpp" />
     <ClCompile Include="SectionExtractor.cpp" />
     <ClCompile Include="StoreCardProcessingData.cpp" />
+    <ClCompile Include="SystemMethods.cpp" />
     <ClCompile Include="TimePoint.cpp" />
     <ClCompile Include="TitleExtractor.cpp" />
     <ClCompile Include="ImageOcrHelper.cpp" />

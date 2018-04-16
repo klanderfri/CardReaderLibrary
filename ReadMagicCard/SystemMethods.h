@@ -1,16 +1,18 @@
 #pragma once
-#include <string>
 #include "Colour.h"
+#include <string>
 //Class holding methods whose implementation depends on the operating system.
 class SystemMethods
 {
 public:
-	//Convert a wide Unicode string to an UTF8 string.
+	//Convert a wide string to a string using ANSI format.
 	virtual std::string ToString(const std::wstring& wstringToConvert) = 0;
-	//Convert an UTF8 string to a wide Unicode string.
+	//Convert a string to a wide string using ANSI format.
 	virtual std::wstring ToWString(const std::string& stringToConvert) = 0;
-	//Converts a float to an UTF8 string.
+	//Converts a float to a wide string.
 	virtual std::wstring ToWString(const float& floatToConvert, int precision = 5) = 0;
+	//Converts an UTF8 string to an ANSI wide string.
+	std::wstring UTF8ToWstring(const char *utf8ToConvert);
 	//Gets the user name of the current user.
 	virtual std::wstring GetCurrentUserName() = 0;
 	//Gets the picture folder of the current user.
