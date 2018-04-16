@@ -118,7 +118,11 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 		CardNameInfo(L"Dire Fleet Captain - Foiled.jpg", L"Dire Fleet Captain"),
 		CardNameInfo(L"Treasure Cove.jpg", L"Treasure Cove"),
 		CardNameInfo(L"Spring Mind.jpg", L"Spring // Mind"),
-		CardNameInfo(L"Start Finish.jpg", L"Start // Finish")
+		CardNameInfo(L"Start Finish.jpg", L"Start // Finish"),
+		CardNameInfo(L"Shipwreck Looter - 1 - Straight.jpg", L"Shipwreck Looter"),
+		CardNameInfo(L"Shipwreck Looter - 2 - Slightly rotated.jpg", L"Shipwreck Looter"),
+		CardNameInfo(L"Shipwreck Looter - 6 - Upside-down.jpg", L"Shipwreck Looter"),
+		CardNameInfo(L"Shipwreck Looter - 7 - Very upside-down.jpg", L"Shipwreck Looter")
 	};
 
 	return expectedResults;
