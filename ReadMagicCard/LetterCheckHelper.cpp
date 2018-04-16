@@ -27,6 +27,10 @@ bool LetterCheckHelper::IsLetter(RotatedRect letterArea) {
 		return true;
 	}
 
+	if (isDash(letterArea)) {
+		return true;
+	}
+
 	if (!isLetterSize(letterArea)) {
 		return false;
 	}
@@ -48,6 +52,14 @@ int LetterCheckHelper::getMaxTitleLetterCoordinateY() {
 
 int LetterCheckHelper::getMinTitleLetterCoordinateY() {
 	return (int)(WORKING_CARD_HEIGHT / 17.0); //40
+}
+
+int LetterCheckHelper::getTitleAreaHeight() {
+	return getMaxTitleLetterCoordinateY() - getMinTitleLetterCoordinateY();
+}
+
+int LetterCheckHelper::getTitleAreaMiddleCoordinateY() {
+	return getMinTitleLetterCoordinateY() + getTitleAreaHeight() / 2;
 }
 
 bool LetterCheckHelper::isWithinTitleArea(RotatedRect letterArea) {
@@ -90,14 +102,49 @@ bool LetterCheckHelper::isIDot(RotatedRect letterArea) {
 
 bool LetterCheckHelper::isComma(RotatedRect letterArea) {
 
-	int titleAreaHeight = getMaxTitleLetterCoordinateY() - getMinTitleLetterCoordinateY();
-	int minCoordinateY = getMinTitleLetterCoordinateY() + titleAreaHeight / 2;
-	if (letterArea.center.y < minCoordinateY) { return false; }
+	if (letterArea.center.y < getTitleAreaMiddleCoordinateY()) { return false; }
 
 	int maxHeight = (int)(WORKING_CARD_HEIGHT / 20); //34
 	int minHeight = (int)(WORKING_CARD_HEIGHT / 34); //20
 	float height = max(letterArea.size.height, letterArea.size.width); //OpenCV doesn't allways set width and height logical.
 	if (height < minHeight || height > maxHeight) { return false; }
+
+	return true;
+}
+
+bool LetterCheckHelper::isDash(RotatedRect letterArea) {
+
+	//Check if it is in the middle line of the title.
+	int titleHeight = getTitleAreaHeight();
+	int middleLine = getTitleAreaMiddleCoordinateY();
+	int minY = middleLine - titleHeight / 5;
+	int maxY = middleLine + titleHeight / 5;
+	if (letterArea.center.y < minY || letterArea.center.y> maxY) {
+		return false;
+	}
+
+	//Check if it has the form of a dash.
+	float height = letterArea.size.height;
+	float width = letterArea.size.width;
+	float sideRelation = height / width;
+	if (sideRelation > 0.3 || sideRelation < 0.2) {
+		return false;
+	}
+
+	//Check if it has the right size.
+	int minimumDashHeight = (int)round(WORKING_CARD_HEIGHT / 170); //4
+	int minimumDashWidth = (int)round(WORKING_CARD_HEIGHT / 42.5); //16
+	int maximumDashHeight = (int)round(WORKING_CARD_HEIGHT / 34); //20
+	int maximumDashWidth = (int)round(WORKING_CARD_HEIGHT / 8.5); //80
+
+	if (height < minimumDashHeight ||
+		width < minimumDashWidth ||
+		height > maximumDashHeight ||
+		width > maximumDashWidth) {
+
+		//Wrong size to be a dash.
+		return false;
+	}
 
 	return true;
 }

@@ -22,12 +22,18 @@ private:
 	int getMaxTitleLetterCoordinateY();
 	//Gets the minimum Y coordinate a title letter may have.
 	int getMinTitleLetterCoordinateY();
+	//Gets the height of the title area.
+	int getTitleAreaHeight();
+	//Gets the Y coordinate of a line cutting the title area horizontal in two.
+	int getTitleAreaMiddleCoordinateY();
 	//Check if the letter is within the area containing letters.
 	bool isWithinTitleArea(cv::RotatedRect letterArea);
-	//Check if it's a i-dot.
+	//Checks if it's a i-dot.
 	bool isIDot(cv::RotatedRect letterArea);
 	//Checks if it's a comma.
 	bool isComma(cv::RotatedRect letterArea);
+	//Checks if it's a dash (-).
+	bool isDash(cv::RotatedRect letterArea);
 	//Check if the letter is big/small enough to be a letter.
 	bool isLetterSize(cv::RotatedRect letterArea);
 };
