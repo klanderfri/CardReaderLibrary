@@ -6,6 +6,7 @@ public:
 	TitleLetterFixer(SystemMethods* systemMethods);
 	~TitleLetterFixer();
 
+	//Fixes incorrectly decoded characters in a title.
 	std::wstring FixTitleLetters(const std::wstring title);
 
 private:
