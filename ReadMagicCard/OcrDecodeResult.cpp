@@ -16,7 +16,7 @@ bool OcrDecodeResult::IsConfidentMtgTitle(SystemMethods* systemMethods, int mini
 	if (Confidence < minimumConfidence) { return false; }
 
 	//The shortest card name is three letters.
-	if (Text.length() < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) { return false; }
+	if (!MtgCardInfoHelper::IsNameLongEnough(Text)) { return false; }
 
 	//Check for illegal characters.
 	if (MtgCardInfoHelper::ContainsInvalidCharacters(systemMethods, Text)) { return false; }

@@ -9,6 +9,8 @@ public:
 
 	//Gives the amount of letters in the shortest MtG card name.
 	static int LettersInShortestCardName();
+	//Checks if a card name is long enough top actually be a card name.
+	static bool IsNameLongEnough(const std::wstring title);
 	//Gets the area of the card that normally contains the title section.
 	static cv::Rect GetNormalTitleSectionBox(cv::Size cardSize);
 	//Gets the area of the card that contains the title section on split cards (assumed that the card is cropped to look like a normal card).

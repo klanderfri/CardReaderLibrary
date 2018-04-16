@@ -20,6 +20,25 @@ int MtgCardInfoHelper::LettersInShortestCardName() {
 	return 3;
 }
 
+bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
+
+	int charactersInName = 0;
+
+	for (wchar_t character : title) {
+
+		if (charactersInName >= LettersInShortestCardName()) {
+			return true;
+		}
+
+		bool isCharacter = (character != L' ');
+		if (isCharacter) {
+			charactersInName++;
+		}
+	}
+
+	return false;
+}
+
 Rect MtgCardInfoHelper::GetNormalTitleSectionBox(Size cardSize) {
 
 	double xCoordinateFactor = 0.037;
