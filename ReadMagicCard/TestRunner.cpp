@@ -122,7 +122,11 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 		CardNameInfo(L"Shipwreck Looter - 1 - Straight.jpg", L"Shipwreck Looter"),
 		CardNameInfo(L"Shipwreck Looter - 2 - Slightly rotated.jpg", L"Shipwreck Looter"),
 		CardNameInfo(L"Shipwreck Looter - 6 - Upside-down.jpg", L"Shipwreck Looter"),
-		CardNameInfo(L"Shipwreck Looter - 7 - Very upside-down.jpg", L"Shipwreck Looter")
+		CardNameInfo(L"Shipwreck Looter - 7 - Very upside-down.jpg", L"Shipwreck Looter"),
+		CardNameInfo(L"Impeccable Timing.jpg", L"Impeccable Timing"),
+		CardNameInfo(L"Ill-tempered Cyclops.jpg", L"Ill-tempered Cyclops"),
+		CardNameInfo(L"Tah-Crop Elite.jpg", L"Tah-Crop Elite"),
+		CardNameInfo(L"Nimble-Blade Khenra.jpg", L"Nimble-Blade Khenra")
 	};
 
 	return expectedResults;
