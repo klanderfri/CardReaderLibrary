@@ -137,6 +137,26 @@ Mat ImageHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy 
 	return drawing;
 }
 
+Mat ImageHelper::DrawLimits(const Mat image, const LetterAreas letters, int letterCenterRadius) {
+
+	Mat onlyLettersBound;
+
+	for (size_t i = 0; i < letters.size(); i++) {
+
+		LetterArea area = letters[i];
+		
+		//Draw the area.
+		onlyLettersBound = onlyLettersBound.empty() ? image : onlyLettersBound;
+		onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, area.Box, Rect(), area.OuterContour);
+
+		//Draw the center.
+		Scalar colour = Scalar(255, 0, 0); //Blue
+		onlyLettersBound = ImageHelper::DrawCenterPoint(onlyLettersBound, area.Box.center, colour, letterCenterRadius);
+	}
+
+	return onlyLettersBound;
+}
+
 Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, Scalar colour, int radius) {
 
 	//Create a working rgb image so the border lines are colour even if the image isn't.

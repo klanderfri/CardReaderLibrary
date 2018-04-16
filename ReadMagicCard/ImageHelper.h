@@ -23,6 +23,8 @@ public:
 	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.
 	static cv::Mat DrawLimits(const cv::Mat image, const Contours contours, const Hierarchy hierarchy, bool useRandomColours = true);
+	//Creates an image showing the limits of the individual letters.
+	static cv::Mat DrawLimits(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
 	//Draws the specified center point to the image.
 	static cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, cv::Scalar colour = cv::Scalar(0, 0, 255), int radius = 10);
 	//Gets how many degrees the rectangle needs to be rotated in positive direction (counter-clockwise) to be straight.

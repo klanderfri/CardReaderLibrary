@@ -83,7 +83,8 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	Mat dbg_onlyLettersBoundImage, dbg_possibleTitleAreaImage;
 	if (runDebugging) {
 
-		dbg_onlyLettersBoundImage = createLetterLimitsImage(titleImage, letters);
+		int radius = (int)(WORKING_CARD_HEIGHT / 226.5); //3
+		dbg_onlyLettersBoundImage = ImageHelper::DrawLimits(titleImage, letters, radius);
 		dbg_possibleTitleAreaImage = ImageHelper::DrawLimits(titleImage, textArea, boundTextArea, combinedLetterContorus);
 	}
 
@@ -126,25 +127,4 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	}
 
 	return true;
-}
-
-Mat TitleExtractor::createLetterLimitsImage(Mat titleImage, LetterAreas letters) {
-
-	Mat onlyLettersBound;
-
-	for (size_t i = 0; i < letters.size(); i++) {
-
-		LetterArea area = letters[i];
-
-		//Draw the area.
-		onlyLettersBound = onlyLettersBound.empty() ? titleImage : onlyLettersBound;
-		onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, area.Box, Rect(), area.OuterContour);
-
-		//Draw the center.
-		int radius = (int)(WORKING_CARD_HEIGHT / 226.5); //3
-		Scalar colour = Scalar(255, 0, 0); //Blue
-		onlyLettersBound = ImageHelper::DrawCenterPoint(onlyLettersBound, area.Box.center, colour, radius);
-	}
-
-	return onlyLettersBound;
 }

@@ -18,7 +18,5 @@ private:
 	int errorProtectGaussAmount(int amountOfGauss);
 	//Extracts the title text area out of an image containing the entire title area.
 	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages, int numberOfTries);
-	//Creates an image showing the limits of the individual letters.
-	cv::Mat createLetterLimitsImage(cv::Mat titleImage, LetterAreas letters);
 
 };
