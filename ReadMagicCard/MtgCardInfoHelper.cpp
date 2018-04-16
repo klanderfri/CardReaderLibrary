@@ -22,16 +22,25 @@ int MtgCardInfoHelper::LettersInShortestCardName() {
 
 bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
-	int charactersInName = 0;
+	int lettersInName = 0;
 
 	for (wchar_t character : title) {
 
-		bool isCharacter = (character != L' ');
-		if (isCharacter) {
-			charactersInName++;
+		bool isLetter = true;
+
+		vector<wchar_t> nonLetterCharacters { L' ', L'-', L'\'', L',', L'/' };
+		for (wchar_t nonLetter : nonLetterCharacters) {
+			if (character == nonLetter) {
+				isLetter = false;
+				break;
+			}
 		}
 
-		if (charactersInName >= LettersInShortestCardName()) {
+		if (isLetter) {
+			lettersInName++;
+		}
+
+		if (lettersInName >= LettersInShortestCardName()) {
 			return true;
 		}
 	}
