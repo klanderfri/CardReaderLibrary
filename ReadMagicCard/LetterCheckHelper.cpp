@@ -132,7 +132,7 @@ bool LetterCheckHelper::isDash(RotatedRect letterArea) {
 
 	//Check if it has the form of a dash.
 	float sideRelation = height / width;
-	if (sideRelation > 0.3 || sideRelation < 0.2) {
+	if (sideRelation > 0.35 || sideRelation < 0.2) {
 		return false;
 	}
 
