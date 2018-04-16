@@ -26,13 +26,13 @@ bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
 	for (wchar_t character : title) {
 
-		if (charactersInName >= LettersInShortestCardName()) {
-			return true;
-		}
-
 		bool isCharacter = (character != L' ');
 		if (isCharacter) {
 			charactersInName++;
+		}
+
+		if (charactersInName >= LettersInShortestCardName()) {
+			return true;
 		}
 	}
 
