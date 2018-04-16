@@ -123,9 +123,14 @@ bool LetterCheckHelper::isDash(RotatedRect letterArea) {
 		return false;
 	}
 
-	//Check if it has the form of a dash.
+	//Get the height and width.
 	float height = letterArea.size.height;
 	float width = letterArea.size.width;
+	if (letterArea.angle < -45) {
+		swap(height, width);
+	}
+
+	//Check if it has the form of a dash.
 	float sideRelation = height / width;
 	if (sideRelation > 0.3 || sideRelation < 0.2) {
 		return false;
