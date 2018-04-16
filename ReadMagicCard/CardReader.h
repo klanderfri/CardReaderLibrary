@@ -46,8 +46,10 @@ private:
 	bool finalTitleExtractionSuccess = false;
 	//Tells how confident Tesseract was of decoding the title.
 	int finalTitleOcrConfidence = 0;
-	//The number of title images of the card the debug algorithm has stored to disk.
+	//The number of OCR-prepared title images of the card the debug algorithm has stored to disk.
 	int numberOfOcrTitlesStoredForDebug;
+	//The number of title images of the card the debug algorithm has stored to disk.
+	int numberOfTitleImagesStoredForDebug;
 	//The number of times the algorithm has tried to read the card.
 	int numberOfCardReadTries;
 };

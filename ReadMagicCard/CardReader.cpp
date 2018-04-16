@@ -70,6 +70,7 @@ wstring CardReader::readTitle(Mat cardImage) {
 
 	//Try reading the title.
 	numberOfOcrTitlesStoredForDebug = 0;
+	numberOfTitleImagesStoredForDebug = 0;
 	numberOfCardReadTries = 0;
 	auto result = readTitle(cardImage, NormalTitle);
 
@@ -291,6 +292,7 @@ void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, 
 
 	//Store result for debugging.
 	if (runDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, outImage, imageFileName, L"6 - Title Section");
+		wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(++numberOfTitleImagesStoredForDebug));
+		SaveOcvImage::SaveImageData(systemMethods, outImage, filename, L"6 - Title Section");
 	}
 }
