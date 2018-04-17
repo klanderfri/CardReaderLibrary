@@ -20,6 +20,9 @@ CardNameInfo::~CardNameInfo()
 
 bool CardNameInfo::IsConfidentTitle(SystemMethods* systemMethods, int minimumConfidence) {
 
+	//First of, we need to have a successful extraction of the title.
+	if (!IsSuccessful()) { return false; }
+
 	//The Tesseract algorithm needs to be confident with the result otherwise we shouldn't either.
 	if (Confidence < minimumConfidence) { return false; }
 
@@ -34,5 +37,8 @@ bool CardNameInfo::IsConfidentTitle(SystemMethods* systemMethods, int minimumCon
 
 bool CardNameInfo::IsSuccessful() {
 
-	return (Confidence > 0);
+	if (Confidence == 0) { return false; }
+	if (CardName == L"") { return false; }
+
+	return true;
 }
