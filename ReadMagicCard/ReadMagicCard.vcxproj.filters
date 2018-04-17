@@ -156,6 +156,9 @@
     <ClInclude Include="TitleLetterFixer.h">
       <Filter>Engine\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="ReadingConfiguration.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="SystemMethods.cpp">
       <Filter>Libraries\SystemMethods</Filter>
+    </ClCompile>
+    <ClCompile Include="ReadingConfiguration.cpp">
+      <Filter>Core\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

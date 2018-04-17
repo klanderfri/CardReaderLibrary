@@ -14,7 +14,9 @@ using namespace cv;
 using namespace std;
 
 CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool runDebugging)
-	: BasicReaderData(imageFileName, Mat(), systemMethods, runDebugging)
+	: BasicReaderData(imageFileName, Mat(), systemMethods, runDebugging),
+	NORMAL_OCR_CONFIDENCE_THRESH(75),
+	HIGH_OCR_CONFIDENCE_THRESH(80)
 {
 }
 
@@ -27,17 +29,17 @@ wstring CardReader::GetImageFileName() {
 	return imageFileName;
 }
 
-bool CardReader::GetSuccess() {
+CardNameInfo CardReader::GetResult() {
 
-	return finalTitleExtractionSuccess;
+	return finalResult;
 }
 
-int CardReader::GetConfidence() {
+void CardReader::ReadCardName() {
 
-	return finalTitleOcrConfidence;
-}
-
-wstring CardReader::ExtractCardName() {
+	//Reset variables keeping track of the number of X tries.
+	numberOfOcrTitlesStoredForDebug = 0;
+	numberOfTitleImagesStoredForDebug = 0;
+	numberOfCardReadTries = 0;
 
 	//Load the image.
 	Mat originalImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
@@ -45,11 +47,23 @@ wstring CardReader::ExtractCardName() {
 	//Extract the card part.
 	Mat cardImage = extractCardImage(originalImage);
 
-	//Extract the title text.
-	wstring title = readTitle(cardImage);
+	vector<ReadingConfiguration> configs {
+		ReadingConfiguration(120, false),
+		ReadingConfiguration(120, true),
+		ReadingConfiguration(80, false),
+		ReadingConfiguration(140, false),
+		ReadingConfiguration(80, true),
+		ReadingConfiguration(140, true)
+	};
 
-	//Return the extracted card name.
-	return title;
+	//Extract the title text.
+	finalResult = readTitle1(cardImage, true, configs, NormalTitle);
+	finalResult.FileName = imageFileName;
+
+	//Oops! Seems like we couldn't get any title text.
+	if (!finalResult.IsSuccessful()) {
+		finalResult.CardName = L"ERROR: Could not OCR-read the title!";
+	}
 }
 
 Mat CardReader::extractCardImage(Mat originalImage) {
@@ -66,96 +80,123 @@ Mat CardReader::extractCardImage(Mat originalImage) {
 	return cardImage;
 }
 
-wstring CardReader::readTitle(Mat cardImage) {
+CardNameInfo CardReader::readTitle1(Mat cardImage, bool searchForAkhSplitHalf, vector<ReadingConfiguration> configs, CardTitleType cardType) {
 
-	//Try reading the title.
-	numberOfOcrTitlesStoredForDebug = 0;
-	numberOfTitleImagesStoredForDebug = 0;
-	numberOfCardReadTries = 0;
-	auto result = readTitle(cardImage, NormalTitle);
+	CardNameInfo bestResult;
+	Mat cardImageForBestResult;
 
-	//The method reading the title returns an empty result if it failed.
-	if (result.Confidence > 0) {
+	bool hasFoundGoodResult = false;
+	size_t numberOfConfigs = configs.size();
 
-		finalTitleExtractionSuccess = true;
-		return result.Text;
-	}
+	for (size_t i = 0; i < numberOfConfigs; i++) {
 
-	//Try rotate the card. It might be that easy...
-	rotate(cardImage, cardImage, ROTATE_180);
+		ReadingConfiguration currentReadingConfig = configs[i];
 
-	//Try reading the title again.
-	result = readTitle(cardImage, NormalTitle);
+		Mat cardIterationCopy;
+		cardImage.copyTo(cardIterationCopy);
 
-	//The method reading the title returns an empty result if it failed.
-	if (result.Confidence > 0) {
+		if (currentReadingConfig.Rotate180Degrees) {
+			rotate(cardIterationCopy, cardIterationCopy, ROTATE_180);
+		}
 
-		finalTitleExtractionSuccess = true;
-		return result.Text;
-	}
+		CardNameInfo tempResult = readTitle2(cardIterationCopy, currentReadingConfig, cardType);
 
-	throw OperationException("ERROR: Could not OCR-read the title!");
-}
+		if (bestResult.Confidence < tempResult.Confidence) {
+			bestResult = tempResult;
+			cardIterationCopy.copyTo(cardImageForBestResult);
+		}
 
-OcrDecodeResult CardReader::readTitle(Mat cardImage, CardTitleType titleType) {
+		//Sometimes we can be pretty sure we got the title.
+		hasFoundGoodResult = (bestResult.Confidence > HIGH_OCR_CONFIDENCE_THRESH);
 
-	OcrDecodeResult result;
+		//It's only useful to search for Amonkhet split card in certain circumstances.
+		bool acceptableResult = (bestResult.Confidence > NORMAL_OCR_CONFIDENCE_THRESH);
+		bool isLastIteration = (i == numberOfConfigs - 1);
+		bool executeSearchForAkhSplitHalf = searchForAkhSplitHalf && (hasFoundGoodResult || acceptableResult && isLastIteration) && bestResult.CardType == NormalTitle;
 
-	//Get title assuming we got a normal card.
-	vector<Mat> ocrReadyTitles;
-	bool success = extractOcrReadyTitle(cardImage, ocrReadyTitles, titleType);
-	
-	if (success) {
+		if (executeSearchForAkhSplitHalf) {
 
-		//Read the title.
-		result = ocrReadTitle(ocrReadyTitles);
-		success = result.IsConfidentMtgTitle(systemMethods);
+			Mat akhSplitHalf = getSplitCardHalves(cardImageForBestResult, AkhSplitCardTitle)[1];
 
-		if (success && titleType == NormalTitle) {
+			//Extract all search configurations that are not rotating the card.
+			//This because if the title is OK then we know where the Amonkhet split title is.
+			vector<ReadingConfiguration> splitSearchConfigs;
+			splitSearchConfigs.push_back(ReadingConfiguration(currentReadingConfig.BinaryThreshold, false)); //The split title probably has the same light as the title so try the same threshold first.
+			for (ReadingConfiguration config : configs) {
+				if (!config.Rotate180Degrees &&
+					config.BinaryThreshold != currentReadingConfig.BinaryThreshold) {
 
-			//Great! But could it be an Amonkhet split card?
-
-			vector<Mat> halves = getSplitCardHalves(cardImage, AkhSplitCardTitle);
-			OcrDecodeResult splitResultB = readTitle(halves[1], AkhSplitCardTitle);
-
-			if (!hasResultFailed(splitResultB)) {
-
-				//Join the titles to a split card name.
-				OcrDecodeResult splitResult = joinSplitCardTitles(result, splitResultB);
-
-				bool splitSuccess = splitResult.IsConfidentMtgTitle(systemMethods);
-				if (splitSuccess) {
-					result = splitResult;
+					splitSearchConfigs.push_back(config);
 				}
 			}
 
-			//If the main title has been successfully read then we consider the card read one time
-			//no matter if the Amonkhet split card part was successfully read or not.
-			//That is because most of the times we read the split part just to see if it is a split card.
-			storeOcrConfidence(result, ++numberOfCardReadTries);
+			//Fetch the result for the split half.
+			CardNameInfo splithalfResult = readTitle1(akhSplitHalf, false, splitSearchConfigs, AkhSplitCardTitle);
+			bool successfullResult = !hasResultFailed(splithalfResult) && splithalfResult.IsConfidentTitle(systemMethods, NORMAL_OCR_CONFIDENCE_THRESH);
+
+			if (successfullResult) {
+
+				//Join the titles to a split card name.
+				bestResult = joinSplitCardTitles(bestResult, splithalfResult);
+				bestResult.CardType = AkhSplitCardTitle;
+			}
 		}
+		else {
+			storeOcrConfidence(bestResult, ++numberOfCardReadTries);
+		}
+
+		//Quit searching when we have find an acceptable result.
+		if (hasFoundGoodResult) { break; }
 	}
 
-	if (!success && titleType == NormalTitle) {
+	return bestResult;
+}
+
+CardNameInfo CardReader::readTitle2(Mat cardImage, ReadingConfiguration config, CardTitleType cardType) {
+
+	//Try reading the title.
+	return readTitle3(cardImage, cardType, config.BinaryThreshold);
+}
+
+CardNameInfo CardReader::readTitle3(const Mat cardImage, const CardTitleType titleType, const int binaryThreshold) {
+
+	CardNameInfo result;
+	bool couldExtractTitleImage = false, couldExtractCardTitleText = false;
+
+	//Get title image assuming we got a normal card.
+	vector<Mat> ocrReadyTitles;
+	couldExtractTitleImage = extractOcrReadyTitle(cardImage, ocrReadyTitles, titleType, binaryThreshold);
+	
+	if (couldExtractTitleImage) {
+
+		result = ocrReadTitle(ocrReadyTitles);
+		couldExtractCardTitleText = result.IsConfidentTitle(systemMethods, NORMAL_OCR_CONFIDENCE_THRESH);
+	}
+	
+	if (!couldExtractCardTitleText && titleType == NormalTitle) {
 
 		//OK. Perhaps it's a split card?
-		
+
 		//Read the titles of the both halves.
 		vector<Mat> halves = getSplitCardHalves(cardImage, SplitCardTitle);
-		OcrDecodeResult resultA, resultB;
-		resultA = readTitle(halves[0], SplitCardTitle);
+		CardNameInfo resultA, resultB;
+		resultA = readTitle3(halves[0], SplitCardTitle, binaryThreshold);
 
 		//Result B is useless if result A has failed.
-		if (!hasResultFailed(resultA)) {
-			resultB = readTitle(halves[1], SplitCardTitle);
+		bool couldGetSplitTitle = !hasResultFailed(resultA);
+		if (couldGetSplitTitle) {
+			resultB = readTitle3(halves[1], SplitCardTitle, binaryThreshold);
 		}
 
 		//Check if we got success.
-		if (!hasResultFailed(resultB)) {
+		couldGetSplitTitle = !hasResultFailed(resultB);
+		if (couldGetSplitTitle) {
+
+			couldExtractCardTitleText = true;
 
 			//Join the titles to a split card name.
 			result = joinSplitCardTitles(resultA, resultB);
-			success = result.IsConfidentMtgTitle(systemMethods);
+			result.CardType = SplitCardTitle;
 		}
 
 		//It should be considered as another try to read the card
@@ -163,32 +204,26 @@ OcrDecodeResult CardReader::readTitle(Mat cardImage, CardTitleType titleType) {
 		storeOcrConfidence(result, ++numberOfCardReadTries);
 	}
 
-	if (!success) {
-		//We couldn't extract the title so return failure.
-		return OcrDecodeResult();
-	}
-
-	return result;
+	//Return empty result to indicate failure if no card title text could be extracted.
+	return couldExtractCardTitleText ? result : CardNameInfo();
 }
 
-OcrDecodeResult CardReader::joinSplitCardTitles(OcrDecodeResult resultA, OcrDecodeResult resultB) {
+CardNameInfo CardReader::joinSplitCardTitles(CardNameInfo resultA, CardNameInfo resultB) {
 
-	OcrDecodeResult result;
-	result.Text = resultA.Text + L" // " + resultB.Text;
+	CardNameInfo result;
+	result.CardName = resultA.CardName + L" // " + resultB.CardName;
 	result.Confidence = min(resultA.Confidence, resultB.Confidence);
 
 	return result;
 }
 
-void CardReader::storeOcrConfidence(OcrDecodeResult result, int numberOfTries) {
+void CardReader::storeOcrConfidence(CardNameInfo result, int numberOfTries) {
 
 	if (runDebugging) {
 
 		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
-		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.Text, result.Confidence);
+		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.CardName, result.Confidence);
 	}
-
-	finalTitleOcrConfidence = result.Confidence;
 }
 
 vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTitleType titleType) {
@@ -203,7 +238,7 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTit
 	if (titleType != AkhSplitCardTitle) {
 
 		//The extra border limit is because the card border is bigger in relation to the split card half.
-		int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 17.0); //40
+		int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 9.7); //70
 		Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
 		ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
 	}
@@ -215,16 +250,16 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTit
 	return halves;
 }
 
-bool CardReader::hasResultFailed(OcrDecodeResult result) {
+bool CardReader::hasResultFailed(CardNameInfo result) {
 
 	if (result.Confidence > 0) { return false; }
-	if (result.Text != L"") { return false; }
+	if (result.CardName != L"") { return false; }
 
 	//Failure! We got a failure!
 	return true;
 }
 
-OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
+CardNameInfo CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 
 	OcrDecodeResult bestResult;
 	ImageOcrHelper ocrReader(systemMethods);
@@ -240,10 +275,14 @@ OcrDecodeResult CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 		}
 	}
 
-	return bestResult;
+	CardNameInfo cardInfo;
+	cardInfo.CardName = bestResult.Text;
+	cardInfo.Confidence = bestResult.Confidence;
+
+	return cardInfo;
 }
 
-bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, CardTitleType type) {
+bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, const CardTitleType type, const int binaryThreshold) {
 
 	//Extract the title part.
 	Mat titleSection;
@@ -251,7 +290,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 	//Prepare the title for OCR reading.
 	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
-	bool success = titleExtractor.ExtractTitle(outImages);
+	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold);
 
 	//See if we need to stop.
 	if (!success) {

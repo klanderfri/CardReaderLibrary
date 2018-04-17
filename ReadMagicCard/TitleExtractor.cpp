@@ -17,7 +17,7 @@ TitleExtractor::~TitleExtractor()
 {
 }
 
-bool TitleExtractor::ExtractTitle(vector<Mat>& outImages) {
+bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, const int binaryThreshold) {
 
 	int amountOfGauss = (int)(originalImageData.size().height / 18.1818);
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
@@ -32,14 +32,11 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages) {
 	GaussianBlur(outImage, outImage, Size(amountOfGauss, amountOfGauss), 0, 0);
 
 	//Threshold the image to get the important pixels.
-	Mat lowThreshImage, highThreshImage;
-	threshold(outImage, lowThreshImage, 80, 255, THRESH_BINARY);
-	threshold(outImage, highThreshImage, 120, 255, THRESH_BINARY);
+	threshold(outImage, outImage, binaryThreshold, 255, THRESH_BINARY);
 
 	//Extract a clean image containing the title.
 	int numberOfTries = 0;
-	bool success = getTitleText(lowThreshImage, outImages, ++numberOfTries);
-	success = getTitleText(highThreshImage, outImages, ++numberOfTries) || success;
+	bool success = getTitleText(outImage, outImages, ++numberOfTries);
 
 	return success;
 }
@@ -68,14 +65,8 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
 	if (letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) { return false; }
 
+	//Get the areas of the entire title.
 	Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
-
-	//Something is wrong if there are no letters.
-	if (combinedLetterContorus.empty()) {
-
-		return false;
-	}
-
 	RotatedRect textArea = minAreaRect(combinedLetterContorus);
 	Rect boundTextArea = boundingRect(combinedLetterContorus);
 

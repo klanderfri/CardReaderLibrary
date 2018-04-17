@@ -9,8 +9,5 @@ public:
 
 	int Confidence = 0;
 	std::wstring Text = L"";
-
-	//Checks if we got a confident decode of a MtG title.
-	bool IsConfidentMtgTitle(SystemMethods* systemMethods, int minimumConfidence = 75);
 };
 

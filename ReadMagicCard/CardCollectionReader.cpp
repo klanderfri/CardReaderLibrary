@@ -90,10 +90,8 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		try {
 
 			//Extract the card name.
-			info.FileName = readers[i].GetImageFileName();
-			info.CardName = readers[i].ExtractCardName();
-			info.Confidence = readers[i].GetConfidence();
-			info.Success = readers[i].GetSuccess();
+			readers[i].ReadCardName();
+			info = readers[i].GetResult();
 		}
 		catch (exception& ex) {
 
@@ -105,7 +103,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 
-		if (!info.Success) {
+		if (!info.IsSuccessful()) {
 			amountOfErrors++;
 		}
 

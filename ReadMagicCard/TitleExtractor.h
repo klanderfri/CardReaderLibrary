@@ -10,7 +10,7 @@ public:
 	~TitleExtractor();
 
 	//Extracts an image containing the card title.
-	bool ExtractTitle(std::vector<cv::Mat>& outImages);
+	bool ExtractTitle(std::vector<cv::Mat>& outImages, const int binaryThreshold);
 
 private:
 

@@ -29,7 +29,7 @@ bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInf
 	bool success = true;
 	for (size_t i = 0; i < expectedResults.size(); i++) {
 
-		if (!actualResults[i].Success ||
+		if (!actualResults[i].IsSuccessful() ||
 			!resultsCorresponds(expectedResults[i], actualResults[i])) {
 
 			incorrectResults.push_back(actualResults[i]);
