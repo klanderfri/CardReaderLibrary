@@ -30,15 +30,15 @@ private:
 	//Creates the reading configurations to use when searching for the title.
 	std::vector<ReadingConfiguration> createReadingConfigurations();
 	//Reads the title of the card when we don't know if the card is upside-down or not.
-	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, std::vector<ReadingConfiguration> configs, CardTitleType cardType, bool searchForAkhSplitHalf);
+	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, std::vector<ReadingConfiguration> configs, CardTitleType cardTitleTypeToSearch);
 	//Checks if the result is so confident that we can assume we got the title.
 	bool isResultGoodEnoughToQuit(CardNameInfo result);
 	//Checks if we have come to a situation when it's time to search for any secondary Amonkhet split card title .
-	bool shouldWeExecuteAmonkhetSplitHalfSearch(const bool searchForAkhSplitHalf, const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardType);
+	bool shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardTitleTypeToSearch);
 	//Reads the secondary title of an Amonkhet split card.
-	CardNameInfo readAmonkhetSplitTitle(const cv::Mat cardImageForBestResult, const ReadingConfiguration config, CardNameInfo &bestResult);
+	CardNameInfo readAmonkhetSplitTitle(const cv::Mat cardImageGivingBestResult, const ReadingConfiguration config);
 	//Reads the title of the card when we can assume it's not upside down.
-	CardNameInfo readStraightCardTitle(const cv::Mat cardImage, const ReadingConfiguration config, const CardTitleType titleType);
+	CardNameInfo readStraightCardTitle(const cv::Mat cardImage, const ReadingConfiguration config, const CardTitleType cardTitleTypeToSearch);
 	//Reads the title of a split card.
 	CardNameInfo readSplitCardTitle(cv::Mat cardImage, const ReadingConfiguration config);
 	//Joins the titles of two halves of a split card into one title.
