@@ -8,7 +8,7 @@ enum CardTitleType {
 	//The card is split an as such has the titles on the side.
 	SplitCardTitle = 2,
 	
-	//The card is split, with one title in the regular place.
+	//The card is an Amonkhet split card, with one title in the regular place and one title in a split card half.
 	AkhSplitCardTitle = 3,
 	
 	//The card has been transformed.
