@@ -190,6 +190,11 @@ CardNameInfo CardReader::readAmonkhetSplitTitle(const Mat cardImageGivingBestRes
 			config.BinaryThreshold != currentConfig.BinaryThreshold) {
 
 			splitSearchConfigs.push_back(config);
+
+			//Most times, a single extra config will be sufficient since most cards
+			//are regular cards without a second split half. Then it's just waste of time
+			//and resources to put a lot of effort in finding something that doesn't exists.
+			break;
 		}
 	}
 
