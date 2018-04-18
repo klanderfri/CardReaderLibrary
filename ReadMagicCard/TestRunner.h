@@ -10,7 +10,9 @@ public:
 	~TestRunner();
 	
 	//Runs tests checking if the result of the card read is as expected, indicating any broken code.
-	bool RunTests(std::vector<CardNameInfo> actualResults, std::vector<CardNameInfo>& incorrectResults);
+	bool RunCardTests(std::vector<CardNameInfo> actualResults, std::vector<CardNameInfo>& incorrectResults);
+	//Runs tests checking if the code sorting cards are working as intended.
+	bool RunSortTest();
 
 private:
 	//Checks if two result pairs corresponds, i.e if the actual result corresponds with the expected result.
@@ -20,7 +22,11 @@ private:
 	//Compares two subresults by the file name.
 	static bool compareByFileName(CardNameInfo info1, CardNameInfo info2);
 	//Gets a vector containing the expected result.
-	std::vector<CardNameInfo> getExpectedResult();
+	std::vector<CardNameInfo> getExpectedCardResult();
+	//Creates a list of cards the sort algorithm must successfully sort.
+	std::vector<CardNameInfo> getCardListToSort();
+	//Gets a wstring containing the expected sort result.
+	std::wstring getExpectedSortResult();
 
 	//An object holding OS-specific methods.
 	SystemMethods* systemMethods;

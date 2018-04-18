@@ -14,9 +14,9 @@ TestRunner::~TestRunner()
 {
 }
 
-bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
+bool TestRunner::RunCardTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
 
-	vector<CardNameInfo> expectedResults = getExpectedResult();
+	vector<CardNameInfo> expectedResults = getExpectedCardResult();
 
 	//Check that all test cases are acounted for.
 	if (expectedResults.size() != actualResults.size()) { return false; }
@@ -37,6 +37,22 @@ bool TestRunner::RunTests(vector<CardNameInfo> actualResults, vector<CardNameInf
 		}
 	}
 
+	return success;
+}
+
+bool TestRunner::RunSortTest() {
+
+	vector<CardNameInfo> cardList = getCardListToSort();
+	sort(cardList.begin(), cardList.end(), TestRunner::compareByCardName);
+
+	wstring expectedResult = getExpectedSortResult();
+	wstring actualResult;
+	for (CardNameInfo card : cardList) {
+
+		actualResult += card.CardName + L"\n";
+	}
+
+	bool success = (actualResult == expectedResult);
 	return success;
 }
 
@@ -73,10 +89,10 @@ bool TestRunner::compareByFileName(CardNameInfo info1, CardNameInfo info2)
 	return MtgCardInfoHelper::CompareCardNames(info1.FileName, info2.FileName) < 0;
 }
 
-vector<CardNameInfo> TestRunner::getExpectedResult() {
+vector<CardNameInfo> TestRunner::getExpectedCardResult() {
 
 	//The test data files, i.e the image files, can be downloaded from a third-party server.
-	//Check the ReadMe for information about the adress.
+	//Check the CONTRIBUTING.md for information about the adress.
 
 	vector<CardNameInfo> expectedResults {
 
@@ -131,4 +147,54 @@ vector<CardNameInfo> TestRunner::getExpectedResult() {
 	};
 
 	return expectedResults;
+}
+
+vector<CardNameInfo> TestRunner::getCardListToSort() {
+
+	vector<CardNameInfo> cardListToSort {
+
+		CardNameInfo(L"", L"Vear"),
+		CardNameInfo(L"", L"Buccaneer's Crest"),
+		CardNameInfo(L"", L"Jötun Grunt"),
+		CardNameInfo(L"", L"Buccaneers Bravado"),
+		CardNameInfo(L"", L"Very Fast Raptor"),
+		CardNameInfo(L"", L"Dark Martyr"),
+		CardNameInfo(L"", L"Sun-Crested Raptor"),
+		CardNameInfo(L"", L"Dark"),
+		CardNameInfo(L"", L"Jotun Grunt"),
+		CardNameInfo(L"", L"Suncrap Gather"),
+		CardNameInfo(L"", L"ZOMBIE"),
+		CardNameInfo(L"", L"Zonder"),
+		CardNameInfo(L"", L"Darker Offering"),
+		CardNameInfo(L"", L"Jötun Owl Keeper"),
+		CardNameInfo(L"", L"Wear // Tear"),
+		CardNameInfo(L"", L"Wear Away"),
+		CardNameInfo(L"", L"Buccaneer's Armada"),
+	};
+
+	return cardListToSort;
+}
+
+wstring TestRunner::getExpectedSortResult() {
+
+	wstring result =
+		L"Buccaneer's Armada\n"
+		L"Buccaneers Bravado\n"
+		L"Buccaneer's Crest\n"
+		L"Dark\n"
+		L"Dark Martyr\n"
+		L"Darker Offering\n"
+		L"Jotun Grunt\n"
+		L"Jötun Grunt\n"
+		L"Jötun Owl Keeper\n"
+		L"Suncrap Gather\n"
+		L"Sun-Crested Raptor\n"
+		L"Vear\n"
+		L"Very Fast Raptor\n"
+		L"Wear Away\n"
+		L"Wear // Tear\n"
+		L"ZOMBIE\n"
+		L"Zonder\n";
+
+	return result;
 }

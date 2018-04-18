@@ -61,7 +61,7 @@ int CardReaderApplication::Run() {
 	messages.printExecutionTimeMessage(startTime, endTime, numberOfFiles, !runDebugging);
 
 	//Run tests to see if any code has been broken.
-	if (runDebugging) {
+	if (runDebugging && !runSilent) {
 		runTestCases(result);
 	}
 
@@ -136,22 +136,39 @@ void CardReaderApplication::runTestCases(vector<CardNameInfo> result) {
 
 	vector<CardNameInfo> incorrectResults;
 	TestRunner tester(systemMethods);
-	bool testsSucceded = tester.RunTests(result, incorrectResults);
+	bool cardTestsSucceded = tester.RunCardTests(result, incorrectResults);
+	bool sortTestsSucceded = tester.RunSortTest();
 
-	if (testsSucceded) {
+	if (cardTestsSucceded && sortTestsSucceded) {
+
 		systemMethods->SetCommandLineTextColour(Colour::Green);
 		wcout << L"All test cases still works!" << endl << endl;
 	}
-	else if (incorrectResults.size() == 0) {
-		systemMethods->SetCommandLineTextColour(Colour::Red);
-		wcout << L"There are missing test cases!" << endl << endl;
-	}
 	else {
+
 		systemMethods->SetCommandLineTextColour(Colour::Red);
-		wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken test cases!" << endl;
-		for (CardNameInfo subResult : incorrectResults) {
-			wcout << subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+
+		//Inform about card identifying trouble.
+		if (!cardTestsSucceded) {
+
+			if (incorrectResults.size() == 0) {
+
+				wcout << L"There are missing card test cases!" << endl;
+			}
+			else {
+
+				wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
+				for (CardNameInfo subResult : incorrectResults) {
+					wcout << subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+				}
+			}
 		}
+
+		//Inform about trouble in the sorting.
+		if (!sortTestsSucceded) {
+			wcout << L"The algorithm for sorting card is broken!" << endl;
+		}
+
 		wcout << endl;
 	}
 
