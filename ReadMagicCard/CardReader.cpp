@@ -42,10 +42,10 @@ void CardReader::ReadCardName() {
 	numberOfCardReadTries = 0;
 
 	//Load the image.
-	Mat originalImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
+	Mat originalCardImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
 
 	//Extract the card part.
-	Mat cardImage = extractCardImage(originalImage);
+	Mat cardImage = extractCardImage(originalCardImage);
 
 	//Extract the title text.
 	vector<ReadingConfiguration> configs = createReadingConfigurations();
@@ -58,10 +58,10 @@ void CardReader::ReadCardName() {
 	}
 }
 
-Mat CardReader::extractCardImage(Mat originalImage) {
+Mat CardReader::extractCardImage(const Mat originalCardImage) {
 
 	Mat cardImage;
-	CardExtractor cardExtractor(imageFileName, originalImage, systemMethods, runDebugging);
+	CardExtractor cardExtractor(imageFileName, originalCardImage, systemMethods, runDebugging);
 	bool success = cardExtractor.ExtractCard(cardImage);
 
 	//See if we need to stop.
@@ -86,7 +86,7 @@ vector<ReadingConfiguration> CardReader::createReadingConfigurations() {
 	return configs;
 }
 
-CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, vector<ReadingConfiguration> configs, CardTitleType cardTitleTypeToSearch) {
+CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, const vector<ReadingConfiguration> configs, const CardTitleType cardTitleTypeToSearch) {
 
 	CardNameInfo bestResult;
 	Mat cardImageGivingBestResult;
@@ -146,7 +146,7 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, vector<Read
 	return bestResult;
 }
 
-bool CardReader::isResultGoodEnoughToQuit(CardNameInfo result) {
+bool CardReader::isResultGoodEnoughToQuit(const CardNameInfo result) {
 
 	return result.Confidence > HIGH_OCR_CONFIDENCE_THRESH;
 }
@@ -228,7 +228,7 @@ CardNameInfo CardReader::readStraightCardTitle(const Mat cardImage, const Readin
 	return couldExtractCardTitleText ? result : CardNameInfo();
 }
 
-CardNameInfo CardReader::readSplitCardTitle(Mat cardImage, const ReadingConfiguration config)
+CardNameInfo CardReader::readSplitCardTitle(const Mat cardImage, const ReadingConfiguration config)
 {
 	CardNameInfo result;
 
@@ -253,7 +253,7 @@ CardNameInfo CardReader::readSplitCardTitle(Mat cardImage, const ReadingConfigur
 	return result;
 }
 
-CardNameInfo CardReader::joinSplitCardTitles(CardNameInfo resultA, CardNameInfo resultB) {
+CardNameInfo CardReader::joinSplitCardTitles(const CardNameInfo resultA, const CardNameInfo resultB) {
 
 	CardNameInfo result;
 	result.CardName = resultA.CardName + L" // " + resultB.CardName;
@@ -262,7 +262,7 @@ CardNameInfo CardReader::joinSplitCardTitles(CardNameInfo resultA, CardNameInfo 
 	return result;
 }
 
-void CardReader::storeOcrConfidence(CardNameInfo result, int numberOfTries) {
+void CardReader::storeOcrConfidence(const CardNameInfo result, const int numberOfTries) {
 
 	if (runDebugging) {
 
@@ -271,11 +271,11 @@ void CardReader::storeOcrConfidence(CardNameInfo result, int numberOfTries) {
 	}
 }
 
-vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTitleType titleType) {
+vector<Mat> CardReader::getSplitCardHalves(const Mat cardImage, const CardTitleType titleType) {
 
 	Mat splitCard, halfA, halfB;
 
-	originalCardImage.copyTo(splitCard);
+	cardImage.copyTo(splitCard);
 	int rotation = (titleType == AkhSplitCardTitle) ? ROTATE_90_COUNTERCLOCKWISE : ROTATE_90_CLOCKWISE;
 	rotate(splitCard, splitCard, rotation);
 
@@ -295,7 +295,7 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat& originalCardImage, CardTit
 	return halves;
 }
 
-CardNameInfo CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
+CardNameInfo CardReader::ocrReadTitle(const vector<Mat> ocrTitles) {
 
 	OcrDecodeResult bestResult;
 	ImageOcrHelper ocrReader(systemMethods);
@@ -318,11 +318,11 @@ CardNameInfo CardReader::ocrReadTitle(vector<Mat> ocrTitles) {
 	return cardInfo;
 }
 
-bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, const CardTitleType type, const int binaryThreshold) {
+bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, const CardTitleType titleType, const int binaryThreshold) {
 
 	//Extract the title part.
 	Mat titleSection;
-	cropImageToTitleSection(cardImage, titleSection, type);
+	cropImageToTitleSection(cardImage, titleSection, titleType);
 
 	//Prepare the title for OCR reading.
 	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
@@ -348,22 +348,22 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	return true;
 }
 
-void CardReader::cropImageToTitleSection(const Mat rawCardImage, Mat& outImage, CardTitleType type) {
+void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, const CardTitleType titleType) {
 
 	Rect titleBox;
-	switch (type) {
+	switch (titleType) {
 	case NormalTitle:
-		titleBox = MtgCardInfoHelper::GetNormalTitleSectionBox(rawCardImage.size());
+		titleBox = MtgCardInfoHelper::GetNormalTitleSectionBox(cardImage.size());
 		break;
 	case SplitCardTitle:
-		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(rawCardImage.size());
+		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(cardImage.size());
 		break;
 	case AkhSplitCardTitle:
-		titleBox = MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(rawCardImage.size());
+		titleBox = MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(cardImage.size());
 		break;
 	}
 
-	ImageHelper::CropImage(rawCardImage, outImage, titleBox);
+	ImageHelper::CropImage(cardImage, outImage, titleBox);
 
 	//Store result for debugging.
 	if (runDebugging) {

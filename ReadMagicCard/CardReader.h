@@ -26,33 +26,33 @@ private:
 	int HIGH_OCR_CONFIDENCE_THRESH;
 
 	//Extracts the part of the image containing the card.
-	cv::Mat extractCardImage(cv::Mat originalImage);
+	cv::Mat extractCardImage(const cv::Mat originalCardImage);
 	//Creates the reading configurations to use when searching for the title.
 	std::vector<ReadingConfiguration> createReadingConfigurations();
 	//Reads the title of the card when we don't know if the card is upside-down or not.
-	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, std::vector<ReadingConfiguration> configs, CardTitleType cardTitleTypeToSearch);
+	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, const std::vector<ReadingConfiguration> configs, const CardTitleType cardTitleTypeToSearch);
 	//Checks if the result is so confident that we can assume we got the title.
-	bool isResultGoodEnoughToQuit(CardNameInfo result);
+	bool isResultGoodEnoughToQuit(const CardNameInfo result);
 	//Checks if we have come to a situation when it's time to search for any secondary Amonkhet split card title .
 	bool shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardTitleTypeToSearch);
 	//Reads the secondary title of an Amonkhet split card.
-	CardNameInfo readAmonkhetSplitTitle(const cv::Mat cardImageGivingBestResult, const ReadingConfiguration config);
+	CardNameInfo readAmonkhetSplitTitle(const cv::Mat cardImageGivingBestResult, const ReadingConfiguration currentConfig);
 	//Reads the title of the card when we can assume it's not upside down.
 	CardNameInfo readStraightCardTitle(const cv::Mat cardImage, const ReadingConfiguration config, const CardTitleType cardTitleTypeToSearch);
 	//Reads the title of a split card.
-	CardNameInfo readSplitCardTitle(cv::Mat cardImage, const ReadingConfiguration config);
+	CardNameInfo readSplitCardTitle(const cv::Mat cardImage, const ReadingConfiguration config);
 	//Joins the titles of two halves of a split card into one title.
-	CardNameInfo joinSplitCardTitles(CardNameInfo resultA, CardNameInfo resultB);
+	CardNameInfo joinSplitCardTitles(const CardNameInfo resultA, const CardNameInfo resultB);
 	//Store the confidence of the OCR read.
-	void storeOcrConfidence(CardNameInfo result, int numberOfTries);
+	void storeOcrConfidence(const CardNameInfo result, const int numberOfTries);
 	//Splits a card into the two split card halves.
-	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat& originalCardImage, CardTitleType titleType);
+	std::vector<cv::Mat> getSplitCardHalves(const cv::Mat cardImage, const CardTitleType titleType);
 	//Reads the OCR preparied titles and returnes the best result.
-	CardNameInfo ocrReadTitle(std::vector<cv::Mat> ocrTitles);
+	CardNameInfo ocrReadTitle(const std::vector<cv::Mat> ocrTitles);
 	//Extracts and preprocesses the title.
-	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, const CardTitleType type, const int binaryThreshold);
+	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, const CardTitleType titleType, const int binaryThreshold);
 	//Crops out the card title.
-	void cropImageToTitleSection(const cv::Mat rawCardImage, cv::Mat& outImages, CardTitleType type);
+	void cropImageToTitleSection(const cv::Mat cardImage, cv::Mat& outImage, const CardTitleType titleType);
 
 	//The final result of the card reading.
 	CardNameInfo finalResult;
