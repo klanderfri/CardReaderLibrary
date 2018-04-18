@@ -17,6 +17,8 @@ LetterFilter::~LetterFilter()
 
 LetterAreas LetterFilter::RunFilter(Contours contours) {
 
+	//Mat remainingLettersImage = ImageHelper::DrawLimits(CURRENT_LETTER_IMAGE, letters, 3); //Code showing which letters are kept.
+
 	LetterAreas letters = getPossibleLetterAreas(contours);
 	letters = filterOutDuplicates(letters);
 	letters = filterOutNoise(letters);
@@ -134,16 +136,41 @@ LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) 
 
 	vector<LetterAreas> sections = groupLettersBySection(lettersToFilter);
 
-	//Remove sections not containing enough letters to be the title.
+	Mat remainingLettersImage = ImageHelper::DrawLimits(CURRENT_LETTER_IMAGE, lettersToFilter, 3);
+
+	//Remove unworthy sections.
 	vector<LetterAreas> letterSections;
 	for (LetterAreas section : sections) {
+
+		//Remove sections not containing enough letters to be the title.
 		size_t sectionSize = section.size();
-		if (sectionSize >= (size_t)MtgCardInfoHelper::LettersInShortestCardName()) {
-			letterSections.push_back(section);
+		if (sectionSize < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) {
+			continue;
 		}
+
+		//Remove sections that has to much vertical spread between the letters, indicating noise.
+		//This would probably work better if we could find a center trend line and check the spread related to that line.
+		float toppestY = (float)CURRENT_LETTER_IMAGE.rows, bottomestY = 0;
+		for (LetterArea letter : section) {
+
+			if (toppestY > letter.Box.center.y) {
+				toppestY = letter.Box.center.y;
+			}
+			if (bottomestY < letter.Box.center.y) {
+				bottomestY = letter.Box.center.y;
+			}
+		}
+		float verticalSpread = bottomestY - toppestY;
+		float allowedSpread = (float)(WORKING_CARD_HEIGHT / 10.46); //65
+		if (verticalSpread > allowedSpread) {
+			continue;
+		}
+
+		//Seems like an OK section.
+		letterSections.push_back(section);
 	}
-	
-	//Make sure there actually are any sections that are big enough to contain a title.
+
+	//Make sure there actually are any sections left.
 	size_t numberOfSections = letterSections.size();
 	if (numberOfSections == 0) {
 		return LetterAreas();

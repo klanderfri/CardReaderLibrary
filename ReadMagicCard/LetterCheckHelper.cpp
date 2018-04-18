@@ -43,7 +43,7 @@ int LetterCheckHelper::getMaxTitleLetterCoordinateX() {
 }
 
 int LetterCheckHelper::getMinTitleLetterCoordinateX() {
-	return (int)(WORKING_CARD_HEIGHT / 13.6); //50
+	return (int)(WORKING_CARD_HEIGHT / 15.11); //45
 }
 
 int LetterCheckHelper::getMaxTitleLetterCoordinateY() {
