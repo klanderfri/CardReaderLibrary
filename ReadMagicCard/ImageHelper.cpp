@@ -228,14 +228,28 @@ void ImageHelper::ResizeImage(const Mat rawImage, Mat& outImage, int height) {
 	resize(rawImage, outImage, newSize);
 }
 
-void ImageHelper::SetBackgroundByInverting(Mat& image, bool setblackBackground) {
+double ImageHelper::PercentageOfNonZero(const Mat blackAndWhiteimage) {
 
-	int white = countNonZero(image);
-	int black = image.size().area() - white;
+	int white = countNonZero(blackAndWhiteimage);
+	int size = blackAndWhiteimage.size().area();
 
-	if (setblackBackground && white > black ||
-		!setblackBackground && white < black) {
-		image = ~image;
+	double percentage = white / (float)size;
+
+	return percentage;
+}
+
+bool ImageHelper::IsBlackTextWhiteBackground(const Mat blackAndWhiteimage) {
+
+	return PercentageOfNonZero(blackAndWhiteimage) > 0.5;
+}
+
+void ImageHelper::SetBackgroundByInverting(Mat& blackAndWhiteimage, bool setblackBackground) {
+
+	bool isblackOnWhite = IsBlackTextWhiteBackground(blackAndWhiteimage);
+
+	if (setblackBackground && isblackOnWhite ||
+		!setblackBackground && !isblackOnWhite) {
+		blackAndWhiteimage = ~blackAndWhiteimage;
 	}
 }
 

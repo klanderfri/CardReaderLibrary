@@ -17,7 +17,7 @@ TitleExtractor::~TitleExtractor()
 {
 }
 
-bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, const int binaryThreshold) {
+bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold) {
 
 	int amountOfGauss = (int)(originalImageData.size().height / 18.1818);
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
@@ -32,13 +32,32 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, const int binaryThresh
 	GaussianBlur(outImage, outImage, Size(amountOfGauss, amountOfGauss), 0, 0);
 
 	//Threshold the image to get the important pixels.
-	threshold(outImage, outImage, binaryThreshold, 255, THRESH_BINARY);
+	outImage = getBinaryImage(outImage, binaryThreshold);
 
 	//Extract a clean image containing the title.
 	int numberOfTries = 0;
 	bool success = getTitleText(outImage, outImages, ++numberOfTries);
 
 	return success;
+}
+
+Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold) {
+
+	Mat binaryImage, workOriginal;
+	titleImage.copyTo(workOriginal);
+
+	threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
+	if (ImageHelper::PercentageOfNonZero(binaryImage) < 0.3) {
+		workOriginal = ~workOriginal;
+	}
+
+	do {
+		threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
+		binaryThreshold -= 20;
+
+	} while (!ImageHelper::IsBlackTextWhiteBackground(binaryImage) && binaryThreshold > 0);
+	
+	return binaryImage;
 }
 
 int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {

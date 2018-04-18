@@ -39,8 +39,12 @@ public:
 	static void CropImageWithSolidBorder(const cv::Mat rawImage, cv::Mat& outImage, const cv::Rect cropArea, int borderThickness);
 	//Resizes an image to the specified height. The height/width relatio will be preserved.
 	static void ResizeImage(const cv::Mat rawImage, cv::Mat& outImage, int height);
+	//Gives the percentage of pixels that are not zero.
+	static double PercentageOfNonZero(const cv::Mat blackAndWhiteimage);
+	//Checks if the image is black text on white background, i.e if it is mostly white.
+	static bool IsBlackTextWhiteBackground(const cv::Mat blackAndWhiteimage);
 	//Inverts the image background from black to white or vice versa.
-	static void SetBackgroundByInverting(cv::Mat& image, bool setblackBackground);
+	static void SetBackgroundByInverting(cv::Mat& blackAndWhiteimage, bool setblackBackground);
 	//Gives the smallest distance between the center and the limit of a rectangle.
 	static float SmallestDistanceCenterToLimit(cv::RotatedRect rectangle);
 	//Cuts out an area of an image that contains the contour.

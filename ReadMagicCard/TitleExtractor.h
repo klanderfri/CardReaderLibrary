@@ -10,10 +10,12 @@ public:
 	~TitleExtractor();
 
 	//Extracts an image containing the card title.
-	bool ExtractTitle(std::vector<cv::Mat>& outImages, const int binaryThreshold);
+	bool ExtractTitle(std::vector<cv::Mat>& outImages, int binaryThreshold);
 
 private:
 
+	//Creates a black'n'white copy of the image.
+	cv::Mat getBinaryImage(const cv::Mat titleImage, int binaryThreshold);
 	//Makes sure the amount of gauss is valid to use when adding Gaussian blur.
 	int errorProtectGaussAmount(int amountOfGauss);
 	//Extracts the title text area out of an image containing the entire title area.

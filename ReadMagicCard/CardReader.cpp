@@ -148,7 +148,7 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, const vecto
 
 bool CardReader::isResultGoodEnoughToQuit(const CardNameInfo result) {
 
-	return result.Confidence > HIGH_OCR_CONFIDENCE_THRESH;
+	return result.Confidence >= HIGH_OCR_CONFIDENCE_THRESH;
 }
 
 bool CardReader::shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardTitleTypeToSearch) {
@@ -157,7 +157,7 @@ bool CardReader::shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo curre
 	if (cardTitleTypeToSearch != NormalTitle) { return false; }
 
 	//Continue searching for a better main title if the current one us just acceptable.
-	bool acceptableResult = (currentBestResult.Confidence > NORMAL_OCR_CONFIDENCE_THRESH);
+	bool acceptableResult = (currentBestResult.Confidence >= NORMAL_OCR_CONFIDENCE_THRESH);
 	if (!acceptableResult) { return false; }
 
 	//We can skip any further searches for the main title and go for the Amonkhet split one if the main one is excellent clear.
@@ -182,21 +182,6 @@ CardNameInfo CardReader::readAmonkhetSplitTitle(const Mat cardImageGivingBestRes
 
 	//The split title probably has the same light as the title so try the same threshold first.
 	splitSearchConfigs.push_back(ReadingConfiguration(currentConfig.BinaryThreshold, false));
-
-	//Add other relevant configurations to the collection.
-	for (ReadingConfiguration config : createReadingConfigurations()) {
-
-		if (!config.Rotate180Degrees &&
-			config.BinaryThreshold != currentConfig.BinaryThreshold) {
-
-			splitSearchConfigs.push_back(config);
-
-			//Most times, a single extra config will be sufficient since most cards
-			//are regular cards without a second split half. Then it's just waste of time
-			//and resources to put a lot of effort in finding something that doesn't exists.
-			break;
-		}
-	}
 
 	//Fetch the result for the split half.
 	CardNameInfo splitHalfResult = readUnrotatedCardTitle(akhSplitHalf, splitSearchConfigs, AkhSplitCardTitle);
