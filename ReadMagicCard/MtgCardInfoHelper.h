@@ -28,6 +28,8 @@ public:
 	static std::vector<wchar_t> GetAllowedNonLetterCharacters();
 	//Gets the characters that are ignored when sorting/comparing card names.
 	static std::vector<wchar_t> GetAllowedNotRelevantForSortingCharacters();
+	//Checks if a card is an emblem.
+	static bool IsEmblem(const std::wstring title);
 
 private:
 

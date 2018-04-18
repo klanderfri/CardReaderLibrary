@@ -188,3 +188,14 @@ vector<wchar_t> MtgCardInfoHelper::joinCharacterVectors(vector<wchar_t> vectorA,
 
 	return vectorA;
 }
+
+bool MtgCardInfoHelper::IsEmblem(const std::wstring title) {
+
+	if (title.size() != 6) { return false; }
+
+	wstring titleCopy = title;
+	boost::algorithm::to_lower(titleCopy);
+	bool isEmblem = (titleCopy == L"emblem");
+
+	return isEmblem;
+}

@@ -160,6 +160,10 @@ bool CardReader::shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo curre
 	bool acceptableResult = (currentBestResult.Confidence >= NORMAL_OCR_CONFIDENCE_THRESH);
 	if (!acceptableResult) { return false; }
 
+	//Emblems are not split cards.
+	bool isEmblem = MtgCardInfoHelper::IsEmblem(currentBestResult.CardName);
+	if (isEmblem) { return false; }
+
 	//We can skip any further searches for the main title and go for the Amonkhet split one if the main one is excellent clear.
 	bool excellentResult = isResultGoodEnoughToQuit(currentBestResult);
 	if (excellentResult) { return true; }
