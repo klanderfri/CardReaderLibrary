@@ -22,5 +22,7 @@ public:
 	int Confidence = 0;
 	//Tells the type of the card.
 	CardTitleType CardType = NormalTitle;
+	//The OCR-prepared images containing the card name.
+	std::vector<cv::Mat> OcrTitleImages;
 };
 

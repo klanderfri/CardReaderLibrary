@@ -9,6 +9,7 @@
 #include "ImageOcrHelper.h"
 #include "StoreCardProcessingData.h"
 #include "TitleLetterFixer.h"
+#include "AlgorithmHelper.h"
 
 using namespace cv;
 using namespace std;
@@ -56,6 +57,18 @@ void CardReader::ReadCardName() {
 	//Oops! Seems like we couldn't get any title text.
 	if (!finalResult.IsSuccessful()) {
 		finalResult.CardName = L"ERROR: Could not OCR-read the title!";
+	}
+
+	//Store result for debugging.
+	if (runDebugging) {
+
+		size_t size = finalResult.OcrTitleImages.size();
+		for (size_t i = 0; i < size; i++) {
+
+			wstring imageNumberPostfix = L" (" + to_wstring(i + 1) + L" of " + to_wstring(size) + L")";
+			wstring filename = systemMethods->AddToEndOfFilename(finalResult.FileName, imageNumberPostfix);
+			SaveOcvImage::SaveImageData(systemMethods, finalResult.OcrTitleImages[i], filename, L"11 - Best OCR Title");
+		}
 	}
 }
 
@@ -249,6 +262,7 @@ CardNameInfo CardReader::joinSplitCardTitles(const CardNameInfo resultA, const C
 	CardNameInfo result;
 	result.CardName = resultA.CardName + L" // " + resultB.CardName;
 	result.Confidence = min(resultA.Confidence, resultB.Confidence);
+	result.OcrTitleImages = AlgorithmHelper::JoinVectors(resultA.OcrTitleImages, resultB.OcrTitleImages);
 
 	return result;
 }
@@ -305,6 +319,7 @@ CardNameInfo CardReader::ocrReadTitle(const vector<Mat> ocrTitles) {
 	CardNameInfo cardInfo;
 	cardInfo.CardName = bestResult.Text;
 	cardInfo.Confidence = bestResult.Confidence;
+	cardInfo.OcrTitleImages.push_back(bestResult.Image);
 
 	return cardInfo;
 }

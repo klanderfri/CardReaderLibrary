@@ -35,6 +35,4 @@ private:
 
 	//Gets the section specified by the factors.
 	static cv::Rect getSectionBox(cv::Size cardSize, double xCoordinateFactor, double yCoordinateFactor, double widthFactor, double heightFactor);
-	//Joins two vectors containing characters.
-	static std::vector<wchar_t> joinCharacterVectors(std::vector<wchar_t> vectorA, std::vector<wchar_t> vectorB);
 };

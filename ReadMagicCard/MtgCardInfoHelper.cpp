@@ -164,29 +164,19 @@ vector<wchar_t> MtgCardInfoHelper::GetAllowedCharacters() {
 		//http://markrosewater.tumblr.com/post/144471532728/this-is-a-bit-weird-but-i-notice-its-the-aether
 	};
 
-	allowedCharacters = joinCharacterVectors(GetAllowedNonLetterCharacters(), allowedCharacters);
+	allowedCharacters = AlgorithmHelper::JoinVectors(GetAllowedNonLetterCharacters(), allowedCharacters);
 
 	return allowedCharacters;
 }
 
 vector<wchar_t> MtgCardInfoHelper::GetAllowedNonLetterCharacters() {
 
-	return joinCharacterVectors(vector<wchar_t> { L' ' }, GetAllowedNotRelevantForSortingCharacters());
+	return AlgorithmHelper::JoinVectors(vector<wchar_t> { L' ' }, GetAllowedNotRelevantForSortingCharacters());
 }
 
 vector<wchar_t> MtgCardInfoHelper::GetAllowedNotRelevantForSortingCharacters() {
 
 	return vector<wchar_t> { L'-', L'\'', L',', L'/' };
-}
-
-vector<wchar_t> MtgCardInfoHelper::joinCharacterVectors(vector<wchar_t> vectorA, vector<wchar_t> vectorB) {
-
-	for (wchar_t character : vectorB) {
-
-		vectorA.push_back(character);
-	}
-
-	return vectorA;
 }
 
 bool MtgCardInfoHelper::IsEmblem(const std::wstring title) {

@@ -27,6 +27,7 @@ OcrDecodeResult ImageOcrHelper::DecodeImage(Mat originalImageData) {
 	OcrDecodeResult result;
 	result.Text = getUTF8Text(systemMethods);
 	result.Confidence = ocr.MeanTextConf();
+	result.Image = originalImageData;
 
 	return result;
 }
