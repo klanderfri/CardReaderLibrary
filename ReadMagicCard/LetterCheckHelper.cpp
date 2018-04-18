@@ -106,7 +106,7 @@ bool LetterCheckHelper::isComma(RotatedRect letterArea) {
 
 	int maxHeight = (int)(WORKING_CARD_HEIGHT / 20); //34
 	int minHeight = (int)(WORKING_CARD_HEIGHT / 34); //20
-	float height = max(letterArea.size.height, letterArea.size.width); //OpenCV doesn't allways set width and height logical.
+	float height = max(letterArea.size.height, letterArea.size.width); //OpenCV doesn't always set width and height logical.
 	if (height < minHeight || height > maxHeight) { return false; }
 
 	return true;
