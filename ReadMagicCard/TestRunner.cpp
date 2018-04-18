@@ -2,6 +2,7 @@
 #include "TestRunner.h"
 #include "MtgCardInfoHelper.h"
 #include "boost\algorithm\string.hpp"
+#include <iostream>
 
 using namespace std;
 
@@ -14,7 +15,49 @@ TestRunner::~TestRunner()
 {
 }
 
-bool TestRunner::RunCardTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
+void TestRunner::RunTestCases(vector<CardNameInfo> result) {
+
+	vector<CardNameInfo> incorrectResults;
+	bool cardTestsSucceded = runCardTests(result, incorrectResults);
+	bool sortTestsSucceded = runSortTest();
+
+	if (cardTestsSucceded && sortTestsSucceded) {
+
+		systemMethods->SetCommandLineTextColour(Colour::Green);
+		wcout << L"All test cases still works!" << endl << endl;
+	}
+	else {
+
+		systemMethods->SetCommandLineTextColour(Colour::Red);
+
+		//Inform about card identifying trouble.
+		if (!cardTestsSucceded) {
+
+			if (incorrectResults.size() == 0) {
+
+				wcout << L"There are missing card test cases!" << endl;
+			}
+			else {
+
+				wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
+				for (CardNameInfo subResult : incorrectResults) {
+					wcout << subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+				}
+			}
+		}
+
+		//Inform about trouble in the sorting.
+		if (!sortTestsSucceded) {
+			wcout << L"The algorithm for sorting card is broken!" << endl;
+		}
+
+		wcout << endl;
+	}
+
+	systemMethods->ResetCommandLineTextColour();
+}
+
+bool TestRunner::runCardTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
 
 	vector<CardNameInfo> expectedResults = getExpectedCardResult();
 
@@ -40,7 +83,7 @@ bool TestRunner::RunCardTests(vector<CardNameInfo> actualResults, vector<CardNam
 	return success;
 }
 
-bool TestRunner::RunSortTest() {
+bool TestRunner::runSortTest() {
 
 	vector<CardNameInfo> cardList = getCardListToSort();
 	sort(cardList.begin(), cardList.end(), TestRunner::compareByCardName);

@@ -25,8 +25,6 @@ private:
 	void reziseCommandWindow(size_t numberOfFiles, int lengthOfLongestFilename);
 	//Reads the title of the card in the provided image files.
 	std::vector<CardNameInfo> readAllCards(SystemMethods* systemMethods, const std::vector<std::wstring> filenamesOfImages);
-	//Checks if any code has been broken.
-	void runTestCases(std::vector<CardNameInfo> result);
 
 	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;

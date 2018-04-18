@@ -8,13 +8,15 @@ class TestRunner
 public:
 	TestRunner(SystemMethods* systemMethods);
 	~TestRunner();
-	
-	//Runs tests checking if the result of the card read is as expected, indicating any broken code.
-	bool RunCardTests(std::vector<CardNameInfo> actualResults, std::vector<CardNameInfo>& incorrectResults);
-	//Runs tests checking if the code sorting cards are working as intended.
-	bool RunSortTest();
+
+	//Runs tests to see if there are any broken code.
+	void RunTestCases(std::vector<CardNameInfo> result);
 
 private:
+	//Runs tests checking if the result of the card read is as expected, indicating any broken code.
+	bool runCardTests(std::vector<CardNameInfo> actualResults, std::vector<CardNameInfo>& incorrectResults);
+	//Runs tests checking if the code sorting cards are working as intended.
+	bool runSortTest();
 	//Checks if two result pairs corresponds, i.e if the actual result corresponds with the expected result.
 	bool resultsCorresponds(CardNameInfo expectedResult, CardNameInfo actualResult);
 	//Compares two subresults by the card name.
