@@ -176,12 +176,8 @@ CardNameInfo CardReader::readAmonkhetSplitTitle(const Mat cardImageGivingBestRes
 	//Get the half that might contain the Amonkhet split card.
 	Mat akhSplitHalf = getSplitCardHalves(cardImageGivingBestResult, AkhSplitCardTitle)[1];
 
-	//Extract all search configurations that are not rotating the card.
-	//This because if the title is OK then we know where the Amonkhet split title is.
-	vector<ReadingConfiguration> splitSearchConfigs;
-
-	//The split title probably has the same light as the title so try the same threshold first.
-	splitSearchConfigs.push_back(ReadingConfiguration(currentConfig.BinaryThreshold, false));
+	//The split title probably has the same light as the title so try the same threshold.
+	vector<ReadingConfiguration> splitSearchConfigs { ReadingConfiguration(currentConfig.BinaryThreshold, false) };
 
 	//Fetch the result for the split half.
 	CardNameInfo splitHalfResult = readUnrotatedCardTitle(akhSplitHalf, splitSearchConfigs, AkhSplitCardTitle);
