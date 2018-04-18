@@ -9,7 +9,7 @@ LetterArea::~LetterArea()
 {
 }
 
-bool LetterArea::CompareLetterAreaByBorderXAscending(LetterArea area1, LetterArea area2)
+bool LetterArea::CompareLetterAreaByLeftBorderXAscending(LetterArea area1, LetterArea area2)
 {
 	float borderX1 = area1.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area1.Box);
 	float borderX2 = area2.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area2.Box);

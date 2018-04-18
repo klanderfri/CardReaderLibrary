@@ -10,7 +10,7 @@ public:
 	~LetterArea();
 
 	//Compares two letter areas by the X-coordinate of the left border when the letters are standing stright up.
-	static bool CompareLetterAreaByBorderXAscending(LetterArea area1, LetterArea area2);
+	static bool CompareLetterAreaByLeftBorderXAscending(LetterArea area1, LetterArea area2);
 	//Checks if a letter is a child to any other letter.
 	static bool HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents);
 

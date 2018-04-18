@@ -44,7 +44,7 @@ LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
 		possibleLetterAreas.push_back(area);
 	}
 
-	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByBorderXAscending);
+	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
 
 	return possibleLetterAreas;
 }
