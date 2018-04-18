@@ -26,15 +26,7 @@ bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
 	for (wchar_t character : title) {
 
-		bool isLetter = true;
-
-		vector<wchar_t> nonLetterCharacters = GetAllowedNonLetterCharacters();
-		for (wchar_t nonLetter : nonLetterCharacters) {
-			if (character == nonLetter) {
-				isLetter = false;
-				break;
-			}
-		}
+		bool isLetter = !AlgorithmHelper::VectorContains(GetAllowedNonLetterCharacters(), character);
 
 		if (isLetter) {
 			lettersInName++;
