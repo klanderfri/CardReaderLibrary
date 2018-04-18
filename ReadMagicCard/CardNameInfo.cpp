@@ -18,7 +18,7 @@ CardNameInfo::~CardNameInfo()
 {
 }
 
-bool CardNameInfo::IsConfidentTitle(SystemMethods* systemMethods, int minimumConfidence) {
+bool CardNameInfo::IsConfidentTitle(int minimumConfidence) {
 
 	//First of, we need to have a successful extraction of the title.
 	if (!IsSuccessful()) { return false; }
@@ -30,7 +30,7 @@ bool CardNameInfo::IsConfidentTitle(SystemMethods* systemMethods, int minimumCon
 	if (!MtgCardInfoHelper::IsNameLongEnough(CardName)) { return false; }
 
 	//Check for illegal characters.
-	if (MtgCardInfoHelper::ContainsInvalidCharacters(systemMethods, CardName)) { return false; }
+	if (MtgCardInfoHelper::ContainsInvalidCharacters(CardName)) { return false; }
 
 	return true;
 }

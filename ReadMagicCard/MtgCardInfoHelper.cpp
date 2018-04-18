@@ -28,7 +28,7 @@ bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
 		bool isLetter = true;
 
-		vector<wchar_t> nonLetterCharacters { L' ', L'-', L'\'', L',', L'/' };
+		vector<wchar_t> nonLetterCharacters = GetAllowedNonLetterCharacters();
 		for (wchar_t nonLetter : nonLetterCharacters) {
 			if (character == nonLetter) {
 				isLetter = false;
@@ -142,25 +142,42 @@ void MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring 
 	result = wstring(resultPtr);
 }
 
-bool MtgCardInfoHelper::ContainsInvalidCharacters(SystemMethods* systemMethods, const wstring title) {
+bool MtgCardInfoHelper::ContainsInvalidCharacters(const wstring title) {
 
 	//Make the title lowercase to make it easier to work with.
-	string titleStr = systemMethods->ToString(title);
-	boost::algorithm::to_lower(titleStr);
-
-	vector<char> allowedCharacters
-	{
-		' ', '-', '\'', ',', '/', 'æ',
-		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-		'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
-	};
+	wstring titleCopy = title;
+	boost::algorithm::to_lower(titleCopy);
 
 	//Check for illegal characters.
-	for (char letter : titleStr) {
-		if (!AlgorithmHelper::VectorContains(allowedCharacters, letter)) {
+	for (wchar_t letter : titleCopy) {
+		if (!AlgorithmHelper::VectorContains(GetAllowedCharacters(), letter)) {
 			return true;
 		}
 	}
 
 	return false;
+}
+
+vector<wchar_t> MtgCardInfoHelper::GetAllowedCharacters() {
+
+	vector<wchar_t> allowedCharacters
+	{
+		L'æ', L'a', L'b', L'c', L'd', L'e', L'f', L'g', L'h', L'i', L'j', L'k', L'l', L'm',
+		L'n', L'o', L'p', L'q', L'r', L's', L't', L'u', L'v', L'w', L'x', L'y', L'z', L'ö'
+		//Damn those Scandinavians whith their fancy Æ and Ö! ;-)
+	};
+
+	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();
+	for (wchar_t character : nonLetters) {
+
+		allowedCharacters.push_back(character);
+	}
+
+	return allowedCharacters;
+}
+
+
+vector<wchar_t> MtgCardInfoHelper::GetAllowedNonLetterCharacters() {
+
+	return vector<wchar_t> { L' ', L'-', L'\'', L',', L'/' };
 }

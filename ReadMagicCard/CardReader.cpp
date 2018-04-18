@@ -121,7 +121,7 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, vector<Read
 			CardNameInfo splitHalfResult = readAmonkhetSplitTitle(cardImageGivingBestResult, currentReadingConfig);
 
 			//Join the titles to a split card name.
-			if (splitHalfResult.IsConfidentTitle(systemMethods, NORMAL_OCR_CONFIDENCE_THRESH)) {
+			if (splitHalfResult.IsConfidentTitle(NORMAL_OCR_CONFIDENCE_THRESH)) {
 			
 				bestResult = joinSplitCardTitles(bestResult, splitHalfResult);
 				bestResult.CardType = AkhSplitCardTitle;
@@ -195,7 +195,7 @@ CardNameInfo CardReader::readAmonkhetSplitTitle(const Mat cardImageGivingBestRes
 
 	//Fetch the result for the split half.
 	CardNameInfo splitHalfResult = readUnrotatedCardTitle(akhSplitHalf, splitSearchConfigs, AkhSplitCardTitle);
-	bool successfullResult = splitHalfResult.IsSuccessful() && splitHalfResult.IsConfidentTitle(systemMethods, NORMAL_OCR_CONFIDENCE_THRESH);
+	bool successfullResult = splitHalfResult.IsSuccessful() && splitHalfResult.IsConfidentTitle(NORMAL_OCR_CONFIDENCE_THRESH);
 
 	//Return the result or indicate read failure with empty result.
 	return successfullResult ? splitHalfResult : CardNameInfo();
@@ -214,7 +214,7 @@ CardNameInfo CardReader::readStraightCardTitle(const Mat cardImage, const Readin
 
 		//Try decode the title image, i.e getting the card name using OCR.
 		result = ocrReadTitle(ocrReadyTitles);
-		couldExtractCardTitleText = result.IsConfidentTitle(systemMethods, NORMAL_OCR_CONFIDENCE_THRESH);
+		couldExtractCardTitleText = result.IsConfidentTitle(NORMAL_OCR_CONFIDENCE_THRESH);
 	}
 	
 	if (!couldExtractCardTitleText && cardTitleTypeToSearch == NormalTitle) {

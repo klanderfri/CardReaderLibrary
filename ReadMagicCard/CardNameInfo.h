@@ -10,7 +10,7 @@ public:
 	~CardNameInfo();
 
 	//Checks if we got a confident decode of a MtG title.
-	bool IsConfidentTitle(SystemMethods* systemMethods, int minimumConfidence);
+	bool IsConfidentTitle(int minimumConfidence);
 	//Tells if the algorithm extracting the card name was successful.
 	bool IsSuccessful();
 

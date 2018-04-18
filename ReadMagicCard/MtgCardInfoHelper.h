@@ -1,5 +1,4 @@
 #pragma once
-#include "SystemMethods.h"
 //Class holding methods giving information about the MtG card environment.
 class MtgCardInfoHelper
 {
@@ -7,7 +6,7 @@ public:
 	MtgCardInfoHelper();
 	~MtgCardInfoHelper();
 
-	//Gives the amount of letters in the shortest MtG card name.
+	//Gives the amount of letters in the shortest card name.
 	static int LettersInShortestCardName();
 	//Checks if a card name is long enough top actually be a card name.
 	static bool IsNameLongEnough(const std::wstring title);
@@ -22,7 +21,11 @@ public:
 	//Removes characters, that are not relevant for sorting, from a card name.
 	static void RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName, std::wstring& result);
 	//Checks if there are any illeagal characters in the title.
-	static bool ContainsInvalidCharacters(SystemMethods* systemMethods, const std::wstring title);
+	static bool ContainsInvalidCharacters(const std::wstring title);
+	//Gets the characters that are allowed in a card name.
+	static std::vector<wchar_t> GetAllowedCharacters();
+	//Gets the non-letter characters that are allowed in a card name.
+	static std::vector<wchar_t> GetAllowedNonLetterCharacters();
 
 private:
 
