@@ -57,9 +57,11 @@ private:
 	//The final result of the card reading.
 	CardNameInfo finalResult;
 	//The number of OCR-prepared title images of the card the debug algorithm has stored to disk.
-	int numberOfOcrTitlesStoredForDebug;
+	int numberOfOcrTitleImagesStoredForDebug;
 	//The number of title images of the card the debug algorithm has stored to disk.
 	int numberOfTitleImagesStoredForDebug;
 	//The number of times the algorithm has tried to read the card.
 	int numberOfCardReadTries;
+	//The number of times we have tried to extract a title text image.
+	int numberOfTitleImageExtractions;
 };

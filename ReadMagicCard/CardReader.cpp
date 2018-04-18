@@ -37,9 +37,10 @@ CardNameInfo CardReader::GetResult() {
 void CardReader::ReadCardName() {
 
 	//Reset variables keeping track of the number of X tries.
-	numberOfOcrTitlesStoredForDebug = 0;
+	numberOfOcrTitleImagesStoredForDebug = 0;
 	numberOfTitleImagesStoredForDebug = 0;
 	numberOfCardReadTries = 0;
+	numberOfTitleImageExtractions = 0;
 
 	//Load the image.
 	Mat originalCardImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
@@ -316,7 +317,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 	//Prepare the title for OCR reading.
 	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
-	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold);
+	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold, numberOfTitleImageExtractions);
 
 	//See if we need to stop.
 	if (!success) {
@@ -330,7 +331,8 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 		//Store result for debugging.
 		if (runDebugging) {
-			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(++numberOfOcrTitlesStoredForDebug));
+			numberOfOcrTitleImagesStoredForDebug++;
+			wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(numberOfOcrTitleImagesStoredForDebug));
 			SaveOcvImage::SaveImageData(systemMethods, outImages[i], filename, L"10 - OCR Prepared Title");
 		}
 	}
@@ -357,7 +359,8 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 
 	//Store result for debugging.
 	if (runDebugging) {
-		wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(++numberOfTitleImagesStoredForDebug));
+		numberOfTitleImagesStoredForDebug++;
+		wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(numberOfTitleImagesStoredForDebug));
 		SaveOcvImage::SaveImageData(systemMethods, outImage, filename, L"5 - Title Section");
 	}
 }

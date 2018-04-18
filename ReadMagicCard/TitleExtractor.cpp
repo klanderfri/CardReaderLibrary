@@ -17,7 +17,7 @@ TitleExtractor::~TitleExtractor()
 {
 }
 
-bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold) {
+bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, int& numberOfTries) {
 
 	int amountOfGauss = (int)(originalImageData.size().height / 18.1818);
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
@@ -35,8 +35,7 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold) {
 	outImage = getBinaryImage(outImage, binaryThreshold);
 
 	//Extract a clean image containing the title.
-	int numberOfTries = 0;
-	bool success = getTitleText(outImage, outImages, ++numberOfTries);
+	bool success = getTitleText(outImage, outImages, numberOfTries);
 
 	return success;
 }
@@ -75,14 +74,15 @@ int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {
 	return amountOfGauss;
 }
 
-bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages, int numberOfTries) {
+bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages, int& numberOfTries) {
 
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
 	LetterFilter filter(WORKING_CARD_HEIGHT, titleImage);
 	LetterAreas letters = filter.RunFilter(contours);
 	
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
-	if (letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) { return false; }
+	bool toShortTitle = letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName();
+	if (toShortTitle) { return false; }
 
 	//Get the areas of the entire title.
 	Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
@@ -124,13 +124,15 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	textImages.push_back(straightenTitleImage);
 	textImages.push_back(boundedTitleImage);
 
+	numberOfTries++;
+
 	//Store result for debugging.
 	if (runDebugging) {
 
-		wstring triesPostfix = L"(" + to_wstring(numberOfTries) + L")";
+		wstring triesPostfix = L"_" + to_wstring(numberOfTries);
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles" + triesPostfix), L"6 - Only Title Letters");
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle" + triesPostfix), L"7 - Possible Title Area");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"6 - Only Title Letters");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"7 - Possible Title Area");
 
 		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"8 - Title Text (Straighten)");
 		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9 - Title Text (Bounded)");
