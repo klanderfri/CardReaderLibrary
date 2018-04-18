@@ -69,7 +69,7 @@ bool TestRunner::compareByCardName(CardNameInfo info1, CardNameInfo info2)
 bool TestRunner::compareByFileName(CardNameInfo info1, CardNameInfo info2)
 {
 	//Yeah, I know. We are sorting the filename with the algorithm for comparing card names.
-	//But it should be fine as long as they are sorted in the same way.
+	//But it should be fine as long as the filenames are sorted in the same way as eachother.
 	return MtgCardInfoHelper::CompareCardNames(info1.FileName, info2.FileName) < 0;
 }
 

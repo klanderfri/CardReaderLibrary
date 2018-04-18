@@ -91,8 +91,8 @@ double MtgCardInfoHelper::CompareCardNames(const wstring name1, const wstring na
 	wstring tmp_name2 = name2;
 	boost::algorithm::to_lower(tmp_name1);
 	boost::algorithm::to_lower(tmp_name2);
-	RemoveCharactersNotRelevantForNameSorting(tmp_name1, tmp_name1);
-	RemoveCharactersNotRelevantForNameSorting(tmp_name2, tmp_name2);
+	tmp_name1 = RemoveCharactersNotRelevantForNameSorting(tmp_name1);
+	tmp_name2 = RemoveCharactersNotRelevantForNameSorting(tmp_name2);
 
 	if (tmp_name1 == tmp_name2) { return 0; }
 
@@ -116,22 +116,24 @@ double MtgCardInfoHelper::CompareCardNames(const wstring name1, const wstring na
 	return -1; //name1 comes first.
 }
 
-void MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring cardName, wstring& result) {
+wstring MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring cardName) {
 
-	vector<wchar_t> cleanedName;
+	wstring cleanedName;
 
-	for (wchar_t letter : cardName) {
+	for (size_t i = 0; i < cardName.size(); i++)
+	{
+		wchar_t letter = cardName[i];
 
-		if (letter == L'\'') { continue; }
-		if (letter == L'-') { continue; }
-		if (letter == L',') { continue; }
+		bool isIrrelevant = AlgorithmHelper::VectorContains(GetAllowedNotRelevantForSortingCharacters(), letter);
+		if (isIrrelevant) { continue; }
 
-		cleanedName.push_back(letter);
+		bool isSecondWhitespace = (i > 0 && cleanedName[cleanedName.size() - 1] == L' ' && cardName[i] == L' ');
+		if (isSecondWhitespace) { continue; }
+
+		cleanedName += letter;
 	}
 
-	cleanedName.push_back(L'\0');
-	wchar_t* resultPtr = &cleanedName[0];
-	result = wstring(resultPtr);
+	return cleanedName;
 }
 
 bool MtgCardInfoHelper::ContainsInvalidCharacters(const wstring title) {
@@ -156,22 +158,33 @@ vector<wchar_t> MtgCardInfoHelper::GetAllowedCharacters() {
 	{
 		L'a', L'b', L'c', L'd', L'e', L'f', L'g', L'h', L'i', L'j', L'k', L'l', L'm',
 		L'n', L'o', L'p', L'q', L'r', L's', L't', L'u', L'v', L'w', L'x', L'y', L'z', L'ö'
+
 		//Damn those Scandinavians whith their fancy Ö!
 		//At least Wizards stoped using Æ. ;-)
 		//http://markrosewater.tumblr.com/post/144471532728/this-is-a-bit-weird-but-i-notice-its-the-aether
 	};
 
-	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();
-	for (wchar_t character : nonLetters) {
-
-		allowedCharacters.push_back(character);
-	}
+	allowedCharacters = joinCharacterVectors(GetAllowedNonLetterCharacters(), allowedCharacters);
 
 	return allowedCharacters;
 }
 
-
 vector<wchar_t> MtgCardInfoHelper::GetAllowedNonLetterCharacters() {
 
-	return vector<wchar_t> { L' ', L'-', L'\'', L',', L'/' };
+	return joinCharacterVectors(vector<wchar_t> { L' ' }, GetAllowedNotRelevantForSortingCharacters());
+}
+
+vector<wchar_t> MtgCardInfoHelper::GetAllowedNotRelevantForSortingCharacters() {
+
+	return vector<wchar_t> { L'-', L'\'', L',', L'/' };
+}
+
+vector<wchar_t> MtgCardInfoHelper::joinCharacterVectors(vector<wchar_t> vectorA, vector<wchar_t> vectorB) {
+
+	for (wchar_t character : vectorB) {
+
+		vectorA.push_back(character);
+	}
+
+	return vectorA;
 }

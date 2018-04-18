@@ -19,16 +19,20 @@ public:
 	//Compares two card names. Negative if 1st name comes first. Positive if 2nd name comes first. Zero if the names are equal.
 	static double CompareCardNames(std::wstring name1, std::wstring name2);
 	//Removes characters, that are not relevant for sorting, from a card name.
-	static void RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName, std::wstring& result);
+	static std::wstring RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName);
 	//Checks if there are any illeagal characters in the title.
 	static bool ContainsInvalidCharacters(const std::wstring title);
 	//Gets the characters that are allowed in a card name.
 	static std::vector<wchar_t> GetAllowedCharacters();
 	//Gets the non-letter characters that are allowed in a card name.
 	static std::vector<wchar_t> GetAllowedNonLetterCharacters();
+	//Gets the characters that are ignored when sorting/comparing card names.
+	static std::vector<wchar_t> GetAllowedNotRelevantForSortingCharacters();
 
 private:
 
 	//Gets the section specified by the factors.
 	static cv::Rect getSectionBox(cv::Size cardSize, double xCoordinateFactor, double yCoordinateFactor, double widthFactor, double heightFactor);
+	//Joins two vectors containing characters.
+	static std::vector<wchar_t> joinCharacterVectors(std::vector<wchar_t> vectorA, std::vector<wchar_t> vectorB);
 };
