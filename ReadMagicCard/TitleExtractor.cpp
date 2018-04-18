@@ -129,11 +129,11 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 		wstring triesPostfix = L"(" + to_wstring(numberOfTries) + L")";
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles" + triesPostfix), L"7 - Only Title Letters");
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle" + triesPostfix), L"8 - Possible Title Area");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, L"_LetterRectangles" + triesPostfix), L"6 - Only Title Letters");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, L"_TitleRectangle" + triesPostfix), L"7 - Possible Title Area");
 
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9a - Title Text (Straighten)");
-		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9b - Title Text (Bounded)");
+		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"8 - Title Text (Straighten)");
+		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9 - Title Text (Bounded)");
 	}
 
 	return true;

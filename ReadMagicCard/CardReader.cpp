@@ -354,6 +354,6 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 	//Store result for debugging.
 	if (runDebugging) {
 		wstring filename = systemMethods->AddToEndOfFilename(imageFileName, L"_" + to_wstring(++numberOfTitleImagesStoredForDebug));
-		SaveOcvImage::SaveImageData(systemMethods, outImage, filename, L"6 - Title Section");
+		SaveOcvImage::SaveImageData(systemMethods, outImage, filename, L"5 - Title Section");
 	}
 }
