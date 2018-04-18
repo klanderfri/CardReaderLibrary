@@ -162,9 +162,11 @@ vector<wchar_t> MtgCardInfoHelper::GetAllowedCharacters() {
 
 	vector<wchar_t> allowedCharacters
 	{
-		L'æ', L'a', L'b', L'c', L'd', L'e', L'f', L'g', L'h', L'i', L'j', L'k', L'l', L'm',
+		L'a', L'b', L'c', L'd', L'e', L'f', L'g', L'h', L'i', L'j', L'k', L'l', L'm',
 		L'n', L'o', L'p', L'q', L'r', L's', L't', L'u', L'v', L'w', L'x', L'y', L'z', L'ö'
-		//Damn those Scandinavians whith their fancy Æ and Ö! ;-)
+		//Damn those Scandinavians whith their fancy Ö!
+		//At least Wizards stoped using Æ. ;-)
+		//http://markrosewater.tumblr.com/post/144471532728/this-is-a-bit-weird-but-i-notice-its-the-aether
 	};
 
 	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();

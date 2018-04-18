@@ -18,6 +18,7 @@ wstring TitleLetterFixer::FixTitleLetters(const wstring title) {
 
 	outText = changeNumbersToLetters(outText);
 	outText = fixLtoIJ(outText);
+	outText = fixLigature(outText);
 
 	return systemMethods->ToWString(outText);
 }
@@ -102,6 +103,35 @@ string TitleLetterFixer::fixLtoIJ(const string title) {
 		}
 
 		outText[i] = 'I';
+	}
+
+	return outText;
+}
+
+string TitleLetterFixer::fixLigature(const string title) {
+
+	//Wizards has stopped using the ligature 'Æ':
+	//http://markrosewater.tumblr.com/post/144471532728/this-is-a-bit-weird-but-i-notice-its-the-aether
+
+	string outText;
+
+	for (size_t i = 0; i < title.length(); i++) {
+
+		char letter = title[i];
+
+		if (letter == 'æ') {
+
+			outText += 'a';
+			outText += 'e';
+		}
+		else if (letter == 'Æ') {
+
+			outText += 'A';
+			outText += 'e';
+		}
+		else {
+			outText += letter;
+		}
 	}
 
 	return outText;
