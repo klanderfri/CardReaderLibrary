@@ -4,6 +4,7 @@ class TrendLine
 public:
 	TrendLine();
 	TrendLine(double slope, double offset);
+	TrendLine(const std::vector<cv::Point2f>& points);
 	~TrendLine();
 
 	//Gets the end points of the line.
@@ -19,5 +20,10 @@ public:
 	double Slope = 0;
 	//The offset of the line.
 	double Offset = 0;
+
+private:
+
+	//Sets up the member variables.
+	void setupMemberVariables(double slope, double offset);
 };
 

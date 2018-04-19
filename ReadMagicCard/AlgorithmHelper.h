@@ -14,10 +14,6 @@ public:
 	template<typename T> static std::vector<T> JoinVectors(const std::vector<T> vectorA, const std::vector<T> vectorB);
 	//Appends a vector to another.
 	template<typename T> static void AppendVector(std::vector<T>& mainVector, const std::vector<T> toAppend);
-	//Finds two points that could be used to draw a trend line for the provided points.
-	static std::vector<cv::Point2f> TrendLinePoints(const std::vector<cv::Point2f>& points);
-	//Finds the trendline for the provided points.
-	static TrendLine TrendLineValues(const std::vector<cv::Point2f>& points);
 	//Finds the trend line slope for a set of values.
 	static double Slope(const std::vector<double>& x, const std::vector<double>& y);
 	//Finds the avarage value for a set of numbers.
