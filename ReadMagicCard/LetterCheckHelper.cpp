@@ -4,9 +4,10 @@
 using namespace std;
 using namespace cv;
 
-LetterCheckHelper::LetterCheckHelper(int workingCardHeight)
+LetterCheckHelper::LetterCheckHelper(int workingCardHeight, TrendLine textCenterLine)
 	: WORKING_CARD_HEIGHT(workingCardHeight)
 {
+	this->textCenterLine = textCenterLine;
 }
 
 LetterCheckHelper::~LetterCheckHelper()
@@ -46,20 +47,30 @@ int LetterCheckHelper::getMinTitleLetterCoordinateX() {
 	return (int)(WORKING_CARD_HEIGHT / 15.11); //45
 }
 
-int LetterCheckHelper::getMaxTitleLetterCoordinateY() {
-	return (int)(WORKING_CARD_HEIGHT / 4.689655); //145
+int LetterCheckHelper::getMaxTitleLetterCoordinateY(double x) {
+
+	int titleHeight = getTitleAreaHeight();
+	double y = textCenterLine.GetY(x);
+	int maxCoordinateY = (int)round(y + titleHeight / 2);
+
+	return maxCoordinateY;
 }
 
-int LetterCheckHelper::getMinTitleLetterCoordinateY() {
-	return (int)(WORKING_CARD_HEIGHT / 17.0); //40
+int LetterCheckHelper::getMinTitleLetterCoordinateY(double x) {
+	
+	int titleHeight = getTitleAreaHeight();
+	double y = textCenterLine.GetY(x);
+	int minCoordinateY = (int)round(y - titleHeight / 2);
+	
+	return minCoordinateY;
 }
 
 int LetterCheckHelper::getTitleAreaHeight() {
-	return getMaxTitleLetterCoordinateY() - getMinTitleLetterCoordinateY();
+	return (int)(WORKING_CARD_HEIGHT / 6.47619); //105
 }
 
-int LetterCheckHelper::getTitleAreaMiddleCoordinateY() {
-	return getMinTitleLetterCoordinateY() + getTitleAreaHeight() / 2;
+int LetterCheckHelper::getTitleAreaMiddleCoordinateY(double x) {
+	return getMinTitleLetterCoordinateY(x) + getTitleAreaHeight() / 2;
 }
 
 bool LetterCheckHelper::isWithinTitleArea(RotatedRect letterArea) {
@@ -68,8 +79,8 @@ bool LetterCheckHelper::isWithinTitleArea(RotatedRect letterArea) {
 
 	if (approximateCoordinateX > getMaxTitleLetterCoordinateX() ||
 		approximateCoordinateX < getMinTitleLetterCoordinateX() ||
-		letterArea.center.y < getMinTitleLetterCoordinateY() ||
-		letterArea.center.y > getMaxTitleLetterCoordinateY()) {
+		letterArea.center.y < getMinTitleLetterCoordinateY(approximateCoordinateX) ||
+		letterArea.center.y > getMaxTitleLetterCoordinateY(approximateCoordinateX)) {
 
 		//To far off to be a letter!
 		return false;
@@ -102,7 +113,8 @@ bool LetterCheckHelper::isIDot(RotatedRect letterArea) {
 
 bool LetterCheckHelper::isComma(RotatedRect letterArea) {
 
-	if (letterArea.center.y < getTitleAreaMiddleCoordinateY()) { return false; }
+	bool isAboveCenterLine = (letterArea.center.y < getTitleAreaMiddleCoordinateY(letterArea.center.x));
+	if (isAboveCenterLine) { return false; }
 
 	int maxHeight = (int)(WORKING_CARD_HEIGHT / 20); //34
 	int minHeight = (int)(WORKING_CARD_HEIGHT / 34); //20
@@ -116,10 +128,10 @@ bool LetterCheckHelper::isDash(RotatedRect letterArea) {
 
 	//Check if it is in the middle line of the title.
 	int titleHeight = getTitleAreaHeight();
-	int middleLine = getTitleAreaMiddleCoordinateY();
+	int middleLine = getTitleAreaMiddleCoordinateY(letterArea.center.x);
 	int minY = middleLine - titleHeight / 5;
 	int maxY = middleLine + titleHeight / 5;
-	if (letterArea.center.y < minY || letterArea.center.y> maxY) {
+	if (letterArea.center.y < minY || letterArea.center.y > maxY) {
 		return false;
 	}
 

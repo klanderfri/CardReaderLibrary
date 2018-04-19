@@ -2,12 +2,14 @@
 #include "LetterFilter.h"
 #include "LetterCheckHelper.h"
 #include "MtgCardInfoHelper.h"
+#include "AlgorithmHelper.h"
+#include "SaveOcvImage.h"
 
 using namespace cv;
 using namespace std;
 
-LetterFilter::LetterFilter(int workingCardHeight, Mat currentLetterImage)
-	: WORKING_CARD_HEIGHT(workingCardHeight), CURRENT_LETTER_IMAGE(currentLetterImage)
+LetterFilter::LetterFilter(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
+	: BasicReaderData(imageFileName, originalImageData, systemMethods, runDebugging)
 {
 }
 
@@ -17,16 +19,52 @@ LetterFilter::~LetterFilter()
 
 LetterAreas LetterFilter::RunFilter(Contours contours) {
 
-	//Mat remainingLettersImage = ImageHelper::DrawLimits(CURRENT_LETTER_IMAGE, letters, 3); //Code showing which letters are kept.
+	//Reset center line.
+	titleCenterLine = TrendLine(0, originalImageData.rows / 2);
 
-	LetterAreas letters = getPossibleLetterAreas(contours);
-	letters = filterOutDuplicates(letters);
-	letters = filterOutNoise(letters);
-	letters = filterOutTransformSymbol(letters);
-	letters = filterOutLetterHoles(letters);
-	letters = filterOutNonTitleSymbols(letters);
+	//Do a crude filtering of the the letters.
+	LetterAreas allPossibleLetters = getPossibleLetterAreas(contours);
+	LetterAreas letters = filterOutNonTitleSymbols(allPossibleLetters);
+
+	//Check if there was any letters at all.
+	if (letters.empty()) {
+		return LetterAreas();
+	}
+
+	//Find the center of the title.
+	findTitleCenterLine(letters);
+
+	//Store result for debugging.
+	if (runDebugging) {
+
+		float leftLimit = letters[0].Box.center.x;
+		float rightLimit = letters[letters.size() - 1].Box.center.x;
+		vector<Point2f> line = titleCenterLine.GetEndPoints(leftLimit, rightLimit);
+
+		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
+		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
+
+		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line");
+	}
+	
+	//Redo the filtering with now when we got the center line to work with.
+	//Sometimes real letters are missed but the trend line makes it easier
+	//to avoid those false negatives.
+	letters = filterOutNonTitleSymbols(allPossibleLetters);
+	letters = filterOutNonNameSymbols(letters);
 
 	return letters;
+}
+
+TrendLine LetterFilter::findTitleCenterLine(LetterAreas letters) {
+
+	vector<Point2f> points;
+
+	for (LetterArea letter : letters) {
+		points.push_back(letter.Box.center);
+	}
+
+	return TrendLine(points);
 }
 
 LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
@@ -49,6 +87,17 @@ LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
 	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
 
 	return possibleLetterAreas;
+}
+
+LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) {
+
+	LetterAreas letters;
+	letters = filterOutDuplicates(lettersToFilter);
+	letters = filterOutNoise(letters);
+	letters = filterOutTransformSymbol(letters);
+	letters = filterOutLetterHoles(letters);
+
+	return letters;
 }
 
 LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
@@ -85,7 +134,7 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 
 LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
 
-	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT);
+	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, titleCenterLine);
 	LetterAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++)
@@ -132,11 +181,9 @@ LetterAreas LetterFilter::filterOutLetterHoles(LetterAreas lettersToFilter) {
 	return letters;
 }
 
-LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) {
+LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 
 	vector<LetterAreas> sections = groupLettersBySection(lettersToFilter);
-
-	Mat remainingLettersImage = ImageHelper::DrawLimits(CURRENT_LETTER_IMAGE, lettersToFilter, 3);
 
 	//Remove unworthy sections.
 	vector<LetterAreas> letterSections;
@@ -150,7 +197,7 @@ LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) 
 
 		//Remove sections that has to much vertical spread between the letters, indicating noise.
 		//This would probably work better if we could find a center trend line and check the spread related to that line.
-		float toppestY = (float)CURRENT_LETTER_IMAGE.rows, bottomestY = 0;
+		float toppestY = (float)originalImageData.rows, bottomestY = 0;
 		for (LetterArea letter : section) {
 
 			if (toppestY > letter.Box.center.y) {
@@ -182,7 +229,7 @@ LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) 
 	}
 
 	//It's probably the title if it's centered.
-	int titleWidth = CURRENT_LETTER_IMAGE.cols;
+	int titleWidth = originalImageData.cols;
 	int middleAreaWidth = titleWidth / 5;
 	int minCoordinateX = (titleWidth / 2) - middleAreaWidth / 2;
 	int maxCoordinateX = (titleWidth / 2) + middleAreaWidth / 2;

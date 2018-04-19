@@ -1,9 +1,10 @@
 #pragma once
+#include "TrendLine.h"
 //Class holding methods checking if a letter area actually contains a letter.
 class LetterCheckHelper
 {
 public:
-	LetterCheckHelper(int workingCardHeight);
+	LetterCheckHelper(int workingCardHeight, TrendLine textCenterLine);
 	~LetterCheckHelper();
 
 	//Checks if a specified rotated rectangle would contain a card title letter.
@@ -19,13 +20,13 @@ private:
 	//Gets the minimum X coordinate a title letter may have.
 	int getMinTitleLetterCoordinateX();
 	//Gets the maximum Y coordinate a title letter may have.
-	int getMaxTitleLetterCoordinateY();
+	int getMaxTitleLetterCoordinateY(double x);
 	//Gets the minimum Y coordinate a title letter may have.
-	int getMinTitleLetterCoordinateY();
+	int getMinTitleLetterCoordinateY(double x);
 	//Gets the height of the title area.
 	int getTitleAreaHeight();
 	//Gets the Y coordinate of a line cutting the title area horizontal in two.
-	int getTitleAreaMiddleCoordinateY();
+	int getTitleAreaMiddleCoordinateY(double x);
 	//Check if the letter is within the area containing letters.
 	bool isWithinTitleArea(cv::RotatedRect letterArea);
 	//Checks if it's a i-dot.
@@ -36,4 +37,7 @@ private:
 	bool isDash(cv::RotatedRect letterArea);
 	//Check if the letter is big/small enough to be a letter.
 	bool isLetterSize(cv::RotatedRect letterArea);
+
+	//The approximal line going through the center of the text.
+	TrendLine textCenterLine;
 };

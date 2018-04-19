@@ -77,7 +77,7 @@ int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {
 bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages, int& numberOfTries) {
 
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
-	LetterFilter filter(WORKING_CARD_HEIGHT, titleImage);
+	LetterFilter filter(imageFileName, titleImage, systemMethods, runDebugging);
 	LetterAreas letters = filter.RunFilter(contours);
 	
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
@@ -131,11 +131,11 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 		wstring triesPostfix = L"_" + to_wstring(numberOfTries);
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"6 - Only Title Letters");
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"7 - Possible Title Area");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"7 - Only Title Letters");
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"8 - Possible Title Area");
 
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"8 - Title Text (Straighten)");
-		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9 - Title Text (Bounded)");
+		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9 - Title Text (Straighten)");
+		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"10 - Title Text (Bounded)");
 	}
 
 	return true;
