@@ -19,6 +19,8 @@ public:
 	static int ShowImage(const cv::Mat imageToShow);
 	//Rotates an image.
 	static void RotateImage(const cv::Mat rawImage, cv::Mat& outImage, const double angleToRotate, const cv::Point2f centerPoint);
+	//Draws a line on an image between two points.
+	static cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2);
 	//Draws the specified limits to the image.
 	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.

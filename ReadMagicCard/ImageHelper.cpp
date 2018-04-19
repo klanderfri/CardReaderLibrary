@@ -87,6 +87,17 @@ void ImageHelper::RotateImage(const Mat rawImage, Mat& outImage, const double an
 	warpAffine(rawImage, outImage, r, Size(rawImage.cols, rawImage.rows), INTER_LANCZOS4);
 }
 
+Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2) {
+	
+	Mat outImage;
+	image.copyTo(outImage);
+
+	Scalar lineColour = Scalar(180, 0, 180); //Purple
+	line(outImage, point1, point2, lineColour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+
+	return outImage;
+}
+
 Mat ImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRectangle, const Rect straightLimitRectangle, const Contour limitContour)
 {
 	//Create a working RGB image so the border lines are colour even if the image isn't.
