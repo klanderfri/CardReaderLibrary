@@ -76,9 +76,11 @@ int TitleExtractor::errorProtectGaussAmount(int amountOfGauss) {
 
 bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages, int& numberOfTries) {
 
+	numberOfTries++;
+
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
 	LetterFilter filter(imageFileName, titleImage, systemMethods, runDebugging);
-	LetterAreas letters = filter.RunFilter(contours);
+	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
 	
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
 	bool toShortTitle = letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName();
@@ -124,18 +126,14 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	textImages.push_back(straightenTitleImage);
 	textImages.push_back(boundedTitleImage);
 
-	numberOfTries++;
-
 	//Store result for debugging.
 	if (runDebugging) {
 
-		wstring triesPostfix = L"_" + to_wstring(numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"7 - Only Title Letters", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"8 - Possible Title Area", numberOfTries);
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"7 - Only Title Letters");
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"8 - Possible Title Area");
-
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"9 - Title Text (Straighten)");
-		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, systemMethods->AddToEndOfFilename(imageFileName, triesPostfix), L"10 - Title Text (Bounded)");
+		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"9 - Title Text (Straighten)", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, imageFileName, L"10 - Title Text (Bounded)", numberOfTries);
 	}
 
 	return true;

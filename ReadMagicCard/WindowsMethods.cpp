@@ -117,6 +117,8 @@ wstring WindowsMethods::GetUserPicturesFileDirectory() {
 
 wstring WindowsMethods::AddToEndOfFilename(wstring originalFilename, wstring addition) {
 
+	if (addition.empty()) { return originalFilename; }
+
 	size_t pointPosition = originalFilename.rfind('.');
 	wstring filename = originalFilename.substr(0, pointPosition);
 	wstring extension = originalFilename.substr(pointPosition);

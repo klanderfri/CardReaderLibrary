@@ -17,7 +17,7 @@ LetterFilter::~LetterFilter()
 {
 }
 
-LetterAreas LetterFilter::RunFilter(Contours contours) {
+LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 	//Reset center line.
 	titleCenterLine = TrendLine(0, originalImageData.rows / 2);
@@ -44,7 +44,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours) {
 		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
 		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
 
-		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line");
+		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line", numberOfTries);
 	}
 	
 	//Redo the filtering with now when we got the center line to work with.

@@ -15,11 +15,21 @@ SaveOcvImage::~SaveOcvImage()
 }
 
 //Saves the image and gives the specified name to the file.
-void SaveOcvImage::SaveImageData(SystemMethods* systemMethods, Mat imageToSave, wstring fileNameOfSavedFile, wstring subFolder)
+void SaveOcvImage::SaveImageData(SystemMethods* systemMethods, Mat imageToSave, wstring fileNameOfSavedFile, wstring subFolder, int currentFileNumber, int amountOfFiles)
 {
 	if (subFolder.empty()) {
 		throw ParameterException("The subfolder cannot be empty!", "subFolder");
 	}
+	
+	//Add postfix.
+	wstring imageNumberPostfix = L"";
+	if (currentFileNumber > 0 && amountOfFiles > 0) {
+		imageNumberPostfix = FileHandling::CreateFileNumberPostfix(currentFileNumber, amountOfFiles);
+	}
+	else if (currentFileNumber > 0) {
+		imageNumberPostfix = FileHandling::CreateFileNumberPostfix(currentFileNumber);
+	}
+	fileNameOfSavedFile = systemMethods->AddToEndOfFilename(fileNameOfSavedFile, imageNumberPostfix);
 
 	//Get the path the image should be saved to.
 	wstring saveInFolderPath = FileHandling::GetSubFolderPath(systemMethods, subFolder);

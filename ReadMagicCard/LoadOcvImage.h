@@ -1,7 +1,8 @@
 #pragma once
-#include "SystemMethods.h"
+#include "FileHandling.h"
 //Class for loading images from disk.
 class LoadOcvImage
+	: public FileHandling
 {
 public:
 	LoadOcvImage();

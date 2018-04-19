@@ -11,7 +11,7 @@ public:
 	~LetterFilter();
 
 	//Runs the filter and returns the letters.
-	LetterAreas RunFilter(Contours contours);
+	LetterAreas RunFilter(Contours contours, int numberOfTries);
 
 private:
 	//Finds the center line for a set of letters.

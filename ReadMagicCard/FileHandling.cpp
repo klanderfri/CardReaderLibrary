@@ -96,3 +96,19 @@ bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {
 	if (boost::filesystem::exists(fullFolderPath)) { return true; }
 	return boost::filesystem::create_directory(fullFolderPath);
 }
+
+wstring FileHandling::CreateFileNumberPostfix(int currentFileNumber, int amountOfFiles) {
+
+	if (currentFileNumber < 1) {
+		throw ParameterException("The first file to get a postfix must have a number bigger than zero!", "currentFileNumber");
+	}
+
+	wstring numberStr = to_wstring(currentFileNumber);
+
+	if (amountOfFiles > 0) {
+		return L" (" + numberStr + L" of " + to_wstring(amountOfFiles) + L")";
+	}
+	else {
+		return L" (" + numberStr + L")";
+	}
+}

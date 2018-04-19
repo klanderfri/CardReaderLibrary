@@ -20,6 +20,8 @@ public:
 	static std::wstring GetSubFolderPath(SystemMethods* systemMethods, std::wstring subFolder);
 	//Creates a file directory.
 	static bool CreateFileDirectory(std::wstring fullFolderPath);
+	//Creates a string that could be used to postfix files with the same filename.
+	static std::wstring CreateFileNumberPostfix(int currentFileNumber, int amountOfFiles = 0);
 
 private:
 
