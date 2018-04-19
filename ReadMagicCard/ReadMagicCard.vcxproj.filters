@@ -159,6 +159,9 @@
     <ClInclude Include="ReadingConfiguration.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="TrendLine.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -246,6 +249,9 @@
       <Filter>Libraries\SystemMethods</Filter>
     </ClCompile>
     <ClCompile Include="ReadingConfiguration.cpp">
+      <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="TrendLine.cpp">
       <Filter>Core\Containers</Filter>
     </ClCompile>
   </ItemGroup>
