@@ -12,6 +12,8 @@ public:
 
 	//Runs the filter and returns the letters.
 	LetterAreas RunFilter(Contours contours, int numberOfTries);
+	//Gets the center line of the text.
+	TrendLine GetTextCenterLine();
 
 private:
 	//Finds the center line for a set of letters.
@@ -35,7 +37,7 @@ private:
 	//Checks if to letter areas has a "wide" distance between its' centers, indicating that one is a title letter and the other a mana cost.
 	bool hasWideLimitDistance(cv::RotatedRect leftLetterArea, cv::RotatedRect rightLetterArea);
 
-	//The approximal line going through the center of the title.
-	TrendLine titleCenterLine;
+	//The approximal line going through the center of the text.
+	TrendLine textCenterLine;
 };
 

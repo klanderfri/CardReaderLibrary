@@ -17,10 +17,15 @@ LetterFilter::~LetterFilter()
 {
 }
 
+TrendLine LetterFilter::GetTextCenterLine() {
+
+	return textCenterLine;
+}
+
 LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 	//Reset center line.
-	titleCenterLine = TrendLine(0, originalImageData.rows / 2);
+	textCenterLine = TrendLine(0, originalImageData.rows / 2);
 
 	//Do a crude filtering of the the letters.
 	LetterAreas allPossibleLetters = getPossibleLetterAreas(contours);
@@ -32,14 +37,14 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	}
 
 	//Find the center of the title.
-	titleCenterLine = findTitleCenterLine(letters);
+	textCenterLine = findTitleCenterLine(letters);
 
 	//Store result for debugging.
 	if (runDebugging) {
 
 		float leftLimit = letters[0].Box.center.x;
 		float rightLimit = letters[letters.size() - 1].Box.center.x;
-		vector<Point2f> line = titleCenterLine.GetEndPoints(leftLimit, rightLimit);
+		vector<Point2f> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
 
 		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
 		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
@@ -52,6 +57,9 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	//to avoid those false negatives.
 	letters = filterOutNonTitleSymbols(allPossibleLetters);
 	letters = filterOutNonNameSymbols(letters);
+
+	//Find the center of the title.
+	textCenterLine = findTitleCenterLine(letters);
 
 	return letters;
 }
@@ -134,7 +142,7 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 
 LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
 
-	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, titleCenterLine);
+	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
 	LetterAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++)
