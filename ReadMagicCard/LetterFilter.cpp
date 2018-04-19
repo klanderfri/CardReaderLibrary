@@ -32,7 +32,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	}
 
 	//Find the center of the title.
-	findTitleCenterLine(letters);
+	titleCenterLine = findTitleCenterLine(letters);
 
 	//Store result for debugging.
 	if (runDebugging) {
