@@ -66,7 +66,8 @@ int LetterCheckHelper::getMinTitleLetterCoordinateY(double x) {
 }
 
 int LetterCheckHelper::getTitleAreaHeight() {
-	return (int)(WORKING_CARD_HEIGHT / 6.47619); //105
+	
+	return (int)(WORKING_CARD_HEIGHT / 8.77); //77
 }
 
 int LetterCheckHelper::getTitleAreaMiddleCoordinateY(double x) {
