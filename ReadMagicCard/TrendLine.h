@@ -23,6 +23,8 @@ public:
 	double GetPerpendicularDistance(cv::Point point);
 	//Gets another line perpendicular to the line.
 	TrendLine GetPerpendicularLine(cv::Point pointOnPerpendicularLine);
+	//Gets another line parallel to the line.
+	TrendLine GetParallelLine(cv::Point pointOnParallelLine);
 	//Gets the point in which thw two lines meet.
 	static cv::Point2d GetIntersectionPoint(TrendLine lineA, TrendLine lineB);
 

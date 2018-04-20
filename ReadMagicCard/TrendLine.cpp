@@ -122,6 +122,8 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 
 	//Implemented according to:
 	//https://www.slideshare.net/nsimmons/11-x1-t05-05-perpendicular-distance
+	//Also check "Line defined by an equation" at Wikipedia:
+	//https://en.wikipedia.org/w/index.php?title=Distance_from_a_point_to_a_line&oldid=837108058#Line_defined_by_an_equation
 
 	double a = (-1) * Slope;
 	double b = (1);
@@ -168,6 +170,16 @@ TrendLine TrendLine::GetPerpendicularLine(Point pointOnPerpendicularLine) {
 	return perpendicularLine;
 }
 
+TrendLine TrendLine::GetParallelLine(Point pointOnParallelLine) {
+
+	double y = GetY(pointOnParallelLine.x);
+	double extraOffset = pointOnParallelLine.y - y;
+
+	TrendLine parallel(Slope, Offset + extraOffset);
+
+	return parallel;
+}
+
 Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 
 	//Implemented according to:
@@ -177,7 +189,7 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 		throw OperationException("The slopes are identical, meaning the lines are parallel and has no intersection point!");
 	}
 
-	double x = (lineB.Offset - lineA.Offset) / (lineA.Slope - lineB.Slope); //Will never be dicision by zero due to the exception above.
+	double x = (lineB.Offset - lineA.Offset) / (lineA.Slope - lineB.Slope); //Will never be division by zero due to the exception above.
 	double y = lineA.GetY(x);
 
 	Point2d intersection(x, y);
