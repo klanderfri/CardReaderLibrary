@@ -10,9 +10,11 @@ public:
 	//Convert a string to a wide string using ANSI format.
 	virtual std::wstring ToWString(const std::string& stringToConvert) = 0;
 	//Converts a float to a wide string.
-	virtual std::wstring ToWString(const float& floatToConvert, int precision = 5) = 0;
+	virtual std::wstring ToWString(const float& floatToConvert, int numberOfDecimals = 5) = 0;
+	//Converts a double to a wide string.
+	static std::wstring ToWString(double doubleToConvert, int numberOfDecimals);
 	//Converts an UTF8 string to an ANSI wide string.
-	std::wstring UTF8ToWstring(const char *utf8ToConvert);
+	static std::wstring UTF8ToWstring(const char *utf8ToConvert);
 	//Gets the user name of the current user.
 	virtual std::wstring GetCurrentUserName() = 0;
 	//Gets the picture folder of the current user.

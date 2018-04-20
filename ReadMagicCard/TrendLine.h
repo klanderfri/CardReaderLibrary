@@ -35,7 +35,5 @@ private:
 
 	//Sets up the member variables.
 	void setupMemberVariables(double slope, double offset);
-	//Converts a double to a string.
-	std::wstring convertDoubleToWstring(double number, int decimalPrecision);
 };
 

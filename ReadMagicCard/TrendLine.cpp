@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "TrendLine.h"
 #include "AlgorithmHelper.h"
-#include "boost/lexical_cast.hpp"
+#include "SystemMethods.h"
 
 using namespace cv;
 using namespace std;
-using boost::lexical_cast;
 
 TrendLine::TrendLine()
 {
@@ -87,8 +86,8 @@ bool TrendLine::IsZeroLine() {
 
 wstring TrendLine::GetEquation() {
 
-	wstring offset = convertDoubleToWstring(abs(Offset), 3);
-	wstring slope = convertDoubleToWstring(Slope, 3);
+	wstring offset = SystemMethods::ToWString(abs(Offset), 3);
+	wstring slope = SystemMethods::ToWString(Slope, 3);
 	wstring sign = (Offset < 0) ? L"- " : L"+ ";
 	wstring equation = L"y = " + slope + L"x " + sign + offset;
 
@@ -97,8 +96,8 @@ wstring TrendLine::GetEquation() {
 
 wstring TrendLine::GetZeroEquation() {
 
-	wstring offset = convertDoubleToWstring(abs(Offset), 3);
-	wstring slope = convertDoubleToWstring(abs(Slope), 3);
+	wstring offset = SystemMethods::ToWString(abs(Offset), 3);
+	wstring slope = SystemMethods::ToWString(abs(Slope), 3);
 	wstring offsetSign = (Offset > 0) ? L"- " : L"+ ";
 	wstring slopeSign = (Slope > 0) ? L"- " : L"+ ";
 	wstring equation = L"y " + slopeSign + slope + L"x " + offsetSign + offset + L" = 0";
@@ -171,17 +170,4 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 	Point2d intersection(x, y);
 
 	return intersection;
-}
-
-wstring TrendLine::convertDoubleToWstring(double number, int decimalPrecision) {
-
-	//Rounding implemented as suggested at:
-	//https://stackoverflow.com/a/1344261/1997617
-	
-	double roundFactor = pow(10, decimalPrecision);
-	double nearest = round(number * roundFactor) / roundFactor;
-	
-	wstring numberStr = boost::lexical_cast<wstring>(nearest);
-	numberStr = numberStr.substr(0, numberStr.find(L'.') + decimalPrecision + 1);
-	return numberStr;
 }
