@@ -141,7 +141,7 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 	double difference = abs(controlDistance - abs(distance));
 
 	//Although, too much of a difference indicates error in the algorithms.
-	if (difference >= 0.01) {
+	if (difference >= 0.1) {
 		throw OperationException("The methods calculating the perpendicular distance renders different results!");
 	}
 
