@@ -28,7 +28,7 @@ public:
 	//Creates an image showing the limits of the individual letters.
 	static cv::Mat DrawLimits(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
 	//Draws the specified center point to the image.
-	static cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, cv::Scalar colour = cv::Scalar(0, 0, 255), int radius = 10);
+	static cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, cv::Scalar colour = cv::Scalar(0, 0, 255), int radius = 3);
 	//Gets how many degrees the rectangle needs to be rotated in positive direction (counter-clockwise) to be straight.
 	static double GetAnglesToStrightenUp(const cv::RotatedRect rotatedRectangle, bool enforcePortraitMode = true);
 	//Gets the center point of an image.
