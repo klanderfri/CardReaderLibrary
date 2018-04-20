@@ -44,7 +44,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 		float leftLimit = letters[0].Box.center.x;
 		float rightLimit = letters[letters.size() - 1].Box.center.x;
-		vector<Point2f> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
+		vector<Point2d> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
 
 		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
 		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
@@ -63,7 +63,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 TrendLine LetterFilter::findTitleCenterLine(LetterAreas letters) {
 
-	vector<Point2f> points;
+	vector<Point> points;
 
 	for (LetterArea letter : letters) {
 		points.push_back(letter.Box.center);

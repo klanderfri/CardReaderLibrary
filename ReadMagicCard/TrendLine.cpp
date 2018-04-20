@@ -15,7 +15,7 @@ TrendLine::TrendLine(double slope, double offset)
 	setupMemberVariables(slope, offset);
 }
 
-TrendLine::TrendLine(const vector<Point2f>& points) {
+TrendLine::TrendLine(const vector<Point>& points) {
 
 	if (points.empty()) {
 
@@ -23,8 +23,8 @@ TrendLine::TrendLine(const vector<Point2f>& points) {
 	}
 	else if (points.size() == 1) {
 
-		Point2f origo(0, 0);
-		vector<Point2f> newVector{ origo, points[0] };
+		Point2d origo(0, 0);
+		vector<Point> newVector{ origo, points[0] };
 		TrendLine line(newVector);
 
 		setupMemberVariables(line.Slope, line.Offset);
@@ -33,14 +33,14 @@ TrendLine::TrendLine(const vector<Point2f>& points) {
 
 		vector<double> x, y;
 
-		for (Point2f point : points) {
+		for (Point2d point : points) {
 
 			x.push_back(point.x);
 			y.push_back(point.y);
 		}
 
 		double slope = AlgorithmHelper::Slope(x, y);
-		Point2f point((float)AlgorithmHelper::Average(x), (float)AlgorithmHelper::Average(y));
+		Point2d point((float)AlgorithmHelper::Average(x), (float)AlgorithmHelper::Average(y));
 		double offset = point.y - (slope * point.x);
 
 		setupMemberVariables(slope, offset);
@@ -57,12 +57,12 @@ void TrendLine::setupMemberVariables(double slope, double offset) {
 	this->Offset = offset;
 }
 
-vector<Point2f> TrendLine::GetEndPoints(float leftLimitX, float rightLimitX) {
+vector<Point2d> TrendLine::GetEndPoints(float leftLimitX, float rightLimitX) {
 
-	Point2f linePoint1(leftLimitX, (float)(Offset + Slope * leftLimitX));
-	Point2f linePoint2(rightLimitX, (float)(Offset + Slope * rightLimitX));
+	Point2d linePoint1(leftLimitX, (float)(Offset + Slope * leftLimitX));
+	Point2d linePoint2(rightLimitX, (float)(Offset + Slope * rightLimitX));
 
-	vector<Point2f> linePoints;
+	vector<Point2d> linePoints;
 	linePoints.push_back(linePoint1);
 	linePoints.push_back(linePoint2);
 

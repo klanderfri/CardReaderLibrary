@@ -4,11 +4,11 @@ class TrendLine
 public:
 	TrendLine();
 	TrendLine(double slope, double offset);
-	TrendLine(const std::vector<cv::Point2f>& points);
+	TrendLine(const std::vector<cv::Point>& points);
 	~TrendLine();
 
 	//Gets the end points of the line.
-	std::vector<cv::Point2f> GetEndPoints(float leftLimitX, float rightLimitX);
+	std::vector<cv::Point2d> GetEndPoints(float leftLimitX, float rightLimitX);
 	//Gets the Y value for a given X value.
 	double GetY(double x);
 	//Gets the X value for a given Y value.
