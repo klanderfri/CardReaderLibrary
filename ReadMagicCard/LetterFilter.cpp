@@ -58,9 +58,6 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	letters = filterOutNonTitleSymbols(allPossibleLetters);
 	letters = filterOutNonNameSymbols(letters);
 
-	//Find the center of the title.
-	textCenterLine = findTitleCenterLine(letters);
-
 	return letters;
 }
 
