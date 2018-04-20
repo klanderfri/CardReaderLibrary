@@ -113,10 +113,7 @@ RotatedRect CardExtractor::findCardSquare(const Mat rawImage, int thresh) {
 	}
 
 	//Find the countours of the card.
-	Contours contours;
-	Hierarchy hierarchy;
-	Canny(workingImage, workingImage, thresh, thresh * 2, 3);
-	findContours(workingImage, contours, hierarchy, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
+	Contours contours = ImageHelper::GetCannyContours(workingImage, thresh);
 
 	//Find the outer card contour.
 	Contour maxContour = findMaxContour(contours, workingImage);
