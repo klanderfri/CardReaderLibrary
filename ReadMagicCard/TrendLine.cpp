@@ -111,14 +111,14 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 	//It's a special case that could be calculated quicker,
 	//but the regular algorithm works for these cases as well.
 	if (Slope == 0) {
-		
+
 		return abs(Offset - point.y);
 	}
 
 	//Find distance using intersection;
 	TrendLine perpendicularLine = GetPerpendicularLine(point);
 	Point2d intersection = GetIntersectionPoint(*this, perpendicularLine);
-	double distance1 = AlgorithmHelper::FindDistance(point, intersection);
+	double controlDistance = AlgorithmHelper::FindDistance(point, intersection);
 
 	//Implemented according to:
 	//https://www.slideshare.net/nsimmons/11-x1-t05-05-perpendicular-distance
@@ -127,25 +127,28 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 	double b = (1);
 	double c = (-1) * Offset;
 
-	double numerator = abs(a * point.x + b * point.y + c);
+	double numerator = a * point.x + b * point.y + c;
 	double denominator = sqrt(pow(a, 2) + pow(b, 2)); //Will never be negative or zero.
 
-	double distance2 = numerator / denominator;
+	double distance = numerator / denominator;
 
 	//The two methods should render the same result but considering the result being doubles
-	//they might have small differences.
-	if (distance1 != distance2) {
+	//after valculations with doubles, they most likely have small differences.
+	
+	//The first method can't determine which side the point is relative the line, hense absolute value method.
+	double difference = abs(controlDistance - abs(distance));
 
-		double difference = abs(distance1 - distance2);
-		if (difference >= 0.5) {
-			throw OperationException("The methods calculating the perpendicular distance renders different results!");
-		}
-		else {
-			return AlgorithmHelper::Average(vector<double> { distance1, distance2 });
-		}
+	//Although, too much of a difference indicates error in the algorithms.
+	if (difference >= 0.5) {
+		throw OperationException("The methods calculating the perpendicular distance renders different results!");
 	}
 
-	return distance2;
+	//Use the average value.
+	double sign = (distance < 0) ? -1 : 1;
+	double value = AlgorithmHelper::Average(vector<double> { controlDistance, abs(distance) });
+	distance = sign * value;
+
+	return distance;
 }
 
 TrendLine TrendLine::GetPerpendicularLine(Point pointOnPerpendicularLine) {
