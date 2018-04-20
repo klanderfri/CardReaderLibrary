@@ -27,6 +27,8 @@ public:
 	TrendLine GetParallelLine(cv::Point pointOnParallelLine);
 	//Gets the point in which thw two lines meet.
 	static cv::Point2d GetIntersectionPoint(TrendLine lineA, TrendLine lineB);
+	//Gets the two lines parallel to the line, having all the points between them.
+	std::vector<TrendLine> GetBoundLines(std::vector<cv::Point> points);
 
 	//The slope of the line.
 	double Slope = 0;

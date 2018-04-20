@@ -141,7 +141,7 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 	double difference = abs(controlDistance - abs(distance));
 
 	//Although, too much of a difference indicates error in the algorithms.
-	if (difference >= 0.5) {
+	if (difference >= 0.01) {
 		throw OperationException("The methods calculating the perpendicular distance renders different results!");
 	}
 
@@ -195,4 +195,36 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 	Point2d intersection(x, y);
 
 	return intersection;
+}
+
+vector<TrendLine> TrendLine::GetBoundLines(vector<Point> points) {
+
+	if (points.size() < 3) {
+		return vector<TrendLine> { this, this };
+	}
+
+	Point lowestPoint = points[0], highestPoint = points[0];
+	double lowestPointDistance = GetPerpendicularDistance(lowestPoint);
+	double highestPointDistance = lowestPointDistance;
+
+	for (size_t i = 1; i < points.size(); i++) {
+
+		Point point = points[i];
+		double distance = GetPerpendicularDistance(point);
+
+		if (distance < lowestPointDistance) {
+			lowestPointDistance = distance;
+			lowestPoint = point;
+		}
+		if (distance > highestPointDistance) {
+			highestPointDistance = distance;
+			highestPoint = point;
+		}
+	}
+
+	TrendLine lowestBound = GetParallelLine(lowestPoint);
+	TrendLine highestBound = GetParallelLine(highestPoint);
+
+	vector<TrendLine> bounds{ lowestBound, highestBound };
+	return bounds;
 }
