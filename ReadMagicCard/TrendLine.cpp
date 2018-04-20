@@ -115,6 +115,11 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 		return abs(Offset - point.y);
 	}
 
+	//Find distance using intersection;
+	TrendLine perpendicularLine = GetPerpendicularLine(point);
+	Point2d intersection = GetIntersectionPoint(*this, perpendicularLine);
+	double distance1 = AlgorithmHelper::FindDistance(point, intersection);
+
 	//Implemented according to:
 	//https://www.slideshare.net/nsimmons/11-x1-t05-05-perpendicular-distance
 
@@ -125,9 +130,22 @@ double TrendLine::GetPerpendicularDistance(Point point) {
 	double numerator = abs(a * point.x + b * point.y + c);
 	double denominator = sqrt(pow(a, 2) + pow(b, 2)); //Will never be negative or zero.
 
-	double distance = numerator / denominator;
+	double distance2 = numerator / denominator;
 
-	return distance;
+	//The two methods should render the same result but considering the result being doubles
+	//they might have small differences.
+	if (distance1 != distance2) {
+
+		double difference = abs(distance1 - distance2);
+		if (difference >= 0.5) {
+			throw OperationException("The methods calculating the perpendicular distance renders different results!");
+		}
+		else {
+			return AlgorithmHelper::Average(vector<double> { distance1, distance2 });
+		}
+	}
+
+	return distance2;
 }
 
 TrendLine TrendLine::GetPerpendicularLine(Point pointOnPerpendicularLine) {
