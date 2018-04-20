@@ -15,6 +15,16 @@ public:
 	double GetX(double y);
 	//Tells if the line is a zero line, i.e equivalent with most often is the X-axis.
 	bool IsZeroLine();
+	//Gets the equation in the form 'y = kx + m'.
+	std::wstring GetEquation();
+	//Gets the equation in the form 'y - kx - m = 0'.
+	std::wstring GetZeroEquation();
+	//Gets the perpendicular distance between the line and a point.
+	double GetPerpendicularDistance(cv::Point point);
+	//Gets another line perpendicular to the line.
+	TrendLine GetPerpendicularLine(cv::Point pointOnPerpendicularLine);
+	//Gets the point in which thw two lines meet.
+	static cv::Point2d GetIntersectionPoint(TrendLine lineA, TrendLine lineB);
 
 	//The slope of the line.
 	double Slope = 0;
@@ -25,5 +35,7 @@ private:
 
 	//Sets up the member variables.
 	void setupMemberVariables(double slope, double offset);
+	//Converts a double to a string.
+	std::wstring convertDoubleToWstring(double number, int decimalPrecision);
 };
 
