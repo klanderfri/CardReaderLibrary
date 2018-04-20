@@ -89,8 +89,8 @@ void ImageHelper::RotateImage(const Mat rawImage, Mat& outImage, const double an
 
 Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2) {
 	
-	Mat outImage;
-	image.copyTo(outImage);
+	//Create a working RGB image so the border lines are colour even if the image isn't.
+	Mat outImage = ToColourImage(image);
 
 	Scalar lineColour = Scalar(180, 0, 180); //Purple
 	line(outImage, point1, point2, lineColour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
