@@ -96,6 +96,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		catch (exception& ex) {
 
 			info.CardName = systemMethods->ToWString((string)ex.what());
+			info.FileName = readers[i].GetImageFileName();
 		}
 
 		//Print that we have read the image.
