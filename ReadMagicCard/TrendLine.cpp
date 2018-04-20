@@ -108,29 +108,21 @@ wstring TrendLine::GetZeroEquation() {
 double TrendLine::GetPerpendicularDistance(Point point) {
 
 	//Check if the line is parallel with the X axis.
+	//It's a special case that could be calculated quicker,
+	//but the regular algorithm works for these cases as well.
 	if (Slope == 0) {
 		
 		return abs(Offset - point.y);
 	}
 
-	//Check if the point is origo
-	if (point.x == 0 && point.y == 0) {
-
-		TrendLine perpendicularLine = GetPerpendicularLine(point);
-		Point2d intersection = TrendLine::GetIntersectionPoint(*this, perpendicularLine);
-		double distance = AlgorithmHelper::FindDistance(point, intersection);
-
-		return distance;
-	}
-
 	//Implemented according to:
 	//https://www.slideshare.net/nsimmons/11-x1-t05-05-perpendicular-distance
 
-	double a = (-1) * Slope * point.x;
-	double b = (1) * point.y;
+	double a = (-1) * Slope;
+	double b = (1);
 	double c = (-1) * Offset;
 
-	double numerator = abs(a + b + c);
+	double numerator = abs(a * point.x + b * point.y + c);
 	double denominator = sqrt(pow(a, 2) + pow(b, 2)); //Will never be negative or zero.
 
 	double distance = numerator / denominator;
@@ -164,7 +156,7 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 		throw OperationException("The slopes are identical, meaning the lines are parallel and has no intersection point!");
 	}
 
-	double x = (lineB.Offset - lineA.Offset) / (lineA.Slope - lineB.Slope); //Will never be dicision by zero due to exception above.
+	double x = (lineB.Offset - lineA.Offset) / (lineA.Slope - lineB.Slope); //Will never be dicision by zero due to the exception above.
 	double y = lineA.GetY(x);
 
 	Point2d intersection(x, y);
