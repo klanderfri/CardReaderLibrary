@@ -20,6 +20,8 @@ public:
 	static double Average(const std::vector<double>& numbers);
 	//Finds the point within a set that has a X coordinate closes to the provided X coordinate.
 	static cv::Point2f FindClosestPointX(double x, std::vector<cv::Point2f> points);
+
+	static double FindDistance(cv::Point point1, cv::Point point2);
 };
 
 template<typename T>

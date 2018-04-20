@@ -63,3 +63,13 @@ Point2f AlgorithmHelper::FindClosestPointX(double x, vector<Point2f> points) {
 
 	return closestPoint;
 }
+
+double AlgorithmHelper::FindDistance(cv::Point point1, cv::Point point2) {
+
+	double xDistance = abs(point1.x - point2.x);
+	double yDistance = abs(point1.y - point2.y);
+
+	double distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
+
+	return distance;
+}
