@@ -19,4 +19,16 @@ enum CardTitleType {
 
 	//The card comes form the Amonkhet Invocations set and has the title in the regular place, written in semi-hieroglyphs.
 	AmonkhetInvocationsTitle = 6,
+
+	//The card is an emblem card.
+	Emblem = 7,
+
+	//The card is a token card.
+	Token = 8,
+
+	//The card is a normal transformed card, i.e the backside of the card.
+	Backside = 9,
+
+	//The card is a commercial card, only containing advertising.
+	Commercial = 10
 };
