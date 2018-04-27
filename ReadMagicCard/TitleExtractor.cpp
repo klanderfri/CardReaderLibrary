@@ -140,12 +140,8 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, M
 	if (centerLine.Slope == 0) {
 
 		Rect bounds = boundingRect(letters);
-
-		Point2f center(bounds.width / (float)2 + bounds.x, bounds.height / (float)2 + bounds.y);
-		Size2f size((float)bounds.width, (float)bounds.height);
-		float angle = 0;
-		RotatedRect rect(center, size, angle);
-
+		RotatedRect rect = ImageHelper::ToRotatedRectangle(bounds);
+		
 		return rect;
 	}
 

@@ -34,6 +34,23 @@ Rect2f ImageHelper::ToStraightRectangle(const RotatedRect rawRectangle, bool enf
 	return Rect2f(x, y, width, height);
 }
 
+RotatedRect ImageHelper::ToRotatedRectangle(const Rect straightRectangle) {
+
+	float x = straightRectangle.width / (float)2 + straightRectangle.x;
+	float y = straightRectangle.height / (float)2 + straightRectangle.y;
+	Point2f center(x, y);
+	
+	float width = (float)straightRectangle.width;
+	float height = (float)straightRectangle.height;
+	Size2f size(width, height);
+	
+	float angle = 0;
+	
+	RotatedRect rotatedRectangle(center, size, angle);
+
+	return rotatedRectangle;
+}
+
 Mat ImageHelper::ToGreyImage(const Mat imageToConvert) {
 
 	return changeImageMode(imageToConvert, COLOR_BGR2GRAY);

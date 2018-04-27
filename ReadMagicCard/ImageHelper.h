@@ -10,8 +10,10 @@ public:
 	ImageHelper();
 	~ImageHelper();
 
-	//Converts an rotated rectangle to a straight rectangle in portrait orientation.
+	//Converts a rotated rectangle to a straight rectangle.
 	static cv::Rect2f ToStraightRectangle(const cv::RotatedRect rotatedRectToConvert, bool enforcePortraitMode = true);
+	//Converts a rectangle to a rotated rectangle.
+	static cv::RotatedRect ToRotatedRectangle(const cv::Rect straightRectangle);
 	//Creates a grey scale image out of the provided image.
 	static cv::Mat ToGreyImage(const cv::Mat imageToConvert);
 	//Creates a colour image out of the provided image. Note: This method doesn't add any colours to the image.
