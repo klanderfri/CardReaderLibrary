@@ -2,7 +2,7 @@
 //Enum specifying the kind of title a card has.
 enum CardTitleType {
 
-	//The normal titel position
+	//The normal title position
 	NormalTitle = 1,
 
 	//The card is split an as such has the titles on the side.
