@@ -29,6 +29,8 @@ private:
 	std::vector<CardNameInfo> getCardListToSort();
 	//Gets a wstring containing the expected sort result.
 	std::wstring getExpectedSortResult();
+	//Tests the method calculating the angle between two lines.
+	bool testLineAngleCalculation();
 
 	//An object holding OS-specific methods.
 	SystemMethods* systemMethods;

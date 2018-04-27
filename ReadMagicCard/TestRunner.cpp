@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TestRunner.h"
+#include "TrendLine.h"
 #include "MtgCardInfoHelper.h"
 #include "boost\algorithm\string.hpp"
 #include <iostream>
@@ -20,8 +21,9 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 	vector<CardNameInfo> incorrectResults;
 	bool cardTestsSucceded = runCardTests(result, incorrectResults);
 	bool sortTestsSucceded = runSortTest();
+	bool lineAngleSucceded = testLineAngleCalculation();
 
-	if (cardTestsSucceded && sortTestsSucceded) {
+	if (cardTestsSucceded && sortTestsSucceded && lineAngleSucceded) {
 
 		systemMethods->SetCommandLineTextColour(Colour::Green);
 		wcout << L"All test cases still works!" << endl << endl;
@@ -49,6 +51,11 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 		//Inform about trouble in the sorting.
 		if (!sortTestsSucceded) {
 			wcout << L"The algorithm for sorting card is broken!" << endl;
+		}
+
+		//Inform about trouble in the algorithm calculating angles between lines.
+		if (!lineAngleSucceded) {
+			wcout << L"The algorithm calculating the angle between two lines is broken!" << endl;
 		}
 
 		wcout << endl;
@@ -240,4 +247,27 @@ wstring TestRunner::getExpectedSortResult() {
 		L"Zonder\n";
 
 	return result;
+}
+
+bool TestRunner::testLineAngleCalculation() {
+
+	TrendLine lineA(2, -3);
+	TrendLine lineB(5, 1);
+	TrendLine lineC(4, 1);
+	TrendLine lineD((1 / (double)2), -(1 / (double)3));
+	TrendLine lineE(-1, 0);
+	TrendLine lineF(1, 2);
+	long double result1 = TrendLine::GetAngleBetweenLines(lineA, lineB); //15.3 degrees
+	long double result2 = TrendLine::GetAngleBetweenLines(lineC, lineD); //49.4 degrees
+	long double result3 = TrendLine::GetAngleBetweenLines(lineE, lineF); //90.0 degrees
+
+	long double expectedResult1 = -15.255118703057775;
+	long double expectedResult2 = 49.398705354995542;
+	long double expectedResult3 = -90.000000000000000;
+
+	bool isWorking =
+		result1 == expectedResult1 &&
+		result2 == expectedResult2 &&
+		result3 == expectedResult3;
+	return isWorking;
 }
