@@ -48,17 +48,20 @@ Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, Ca
 	threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
 
 	bool couldHaveBlackBackground = titleType == NormalTitle || titleType == Emblem || titleType == Token;
-	bool hasBlackBackground = couldHaveBlackBackground && ImageHelper::PercentageOfNonZero(binaryImage) < 0.3;
+	double percentageOfWhite = ImageHelper::PercentageOfNonZero(binaryImage);
+	bool hasBlackBackground = couldHaveBlackBackground && percentageOfWhite < 0.3;
 
 	if (hasBlackBackground) {
 		workOriginal = ~workOriginal;
 	}
 
+	bool isBlackTextOnWhite;
 	do {
 		threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
+		isBlackTextOnWhite = ImageHelper::PercentageOfNonZero(binaryImage) > 0.562;
 		binaryThreshold -= 20;
 
-	} while (!ImageHelper::IsBlackTextWhiteBackground(binaryImage) && binaryThreshold > 0);
+	} while (!isBlackTextOnWhite && binaryThreshold > 0);
 	
 	return binaryImage;
 }
