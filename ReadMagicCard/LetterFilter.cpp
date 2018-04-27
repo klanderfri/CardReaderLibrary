@@ -38,19 +38,6 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 	//Find the center of the title.
 	textCenterLine = findTitleCenterLine(letters);
-
-	//Store result for debugging.
-	if (runDebugging) {
-
-		float leftLimit = letters[0].Box.center.x;
-		float rightLimit = letters[letters.size() - 1].Box.center.x;
-		vector<Point2d> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
-
-		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
-		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
-
-		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line", numberOfTries);
-	}
 	
 	//Redo the filtering with now when we got the center line to work with.
 	//Sometimes real letters are missed but the trend line makes it easier
@@ -61,15 +48,33 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	//Find the center of the title.
 	textCenterLine = findTitleCenterLine(letters);
 
+	//Store result for debugging.
+	if (runDebugging) {
+
+		bool hasLetters = !letters.empty();
+		float leftLimit = hasLetters ? letters[0].Box.center.x : 0;
+		float rightLimit = hasLetters ? letters[letters.size() - 1].Box.center.x : originalImageData.cols;
+		vector<Point2d> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
+
+		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
+		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
+
+		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line", numberOfTries);
+	}
+
 	return letters;
 }
 
 TrendLine LetterFilter::findTitleCenterLine(LetterAreas letters) {
 
+	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
 	vector<Point2d> points;
 
 	for (LetterArea letter : letters) {
-		points.push_back(letter.Box.center);
+
+		if (!letterCheck.IsDotLikeCharacter(letter.Box)) {
+			points.push_back(letter.Box.center);
+		}
 	}
 
 	return TrendLine(points);
