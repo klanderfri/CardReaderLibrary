@@ -1,6 +1,7 @@
 #pragma once
 #include "SectionExtractor.h"
 #include "LetterArea.h"
+#include "TrendLine.h"
 //Class for extracting the title section from a card.
 class TitleExtractor :
 	public SectionExtractor
@@ -20,5 +21,6 @@ private:
 	int errorProtectGaussAmount(int amountOfGauss);
 	//Extracts the title text area out of an image containing the entire title area.
 	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages, int& numberOfTries);
-
+	//Gets the rectangle bounding the text area.
+	cv::RotatedRect getTextArea(Contour letters, TrendLine centerLine, cv::Mat titleImage, int numberOfTries);
 };

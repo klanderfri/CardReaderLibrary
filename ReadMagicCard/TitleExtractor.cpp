@@ -2,6 +2,7 @@
 #include "TitleExtractor.h"
 #include "LetterCheckHelper.h"
 #include "MtgCardInfoHelper.h"
+#include "AlgorithmHelper.h"
 #include "SaveOcvImage.h"
 #include "LetterFilter.h"
 
@@ -81,6 +82,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
 	LetterFilter filter(imageFileName, titleImage, systemMethods, runDebugging);
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
+	TrendLine textCenterLine = filter.GetTextCenterLine();
 	
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
 	bool toShortTitle = letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName();
@@ -88,8 +90,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 	//Get the areas of the entire title.
 	Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
-	RotatedRect textArea = minAreaRect(combinedLetterContorus);
-	Rect boundTextArea = boundingRect(combinedLetterContorus);
+	RotatedRect textArea = getTextArea(combinedLetterContorus, textCenterLine, titleImage, numberOfTries);
 
 	//Store result for debugging.
 	Mat dbg_onlyLettersBoundImage, dbg_possibleTitleAreaImage;
@@ -97,13 +98,11 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 		int radius = (int)(WORKING_CARD_HEIGHT / 226.5); //3
 		dbg_onlyLettersBoundImage = ImageHelper::DrawLimits(titleImage, letters, radius);
-		dbg_possibleTitleAreaImage = ImageHelper::DrawLimits(titleImage, textArea, boundTextArea, combinedLetterContorus);
+		dbg_possibleTitleAreaImage = ImageHelper::DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
 	}
 
 	//The title image cropped using a RotatedRect.
 	Mat straightenTitleImage;
-	//The title image cropped using a Rect.
-	Mat boundedTitleImage;
 
 	//Rotate the image so it is straight (as much as possible at least).
 	Rect2f straightTextArea;
@@ -112,29 +111,74 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	}
 	ImageHelper::StraightenUpImage(titleImage, straightenTitleImage, textArea, straightTextArea, false);
 
-	//The bounded text image doesn't need any rotation.
-	titleImage.copyTo(boundedTitleImage);
-
 	//Make black text on white background.
 	ImageHelper::SetBackgroundByInverting(straightenTitleImage, false);
-	ImageHelper::SetBackgroundByInverting(boundedTitleImage, false);
 
 	//Cut out the title text.
 	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, 10);
-	ImageHelper::CropImageWithSolidBorder(boundedTitleImage, boundedTitleImage, boundTextArea, 10);
 
 	textImages.push_back(straightenTitleImage);
-	textImages.push_back(boundedTitleImage);
 
 	//Store result for debugging.
 	if (runDebugging) {
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"7 - Only Title Letters", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"8 - Possible Title Area", numberOfTries);
-
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"9 - Title Text (Straighten)", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, boundedTitleImage, imageFileName, L"10 - Title Text (Bounded)", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"8 - Only Title Letters", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"9 - Possible Title Area", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"10 - Title Text", numberOfTries);
 	}
 
 	return true;
+}
+
+RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, Mat titleImage, int numberOfTries) {
+
+	if (letters.size() < 3) {
+		throw ParameterException("There must be at least three text contour points to get a bounding rotated rectangle!", "combinedLetters");
+	}
+
+	//Use boudning rectangle if there is no slope.
+	if (centerLine.Slope == 0) {
+
+		Rect bounds = boundingRect(letters);
+
+		Point2f center(bounds.width / (float)2 + bounds.x, bounds.height / (float)2 + bounds.y);
+		Size2f size((float)bounds.width, (float)bounds.height);
+		float angle = 0;
+		RotatedRect rect(center, size, angle);
+
+		return rect;
+	}
+
+	//Find the top and bottom borders.
+	DblContour dLettersContour = ImageHelper::ConvertToDoubleFromInt(letters);
+	vector<TrendLine> horizontalBounds = centerLine.GetBoundLines(dLettersContour);
+
+	//Find the left and right borders.
+	Point2d firstContourPoint = dLettersContour[0];
+	TrendLine perpendicularLine = centerLine.GetPerpendicularLine(firstContourPoint);
+	vector<TrendLine> verticalBounds = perpendicularLine.GetBoundLines(dLettersContour);
+
+	//Store result for debugging.
+	if (runDebugging) {
+
+		Mat lineImages;
+		titleImage.copyTo(lineImages);
+		lineImages = ImageHelper::DrawLimits(lineImages, RotatedRect(), Rect(), letters);
+		lineImages = ImageHelper::DrawLine(lineImages, horizontalBounds[0]);
+		lineImages = ImageHelper::DrawLine(lineImages, horizontalBounds[1]);
+		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[0]);
+		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[1]);
+
+		SaveOcvImage::SaveImageData(systemMethods, lineImages, imageFileName, L"7 - Bounded Characters", numberOfTries);
+	}
+
+	//Get the bounded rectangle.
+	RotatedRect textArea = AlgorithmHelper::GetRotatedRectangle(verticalBounds, horizontalBounds);
+
+	//Debug
+	Mat textAreaImage;
+	titleImage.copyTo(textAreaImage);
+	textAreaImage = ImageHelper::DrawLimits(textAreaImage, textArea, Rect(), letters);
+
+	return textArea;
 }
