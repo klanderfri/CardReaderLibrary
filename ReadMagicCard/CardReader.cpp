@@ -330,7 +330,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 	//Prepare the title for OCR reading.
 	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
-	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold, numberOfTitleImageExtractions);
+	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold, numberOfTitleImageExtractions, titleType);
 
 	//See if we need to stop.
 	if (!success) {

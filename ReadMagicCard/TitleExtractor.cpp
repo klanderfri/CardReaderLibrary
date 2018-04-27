@@ -18,7 +18,7 @@ TitleExtractor::~TitleExtractor()
 {
 }
 
-bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, int& numberOfTries) {
+bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, int& numberOfTries, CardTitleType titleType) {
 
 	int amountOfGauss = (int)(originalImageData.size().height / 18.1818);
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
@@ -33,7 +33,7 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 	GaussianBlur(outImage, outImage, Size(amountOfGauss, amountOfGauss), 0, 0);
 
 	//Threshold the image to get the important pixels.
-	outImage = getBinaryImage(outImage, binaryThreshold);
+	outImage = getBinaryImage(outImage, binaryThreshold, titleType);
 
 	//Extract a clean image containing the title.
 	bool success = getTitleText(outImage, outImages, numberOfTries);
@@ -41,13 +41,16 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 	return success;
 }
 
-Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold) {
+Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, CardTitleType titleType) {
 
 	Mat binaryImage, workOriginal;
 	titleImage.copyTo(workOriginal);
-
 	threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
-	if (ImageHelper::PercentageOfNonZero(binaryImage) < 0.3) {
+
+	bool couldHaveBlackBackground = titleType == NormalTitle || titleType == Emblem || titleType == Token;
+	bool hasBlackBackground = couldHaveBlackBackground && ImageHelper::PercentageOfNonZero(binaryImage) < 0.3;
+
+	if (hasBlackBackground) {
 		workOriginal = ~workOriginal;
 	}
 
