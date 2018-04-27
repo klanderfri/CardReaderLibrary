@@ -158,22 +158,22 @@ Mat ImageHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy 
 
 Mat ImageHelper::DrawLimits(const Mat image, const LetterAreas letters, int letterCenterRadius) {
 
-	Mat onlyLettersBound;
+	Mat drawing = ToColourImage(image);
 
 	for (size_t i = 0; i < letters.size(); i++) {
 
 		LetterArea area = letters[i];
 		
 		//Draw the area.
-		onlyLettersBound = onlyLettersBound.empty() ? image : onlyLettersBound;
-		onlyLettersBound = ImageHelper::DrawLimits(onlyLettersBound, area.Box, Rect(), area.OuterContour);
+		drawing = drawing.empty() ? image : drawing;
+		drawing = ImageHelper::DrawLimits(drawing, area.Box, Rect(), area.OuterContour);
 
 		//Draw the center.
 		Scalar colour = Scalar(255, 0, 0); //Blue
-		onlyLettersBound = ImageHelper::DrawCenterPoint(onlyLettersBound, area.Box.center, colour, letterCenterRadius);
+		drawing = ImageHelper::DrawCenterPoint(drawing, area.Box.center, colour, letterCenterRadius);
 	}
 
-	return onlyLettersBound;
+	return drawing;
 }
 
 Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, Scalar colour, int radius) {
