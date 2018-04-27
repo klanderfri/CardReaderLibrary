@@ -20,11 +20,7 @@ bool LetterCheckHelper::IsLetter(RotatedRect letterArea) {
 		return false;
 	}
 
-	if (isIDot(letterArea)) {
-		return true;
-	}
-
-	if (isComma(letterArea)) {
+	if (IsDotLikeCharacter(letterArea)) {
 		return true;
 	}
 
@@ -88,6 +84,21 @@ bool LetterCheckHelper::isWithinTitleArea(RotatedRect letterArea) {
 	}
 
 	return true;
+}
+
+bool LetterCheckHelper::IsDotLikeCharacter(RotatedRect letterArea) {
+
+	if (isIDot(letterArea)) {
+		return true;
+	}
+
+	if (isComma(letterArea)) {
+		return true;
+	}
+
+	//Add apostrophe!
+
+	return false;
 }
 
 bool LetterCheckHelper::isIDot(RotatedRect letterArea) {

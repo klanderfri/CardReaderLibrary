@@ -9,6 +9,8 @@ public:
 
 	//Checks if a specified rotated rectangle would contain a card title letter.
 	bool IsLetter(cv::RotatedRect letterArea);
+	//Checks a specified rotated rectangle would contain a character or character part that looks liek a dot.
+	bool IsDotLikeCharacter(cv::RotatedRect letterArea);
 
 private:
 
