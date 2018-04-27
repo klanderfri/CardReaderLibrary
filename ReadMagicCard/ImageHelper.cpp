@@ -98,6 +98,14 @@ Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2) {
 	return outImage;
 }
 
+Mat ImageHelper::DrawLine(const Mat image, TrendLine line) {
+
+	vector<Point2d> points = line.GetEndPoints(0, image.cols);
+	Mat outImage = DrawLine(image, points[0], points[1]);
+
+	return outImage;
+}
+
 Mat ImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRectangle, const Rect straightLimitRectangle, const Contour limitContour)
 {
 	//Create a working RGB image so the border lines are colour even if the image isn't.
@@ -373,4 +381,58 @@ Mat ImageHelper::GetContourDrawing(const Contour contour) {
 	CropImage(contourImage, contourImage, bounds);
 	
 	return contourImage;
+}
+
+DblContours ImageHelper::ConvertToDoubleFromInt(Contours iContours) {
+
+	DblContours dContours;
+
+	for (Contour iContour : iContours) {
+
+		DblContour dContour = ConvertToDoubleFromInt(iContour);
+		dContours.push_back(dContour);
+	}
+
+	return dContours;
+}
+
+Contours ImageHelper::ConvertToIntFromDouble(DblContours dContours) {
+
+	vector<Contour> iContours;
+
+	for (DblContour dContour : dContours) {
+
+		Contour iContour = ConvertToIntFromDouble(dContour);
+		iContours.push_back(iContour);
+	}
+
+	return iContours;
+}
+
+DblContour ImageHelper::ConvertToDoubleFromInt(Contour iContour) {
+
+	DblContour dContour;
+
+	for (Point iPoint : iContour) {
+
+		Point2d dPoint = iPoint;
+		dContour.push_back(dPoint);
+	}
+
+	return dContour;
+}
+
+Contour ImageHelper::ConvertToIntFromDouble(DblContour dContour) {
+
+	Contour iContour;
+
+	for (Point dPoint : dContour) {
+
+		int x = (int)round(dPoint.x);
+		int y = (int)round(dPoint.y);
+		Point2i iPoint(x, y);
+		iContour.push_back(iPoint);
+	}
+
+	return iContour;
 }

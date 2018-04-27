@@ -1,6 +1,7 @@
 #pragma once
 #include "LetterArea.h"
 #include "Hierarchy.h"
+#include "TrendLine.h"
 #include <opencv2\imgproc.hpp>
 //Class holding image processing methods.
 class ImageHelper
@@ -21,6 +22,8 @@ public:
 	static void RotateImage(const cv::Mat rawImage, cv::Mat& outImage, const double angleToRotate, const cv::Point2f centerPoint);
 	//Draws a line on an image between two points.
 	static cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2);
+	//Draws a line on an image.
+	static cv::Mat DrawLine(const cv::Mat image, TrendLine line);
 	//Draws the specified limits to the image.
 	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.
@@ -63,6 +66,14 @@ public:
 	static Contour GetCombinedLetterContorus(LetterAreas letters);
 	//Creates an image containing the contour.
 	static cv::Mat GetContourDrawing(const Contour contour);
+	//Converts a set of int contours to a set of double contours.
+	static DblContours ConvertToDoubleFromInt(Contours iContours);
+	//Converts a set of double contours to a set of int contours.
+	static Contours ConvertToIntFromDouble(DblContours dContours);
+	//Converts an int contour to a double contour.
+	static DblContour ConvertToDoubleFromInt(Contour iContour);
+	//Converts a double contour to an int contour.
+	static Contour ConvertToIntFromDouble(DblContour dContour);
 
 private:
 
