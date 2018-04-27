@@ -17,7 +17,7 @@ wstring SystemMethods::UTF8ToWstring(const char *utf8ToConvert)
 	return wstr;
 }
 
-wstring SystemMethods::ToWString(double doubleToConvert, int numberOfDecimals) {
+wstring SystemMethods::ToWString(long double doubleToConvert, int numberOfDecimals) {
 
 	//Rounding implemented as suggested at:
 	//https://stackoverflow.com/a/1344261/1997617

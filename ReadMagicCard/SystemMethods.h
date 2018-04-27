@@ -12,7 +12,7 @@ public:
 	//Converts a float to a wide string.
 	virtual std::wstring ToWString(const float& floatToConvert, int numberOfDecimals = 5) = 0;
 	//Converts a double to a wide string.
-	static std::wstring ToWString(double doubleToConvert, int numberOfDecimals);
+	static std::wstring ToWString(long double doubleToConvert, int numberOfDecimals);
 	//Converts an UTF8 string to an ANSI wide string.
 	static std::wstring UTF8ToWstring(const char *utf8ToConvert);
 	//Gets the user name of the current user.
