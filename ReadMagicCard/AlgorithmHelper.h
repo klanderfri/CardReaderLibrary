@@ -15,13 +15,15 @@ public:
 	//Appends a vector to another.
 	template<typename T> static void AppendVector(std::vector<T>& mainVector, const std::vector<T> toAppend);
 	//Finds the trend line slope for a set of values.
-	static double Slope(const std::vector<double>& x, const std::vector<double>& y);
+	static long double Slope(const std::vector<long double>& x, const std::vector<long double>& y);
 	//Finds the avarage value for a set of numbers.
-	static double Average(const std::vector<double>& numbers);
+	static long double Average(const std::vector<long double>& numbers);
 	//Finds the point within a set that has a X coordinate closes to the provided X coordinate.
 	static cv::Point2f FindClosestPointX(double x, std::vector<cv::Point2f> points);
 	//Finds the distance between two points.
 	static double FindDistance(cv::Point2d point1, cv::Point2d point2);
+	//Creates the rectangle bound by the the specified borders.
+	static cv::RotatedRect GetRotatedRectangle(std::vector<TrendLine> verticalBorders, std::vector<TrendLine> horizontalBorders);
 };
 
 template<typename T>

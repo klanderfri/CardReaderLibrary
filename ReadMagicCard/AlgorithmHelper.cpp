@@ -13,7 +13,7 @@ AlgorithmHelper::~AlgorithmHelper()
 {
 }
 
-double AlgorithmHelper::Slope(const vector<double>& x, const vector<double>& y) {
+long double AlgorithmHelper::Slope(const vector<long double>& x, const vector<long double>& y) {
 	
 	//Implemented as suggested at:
 	//https://stackoverflow.com/a/18974171/1997617
@@ -22,24 +22,24 @@ double AlgorithmHelper::Slope(const vector<double>& x, const vector<double>& y) 
 		throw ParameterException("The amount of X and Y values must be the same!", "x/y");
 	}
 
-	double avgX = Average(x);
-	double avgY = Average(y);
+	long double avgX = Average(x);
+	long double avgY = Average(y);
 
-	double numerator = 0.0;
-	double denominator = 0.0;
+	long double numerator = 0.0;
+	long double denominator = 0.0;
 
 	for (size_t i = 0; i < x.size(); ++i) {
 		numerator += (x[i] - avgX) * (y[i] - avgY);
 		denominator += (x[i] - avgX) * (x[i] - avgX);
 	}
 
-	double slope = numerator / denominator;
+	long double slope = numerator / denominator;
 	return slope;
 }
 
-double AlgorithmHelper::Average(const vector<double>& numbers) {
+long double AlgorithmHelper::Average(const vector<long double>& numbers) {
 
-	return accumulate(numbers.begin(), numbers.end(), 0.0) / numbers.size();
+	return accumulate(numbers.begin(), numbers.end(), (long double)0.0) / (long double)numbers.size();
 }
 
 Point2f AlgorithmHelper::FindClosestPointX(double x, vector<Point2f> points) {
@@ -64,7 +64,7 @@ Point2f AlgorithmHelper::FindClosestPointX(double x, vector<Point2f> points) {
 	return closestPoint;
 }
 
-double AlgorithmHelper::FindDistance(cv::Point2d point1, cv::Point2d point2) {
+double AlgorithmHelper::FindDistance(Point2d point1, Point2d point2) {
 
 	double xDistance = abs(point1.x - point2.x);
 	double yDistance = abs(point1.y - point2.y);
@@ -72,4 +72,27 @@ double AlgorithmHelper::FindDistance(cv::Point2d point1, cv::Point2d point2) {
 	double distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 
 	return distance;
+}
+
+RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders) {
+
+	//Get the corners.
+	Point2d corner = TrendLine::GetIntersectionPoint(horizontalBorders[0], verticalBorders[0]);
+	Point2d oppositeCorner = TrendLine::GetIntersectionPoint(horizontalBorders[1], verticalBorders[1]);
+	
+	//Calculate center.
+	Point2d center = 0.5f * (corner + oppositeCorner);
+
+	//Calculate angle.
+	long double angle = (-1) * horizontalBorders[0].GetAngleToAxisX();
+
+	//Calculate size.
+	long double height = TrendLine::GetPerpendicularDistance(horizontalBorders[0], horizontalBorders[1]);
+	long double width = TrendLine::GetPerpendicularDistance(verticalBorders[0], verticalBorders[1]);
+	Size2d size(width, height);
+
+	//Create rectangle.
+	RotatedRect rectangle(center, size, (float)angle);
+
+	return rectangle;
 }
