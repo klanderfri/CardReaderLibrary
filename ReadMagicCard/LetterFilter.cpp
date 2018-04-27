@@ -58,12 +58,15 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	letters = filterOutNonTitleSymbols(allPossibleLetters);
 	letters = filterOutNonNameSymbols(letters);
 
+	//Find the center of the title.
+	textCenterLine = findTitleCenterLine(letters);
+
 	return letters;
 }
 
 TrendLine LetterFilter::findTitleCenterLine(LetterAreas letters) {
 
-	vector<Point> points;
+	vector<Point2d> points;
 
 	for (LetterArea letter : letters) {
 		points.push_back(letter.Box.center);
