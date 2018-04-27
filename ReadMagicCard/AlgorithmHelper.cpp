@@ -76,6 +76,25 @@ double AlgorithmHelper::FindDistance(Point2d point1, Point2d point2) {
 
 RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders) {
 
+	//Make sure the borders are correct.
+	bool isRightSize = verticalBorders.size() == 2 && horizontalBorders.size() == 2;
+	if (!isRightSize) {
+		throw ParameterException("Wrong number of borders! There should be exactly 2 vertical borders and 2 horizontal borders!");
+	}
+
+	bool isParallel = TrendLine::IsParallel(verticalBorders[0], verticalBorders[1]);
+	isParallel = TrendLine::IsParallel(horizontalBorders[0], horizontalBorders[1]) && isParallel;
+	if (!isParallel) {
+		throw ParameterException("The side borders are not paralell!");
+	}
+
+	long double angle1 = TrendLine::GetAngleBetweenLines(verticalBorders[0], horizontalBorders[0]);
+	long double angle2 = TrendLine::GetAngleBetweenLines(verticalBorders[1], horizontalBorders[1]);
+	bool isPerpendicular = abs(angle1) == 90.0 && abs(angle2) == 90;
+	if (!isPerpendicular) {
+		throw ParameterException("The horizontal and vertical borders are not perpendicular!");
+	}
+	
 	//Get the corners.
 	Point2d corner = TrendLine::GetIntersectionPoint(horizontalBorders[0], verticalBorders[0]);
 	Point2d oppositeCorner = TrendLine::GetIntersectionPoint(horizontalBorders[1], verticalBorders[1]);
