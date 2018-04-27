@@ -296,3 +296,8 @@ vector<TrendLine> TrendLine::GetBoundLines(vector<Point2d> points) {
 
 	return bounds;
 }
+
+bool TrendLine::IsParallel(TrendLine lineA, TrendLine lineB) {
+
+	return (lineA.Slope == lineB.Slope);
+}

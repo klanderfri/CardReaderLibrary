@@ -35,6 +35,8 @@ public:
 	long double GetAngleToAxisX();
 	//Gets the two lines parallel to the line, having all the points between them.
 	std::vector<TrendLine> GetBoundLines(std::vector<cv::Point2d> points);
+	//Tells if two lines are parallel.
+	static bool IsParallel(TrendLine lineA, TrendLine lineB);
 
 	//The slope of the line.
 	long double Slope = 0;
