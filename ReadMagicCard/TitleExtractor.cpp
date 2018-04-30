@@ -121,9 +121,18 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	ImageHelper::SetBackgroundByInverting(straightenTitleImage, false);
 
 	//Cut out the title text.
-	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, 10);
+	int borderThickness = 10;
+	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, borderThickness);
 
 	textImages.push_back(straightenTitleImage);
+
+	if (letters.size() < 7) {
+
+		Mat boundedTitleImage;
+		Rect bounds = boundingRect(combinedLetterContorus);
+		ImageHelper::CropImageWithSolidBorder(titleImage, boundedTitleImage, bounds, borderThickness);
+		textImages.push_back(boundedTitleImage);
+	}
 
 	//Store result for debugging.
 	if (runDebugging) {
