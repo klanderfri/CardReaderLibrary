@@ -132,7 +132,7 @@ TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 	}
 
 	baseLine = TrendLine(bottomPoints);
-	return textBaseLine;
+	return baseLine;
 }
 
 LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
