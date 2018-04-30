@@ -244,6 +244,7 @@ long double TrendLine::GetAngleBetweenLines(TrendLine normLine, TrendLine relati
 
 	long double numerator = normLine.Slope - relationLine.Slope;
 	long double denominator = 1 + normLine.Slope * relationLine.Slope;
+	if (denominator == 0) { return (numerator < 0) ? -90 : 90; }
 	long double value = numerator / denominator;
 	long double angle = atan(value) * 180 / CV_PI;
 
