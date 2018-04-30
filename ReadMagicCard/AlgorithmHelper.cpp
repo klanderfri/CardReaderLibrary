@@ -104,7 +104,7 @@ RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorde
 
 	//Calculate angle.
 	long double angle = (-1) * horizontalBorders[0].GetAngleToAxisX();
-	angle -= 0.015; // *shruggs* Seems to work with the test cases, so...
+	angle -= 0.020; // *shruggs* Seems to work with the test cases, so...
 
 	//Calculate size.
 	long double height = TrendLine::GetPerpendicularDistance(horizontalBorders[0], horizontalBorders[1]);
