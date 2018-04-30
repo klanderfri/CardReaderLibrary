@@ -14,10 +14,14 @@ public:
 	LetterAreas RunFilter(Contours contours, int numberOfTries);
 	//Gets the center line of the text.
 	TrendLine GetTextCenterLine();
+	//Gets the base line of the text.
+	TrendLine GetTextBaseLine();
 
 private:
 	//Finds the center line for a set of letters.
-	TrendLine findTitleCenterLine(LetterAreas letters);
+	TrendLine findCenterLine(LetterAreas letters);
+	//Finds the base line (the line marking the bottom) for a set of letters.
+	TrendLine findBaseLine(LetterAreas letters);
 	//Gets the areas that might contain a title letter.
 	LetterAreas getPossibleLetterAreas(Contours contours);
 	//Filter out letter areas that are identical, ie letter areas pointing at the same letter.
@@ -39,5 +43,7 @@ private:
 
 	//The approximal line going through the center of the text.
 	TrendLine textCenterLine;
+	//The approximal line going through the base of the text.
+	TrendLine textBaseLine;
 };
 

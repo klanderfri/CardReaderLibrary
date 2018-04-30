@@ -22,10 +22,15 @@ TrendLine LetterFilter::GetTextCenterLine() {
 	return textCenterLine;
 }
 
+TrendLine LetterFilter::GetTextBaseLine() {
+
+	return textBaseLine;
+}
+
 LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
-	//Reset center line.
-	textCenterLine = TrendLine(0, originalImageData.rows / 2);
+	//Reset base and center line.
+	textBaseLine = textCenterLine = TrendLine(0, originalImageData.rows / 2);
 
 	//Do a crude filtering of the the letters.
 	LetterAreas allPossibleLetters = getPossibleLetterAreas(contours);
@@ -37,7 +42,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	}
 
 	//Find the center of the title.
-	textCenterLine = findTitleCenterLine(letters);
+	findCenterLine(letters);
 	
 	//Redo the filtering with now when we got the center line to work with.
 	//Sometimes real letters are missed but the trend line makes it easier
@@ -46,7 +51,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	letters = filterOutNonNameSymbols(letters);
 
 	//Find the center of the title.
-	textCenterLine = findTitleCenterLine(letters);
+	findCenterLine(letters);
 
 	//Store result for debugging.
 	if (runDebugging) {
@@ -54,10 +59,16 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		bool hasLetters = !letters.empty();
 		float leftLimit = hasLetters ? letters[0].Box.center.x : 0;
 		float rightLimit = hasLetters ? letters[letters.size() - 1].Box.center.x : originalImageData.cols;
-		vector<Point2d> line = textCenterLine.GetEndPoints(leftLimit, rightLimit);
+		vector<Point2d> cLine = textCenterLine.GetEndPoints(leftLimit, rightLimit);
+		TrendLine baseLine = findBaseLine(letters);
+		vector<Point2d> bLine = baseLine.GetEndPoints(leftLimit, rightLimit);
 
 		Mat trendImage = ImageHelper::DrawLimits(originalImageData, letters, 3);
-		trendImage = ImageHelper::DrawLine(trendImage, line[0], line[1]);
+		for (LetterArea letter : letters) {
+			trendImage = ImageHelper::DrawCenterPoint(trendImage, letter.GetMiddleBottomPoint());
+		}
+		trendImage = ImageHelper::DrawLine(trendImage, cLine[0], cLine[1]);
+		trendImage = ImageHelper::DrawLine(trendImage, bLine[0], bLine[1]);
 
 		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line", numberOfTries);
 	}
@@ -65,19 +76,61 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	return letters;
 }
 
-TrendLine LetterFilter::findTitleCenterLine(LetterAreas letters) {
+TrendLine LetterFilter::findCenterLine(LetterAreas letters) {
 
 	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
-	vector<Point2d> points;
+	vector<long double> xCoordinates, yCoordinates;
 
 	for (LetterArea letter : letters) {
 
-		if (!letterCheck.IsDotLikeCharacter(letter.Box)) {
-			points.push_back(letter.Box.center);
-		}
+		if (letterCheck.IsDotLikeCharacter(letter.Box)) { continue; }
+
+		xCoordinates.push_back(letter.Box.center.x);
+		yCoordinates.push_back(letter.Box.center.y);
 	}
 
-	return TrendLine(points);
+	TrendLine baseLine = findBaseLine(letters);
+
+	double avgX = AlgorithmHelper::Average(xCoordinates);
+	double avgY = AlgorithmHelper::Average(yCoordinates);
+	Point2d averageCenter(avgX, avgY);
+
+	double extraOffset = baseLine.GetVerticalDistance(averageCenter);
+	TrendLine centerLine(baseLine.Slope, baseLine.Offset + extraOffset);
+
+	textCenterLine = centerLine;
+	return textCenterLine;
+}
+
+TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
+
+	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
+	vector<Point2d> bottomPoints;
+	LetterAreas baseLineLetters;
+
+	for (LetterArea letter : letters) {
+
+		if (letterCheck.IsDotLikeCharacter(letter.Box)) { continue; }
+
+		bottomPoints.push_back(letter.GetMiddleBottomPoint());
+		baseLineLetters.push_back(letter);
+	}
+
+	TrendLine baseLine(bottomPoints);
+	double allowedPerpendicularDistance = (double)(WORKING_CARD_HEIGHT / 85.0); //8
+	bottomPoints.clear();
+
+	for (LetterArea letter : baseLineLetters) {
+
+		double perpendicularDistance = abs(baseLine.GetPerpendicularDistance(letter.GetMiddleBottomPoint()));
+		if (perpendicularDistance > allowedPerpendicularDistance) { continue; }
+
+		bottomPoints.push_back(letter.GetMiddleBottomPoint());
+	}
+
+	baseLine = TrendLine(bottomPoints);
+	textBaseLine = baseLine;
+	return textBaseLine;
 }
 
 LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
