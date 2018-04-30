@@ -170,6 +170,14 @@ long double TrendLine::GetPerpendicularDistance(Point2d point) {
 	return distance;
 }
 
+long double TrendLine::GetVerticalDistance(Point2d point) {
+
+	long double lineY = GetY(point.x);
+	long double verticalDistance = point.y - lineY;
+
+	return verticalDistance;
+}
+
 TrendLine TrendLine::GetPerpendicularLine(Point2d pointOnPerpendicularLine) {
 
 	//Implemented according to section "Perpendicular Lines" at

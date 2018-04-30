@@ -23,6 +23,8 @@ public:
 	static long double GetPerpendicularDistance(TrendLine lineA, TrendLine lineB);
 	//Gets the perpendicular distance between the line and a point.
 	long double GetPerpendicularDistance(cv::Point2d point);
+	//Gets the vertical distance between the line and a point.
+	long double GetVerticalDistance(cv::Point2d point);
 	//Gets another line perpendicular to the line.
 	TrendLine GetPerpendicularLine(cv::Point2d pointOnPerpendicularLine);
 	//Gets another line parallel to the line.
