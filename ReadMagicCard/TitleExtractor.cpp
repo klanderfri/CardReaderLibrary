@@ -166,7 +166,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	//Make sure there is a margin between the botton bounds and the base line, otherwise letters like 'p' and 'g' will be cut.
 	assert(horizontalBounds[1].Slope == baseLine.Slope);
 	double marginBottomToBase = TrendLine::GetPerpendicularDistance(horizontalBounds[1], baseLine);
-	int minimumMargin = (int)(WORKING_CARD_HEIGHT / 27.2); //25
+	int minimumMargin = (int)(WORKING_CARD_HEIGHT / 45.333); //15
 	if (marginBottomToBase < minimumMargin) {
 		horizontalBounds[1] = TrendLine(baseLine.Slope, baseLine.Offset + minimumMargin);
 	}
