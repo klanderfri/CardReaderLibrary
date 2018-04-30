@@ -88,15 +88,14 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
 	LetterFilter filter(imageFileName, titleImage, systemMethods, runDebugging);
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
-	TrendLine textCenterLine = filter.GetTextCenterLine();
-	
+
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
 	bool toShortTitle = letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName();
 	if (toShortTitle) { return false; }
 
 	//Get the areas of the entire title.
 	Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
-	RotatedRect textArea = getTextArea(combinedLetterContorus, textCenterLine, titleImage, numberOfTries);
+	RotatedRect textArea = getTextArea(combinedLetterContorus, filter.GetTextCenterLine(), filter.GetTextBaseLine(), titleImage, numberOfTries);
 
 	//Store result for debugging.
 	Mat dbg_onlyLettersBoundImage, dbg_possibleTitleAreaImage;
@@ -145,7 +144,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	return true;
 }
 
-RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, Mat titleImage, int numberOfTries) {
+RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, TrendLine baseLine, Mat titleImage, int numberOfTries) {
 
 	if (letters.size() < 3) {
 		throw ParameterException("There must be at least three text contour points to get a bounding rotated rectangle!", "combinedLetters");
@@ -163,6 +162,14 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, M
 	//Find the top and bottom borders.
 	DblContour dLettersContour = ImageHelper::ConvertToDoubleFromInt(letters);
 	vector<TrendLine> horizontalBounds = centerLine.GetBoundLines(dLettersContour);
+	
+	//Make sure there is a margin between the botton bounds and the base line, otherwise letters like 'p' and 'g' will be cut.
+	assert(horizontalBounds[1].Slope == baseLine.Slope);
+	double marginBottomToBase = TrendLine::GetPerpendicularDistance(horizontalBounds[1], baseLine);
+	int minimumMargin = (int)(WORKING_CARD_HEIGHT / 27.2); //25
+	if (marginBottomToBase < minimumMargin) {
+		horizontalBounds[1] = TrendLine(baseLine.Slope, baseLine.Offset + minimumMargin);
+	}
 
 	//Find the left and right borders.
 	Point2d firstContourPoint = dLettersContour[0];
