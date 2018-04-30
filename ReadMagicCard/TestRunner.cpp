@@ -257,17 +257,22 @@ bool TestRunner::testLineAngleCalculation() {
 	TrendLine lineD((1 / (double)2), -(1 / (double)3));
 	TrendLine lineE(-1, 0);
 	TrendLine lineF(1, 2);
-	long double result1 = TrendLine::GetAngleBetweenLines(lineA, lineB); //15.3 degrees
-	long double result2 = TrendLine::GetAngleBetweenLines(lineC, lineD); //49.4 degrees
-	long double result3 = TrendLine::GetAngleBetweenLines(lineE, lineF); //90.0 degrees
+	TrendLine lineG(0.32, 2);
+	TrendLine lineH(-3.125, 3);
+	long double result1 = TrendLine::GetAngleBetweenLines(lineA, lineB);
+	long double result2 = TrendLine::GetAngleBetweenLines(lineC, lineD);
+	long double result3 = TrendLine::GetAngleBetweenLines(lineE, lineF);
+	long double result4 = TrendLine::GetAngleBetweenLines(lineG, lineH);
 
 	long double expectedResult1 = -15.255118703057775;
 	long double expectedResult2 = 49.398705354995542;
 	long double expectedResult3 = -90.000000000000000;
+	long double expectedResult4 = 90.000000000000000;
 
 	bool isWorking =
 		result1 == expectedResult1 &&
 		result2 == expectedResult2 &&
-		result3 == expectedResult3;
+		result3 == expectedResult3 &&
+		result4 == expectedResult4;
 	return isWorking;
 }
