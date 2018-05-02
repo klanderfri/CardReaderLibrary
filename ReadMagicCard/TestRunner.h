@@ -17,6 +17,8 @@ private:
 	bool runCardTests(std::vector<CardNameInfo> actualResults, std::vector<CardNameInfo>& incorrectResults);
 	//Runs tests checking if the code sorting cards are working as intended.
 	bool runSortTest();
+	//Tests that the confidence has not degraded.
+	bool runConfidenceTest(std::vector<CardNameInfo> actualResults, double expectedAverageConfidence, double& actualAverageConfidence, int expectedLowestConfidence, int& actualLowestConfidence);
 	//Checks if two result pairs corresponds, i.e if the actual result corresponds with the expected result.
 	bool resultsCorresponds(CardNameInfo expectedResult, CardNameInfo actualResult);
 	//Compares two subresults by the card name.

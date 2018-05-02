@@ -21,6 +21,9 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 	vector<CardNameInfo> incorrectResults;
 	bool cardTestsSucceded = runCardTests(result, incorrectResults);
 	bool sortTestsSucceded = runSortTest();
+	double actualAverageConfidence, expectedAverageConfidence = 83.3125;
+	int actualLowestConfidence, expectedLowestConfidence = 78;
+	bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
 	bool lineAngleSucceded = testLineAngleCalculation();
 
 	if (cardTestsSucceded && sortTestsSucceded && lineAngleSucceded) {
@@ -51,6 +54,13 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 		//Inform about trouble in the sorting.
 		if (!sortTestsSucceded) {
 			wcout << L"The algorithm for sorting card is broken!" << endl;
+		}
+
+		//Inform about degraded confidence.
+		if (!confidenceTestSucceded) {
+			wcout << L"The average confidence of the title text decoding has degraded!" << endl;
+			wcout << L"\tAverage confidence is " + to_wstring(actualAverageConfidence) + L", expected at least " + to_wstring(expectedAverageConfidence) + L"." << endl;
+			wcout << L"\tLowest confidence is " + to_wstring(actualLowestConfidence) + L", expected at least " + to_wstring(expectedLowestConfidence) + L"." << endl;
 		}
 
 		//Inform about trouble in the algorithm calculating angles between lines.
@@ -103,6 +113,27 @@ bool TestRunner::runSortTest() {
 	}
 
 	bool success = (actualResult == expectedResult);
+	return success;
+}
+
+bool TestRunner::runConfidenceTest(vector<CardNameInfo> actualResults, double expectedAverageConfidence, double& actualAverageConfidence, int expectedLowestConfidence, int& actualLowestConfidence) {
+
+	int totalConfidence = 0;
+	actualLowestConfidence = 100;
+
+	for (CardNameInfo card : actualResults) {
+		
+		totalConfidence += card.Confidence;
+
+		if (card.Confidence < actualLowestConfidence) {
+			actualLowestConfidence = card.Confidence;
+		}
+	}
+	actualAverageConfidence = (double)totalConfidence / actualResults.size();
+	
+	bool success =
+		(actualAverageConfidence >= expectedAverageConfidence) &&
+		(actualLowestConfidence >= expectedLowestConfidence);
 	return success;
 }
 
