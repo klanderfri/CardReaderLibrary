@@ -57,6 +57,7 @@ void CardReader::ReadCardName() {
 	//Oops! Seems like we couldn't get any title text.
 	if (!finalResult.IsConfidentTitle()) {
 		finalResult.CardName = L"ERROR: Could not OCR-read the title!";
+		finalResult.Confidence = 0;
 	}
 
 	//Store result for debugging.
