@@ -203,23 +203,23 @@ vector<CardNameInfo> TestRunner::getCardListToSort() {
 
 	vector<CardNameInfo> cardListToSort {
 
-		CardNameInfo(L"", L"Vear"),
+		CardNameInfo(L"", L"Buccaneer's Armada"),
 		CardNameInfo(L"", L"Buccaneer's Crest"),
-		CardNameInfo(L"", L"Jötun Grunt"),
 		CardNameInfo(L"", L"Buccaneers Bravado"),
-		CardNameInfo(L"", L"Very Fast Raptor"),
 		CardNameInfo(L"", L"Dark Martyr"),
-		CardNameInfo(L"", L"Sun-Crested Raptor"),
 		CardNameInfo(L"", L"Dark"),
-		CardNameInfo(L"", L"Jotun Grunt"),
-		CardNameInfo(L"", L"Suncrap Gather"),
-		CardNameInfo(L"", L"ZOMBIE"),
-		CardNameInfo(L"", L"Zonder"),
 		CardNameInfo(L"", L"Darker Offering"),
+		CardNameInfo(L"", L"Jötun Grunt"),
+		CardNameInfo(L"", L"Jotun Grunt"),
 		CardNameInfo(L"", L"Jötun Owl Keeper"),
+		CardNameInfo(L"", L"Sun-Crested Raptor"),
+		CardNameInfo(L"", L"Suncrap Gather"),
+		CardNameInfo(L"", L"Vear"),
+		CardNameInfo(L"", L"Very Fast Raptor"),
 		CardNameInfo(L"", L"Wear // Tear"),
 		CardNameInfo(L"", L"Wear Away"),
-		CardNameInfo(L"", L"Buccaneer's Armada"),
+		CardNameInfo(L"", L"Zombie"),
+		CardNameInfo(L"", L"ZONDER")
 	};
 
 	return cardListToSort;
@@ -243,8 +243,8 @@ wstring TestRunner::getExpectedSortResult() {
 		L"Very Fast Raptor\n"
 		L"Wear Away\n"
 		L"Wear // Tear\n"
-		L"ZOMBIE\n"
-		L"Zonder\n";
+		L"Zombie\n"
+		L"ZONDER\n";
 
 	return result;
 }
