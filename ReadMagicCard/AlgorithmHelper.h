@@ -23,7 +23,7 @@ public:
 	//Finds the distance between two points.
 	static double FindDistance(cv::Point2d point1, cv::Point2d point2);
 	//Creates the rectangle bound by the the specified borders.
-	static cv::RotatedRect GetRotatedRectangle(std::vector<TrendLine> verticalBorders, std::vector<TrendLine> horizontalBorders);
+	static cv::RotatedRect GetRotatedRectangle(std::vector<TrendLine> verticalBorders, std::vector<TrendLine> horizontalBorders, double angleAdjustment = 0.0);
 };
 
 template<typename T>

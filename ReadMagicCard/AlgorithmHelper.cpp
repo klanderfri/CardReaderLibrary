@@ -74,7 +74,7 @@ double AlgorithmHelper::FindDistance(Point2d point1, Point2d point2) {
 	return distance;
 }
 
-RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders) {
+RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders, double angleAdjustment) {
 
 	//Make sure the borders are correct.
 	bool isRightSize = verticalBorders.size() == 2 && horizontalBorders.size() == 2;
@@ -104,7 +104,7 @@ RotatedRect AlgorithmHelper::GetRotatedRectangle(vector<TrendLine> verticalBorde
 
 	//Calculate angle.
 	long double angle = (-1) * horizontalBorders[0].GetAngleToAxisX();
-	angle -= 0.020; // *shruggs* Seems to work with the test cases, so...
+	angle += angleAdjustment;
 
 	//Calculate size.
 	long double height = TrendLine::GetPerpendicularDistance(horizontalBorders[0], horizontalBorders[1]);
