@@ -57,6 +57,12 @@ string TitleLetterFixer::fixLtoIJ(const string title) {
 
 	string outText = title;
 
+	//Handle 'Ior Ruin Expedition' special case.
+	bool isIorExpedition = title.length() >= 5 && title.substr(0, 5) == "lor R";
+	if (isIorExpedition) {
+		return "Ior Ruin Expedition";
+	}
+
 	for (size_t i = 0; i < outText.length(); i++) {
 
 		char letter = outText[i];
