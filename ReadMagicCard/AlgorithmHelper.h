@@ -16,7 +16,7 @@ public:
 	template<typename T> static void AppendVector(std::vector<T>& mainVector, const std::vector<T> toAppend);
 	//Finds the trend line slope for a set of values.
 	static long double Slope(const std::vector<long double>& x, const std::vector<long double>& y);
-	//Finds the avarage value for a set of numbers.
+	//Finds the average value for a set of numbers.
 	static long double Average(const std::vector<long double>& numbers);
 	//Finds the point within a set that has a X coordinate closes to the provided X coordinate.
 	static cv::Point2f FindClosestPointX(double x, std::vector<cv::Point2f> points);

@@ -87,11 +87,11 @@ void ApplicationMessages::printExecutionTimeMessage(TimePoint startTime, TimePoi
 		wstring timeUnit = showTimeInSeconds ? L"seconds" : L"microseconds";
 		wcout << endl << L"The reading took " + exeTime + L" " + timeUnit + L" to execute." << endl;
 
-		//Print card avarage execution time.
+		//Print card average execution time.
 		if (numberOfFilesExecuted > 0) {
 			float executionTimePerCard = executionDurationTime / numberOfFilesExecuted / (float)1000000;
-			wstring avarageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
-			wcout << L"That's " + avarageExecutionTimePerCard + L" seconds per card on average!" << endl;
+			wstring averageExecutionTimePerCard = systemMethods->ToWString(executionTimePerCard, showTimeInSeconds ? 2 : 8);
+			wcout << L"That's " + averageExecutionTimePerCard + L" seconds per card on average!" << endl;
 		}
 
 		wcout << endl;
