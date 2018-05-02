@@ -104,7 +104,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 
-		if (!info.IsSuccessful()) {
+		if (!info.IsConfidentTitle()) {
 			amountOfErrors++;
 		}
 

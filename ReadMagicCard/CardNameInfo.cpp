@@ -20,9 +20,6 @@ CardNameInfo::~CardNameInfo()
 
 bool CardNameInfo::IsConfidentTitle(int minimumConfidence) {
 
-	//First of, we need to have a successful extraction of the title.
-	if (!IsSuccessful()) { return false; }
-
 	//The Tesseract algorithm needs to be confident with the result otherwise we shouldn't either.
 	if (Confidence < minimumConfidence) { return false; }
 
@@ -31,14 +28,6 @@ bool CardNameInfo::IsConfidentTitle(int minimumConfidence) {
 
 	//Check for illegal characters.
 	if (MtgCardInfoHelper::ContainsInvalidCharacters(CardName)) { return false; }
-
-	return true;
-}
-
-bool CardNameInfo::IsSuccessful() {
-
-	if (Confidence == 0) { return false; }
-	if (CardName == L"") { return false; }
 
 	return true;
 }

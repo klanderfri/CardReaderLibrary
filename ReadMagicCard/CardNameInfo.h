@@ -10,9 +10,7 @@ public:
 	~CardNameInfo();
 
 	//Checks if we got a confident decode of a MtG title.
-	bool IsConfidentTitle(int minimumConfidence);
-	//Tells if the algorithm extracting the card name was successful.
-	bool IsSuccessful();
+	bool IsConfidentTitle(int minimumConfidence = 1);
 
 	//The name of the file containing the card.
 	std::wstring FileName = L"";
