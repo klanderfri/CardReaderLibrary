@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "FileHandling.h"
 #include <experimental\filesystem>
+#include <chrono>
 #include "boost\filesystem.hpp"
 
 namespace fs = std::experimental::filesystem;
@@ -8,6 +9,7 @@ using namespace std;
 
 const wstring FileHandling::MTG_IMAGES_WORKING_FOLDER = L"MtG-cards";
 mutex FileHandling::m_fileLock;
+mutex FileHandling::m_createFolderLock;
 
 FileHandling::FileHandling()
 {
@@ -93,8 +95,18 @@ wstring FileHandling::GetSubFolderPath(SystemMethods* systemMethods, wstring sub
 
 bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {
 
-	if (boost::filesystem::exists(fullFolderPath)) { return true; }
-	return boost::filesystem::create_directory(fullFolderPath);
+	while (!m_createFolderLock.try_lock()) {
+		this_thread::sleep_for(chrono::milliseconds(1));
+	}
+
+	bool folderExists = true;
+	if (!boost::filesystem::exists(fullFolderPath)) {
+		folderExists = boost::filesystem::create_directory(fullFolderPath);
+	}
+
+	m_createFolderLock.unlock();
+
+	return folderExists;
 }
 
 wstring FileHandling::CreateFileNumberPostfix(int currentFileNumber, int amountOfFiles) {

@@ -29,4 +29,6 @@ private:
 	static const std::wstring MTG_IMAGES_WORKING_FOLDER;
 	//A lock preventing multiple threads accessing the same file at the same time.
 	static std::mutex m_fileLock;
+	//A lock preventing multiple threads from creating the same folder.
+	static std::mutex m_createFolderLock;
 };
