@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "TitleLetterFixer.h"
+#include "boost\algorithm\string.hpp"
 
 using namespace std;
 
@@ -55,14 +56,14 @@ string TitleLetterFixer::replaceCharacters(const string text, char toReplace, ch
 
 string TitleLetterFixer::fixLtoIJ(const string title) {
 
-	string outText = title;
-
 	//Handle 'Ior Ruin Expedition' special case.
-	bool isIorExpedition = title.length() >= 5 && title.substr(0, 5) == "lor R";
-	if (isIorExpedition) {
+	string workingTitle = title;
+	boost::algorithm::to_lower(workingTitle);
+	if (workingTitle == "lor ruin expedition") {
 		return "Ior Ruin Expedition";
 	}
 
+	string outText = title;
 	for (size_t i = 0; i < outText.length(); i++) {
 
 		char letter = outText[i];
