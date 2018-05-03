@@ -24,7 +24,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 	bool cardTestCasesMissing = (getExpectedCardResult().size() != result.size());
 	if (cardTestCasesMissing) {
 
-		wcout << L"There are missing card test cases!" << endl;
+		wcout << L"There are missing card test cases!" << endl << endl;
 		return false;
 	}
 
@@ -37,7 +37,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 
 		wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
 		for (CardNameInfo subResult : incorrectResults) {
-			wcout << subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+			wcout << L"\t" + subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
 		}
 		wcout << endl;
 	}
