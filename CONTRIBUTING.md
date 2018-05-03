@@ -4,7 +4,7 @@
 
 ### Before You Start
  * It's recommended that you install Vcpkg and libraries required by this project BEFORE opening/installing/starting this project!
- * Make sure the testcases works before doing any coding.
+ * Make sure the test cases works before doing any coding.
 
 ### Application Data Folder
 Follow this checklist to set up the folder the application reads and writes data to:
@@ -71,7 +71,7 @@ There should be NO warnings. Warnings are just as bad as errors. If you get warn
 One should use *wstring* when coding strings since this code is meant to run on Windows.
 
 ### Language
-British English should be used everywere where it's possible. American English should be avoided.
+British English should be used everywhere where it's possible. American English should be avoided.
 
 ## Testing
 The application has a test case algorithm which is activated when the application is set to do debugging (see ReadMe.md).
