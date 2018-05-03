@@ -57,7 +57,7 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 		}
 
 		//Inform about degraded confidence.
-		if (!confidenceTestSucceded) {
+		if (!confidenceTestSucceded && !result.empty()) {
 			wcout << L"The average confidence of the title text decoding has degraded!" << endl;
 			wcout << L"\tAverage confidence is " + to_wstring(actualAverageConfidence) + L", expected at least " + to_wstring(expectedAverageConfidence) + L"." << endl;
 			wcout << L"\tLowest confidence is " + to_wstring(actualLowestConfidence) + L", expected at least " + to_wstring(expectedLowestConfidence) + L"." << endl;
@@ -118,18 +118,27 @@ bool TestRunner::runSortTest() {
 
 bool TestRunner::runConfidenceTest(vector<CardNameInfo> actualResults, double expectedAverageConfidence, double& actualAverageConfidence, int expectedLowestConfidence, int& actualLowestConfidence) {
 
-	int totalConfidence = 0;
-	actualLowestConfidence = 100;
+	if (actualResults.empty()) {
 
-	for (CardNameInfo card : actualResults) {
-		
-		totalConfidence += card.Confidence;
-
-		if (card.Confidence < actualLowestConfidence) {
-			actualLowestConfidence = card.Confidence;
-		}
+		actualLowestConfidence = 0;
+		actualAverageConfidence = 0;
 	}
-	actualAverageConfidence = (double)totalConfidence / actualResults.size();
+	else {
+
+		int totalConfidence = 0;
+		actualLowestConfidence = 100;
+
+		for (CardNameInfo card : actualResults) {
+
+			totalConfidence += card.Confidence;
+
+			if (card.Confidence < actualLowestConfidence) {
+				actualLowestConfidence = card.Confidence;
+			}
+		}
+
+		actualAverageConfidence = (double)totalConfidence / actualResults.size();
+	}
 	
 	bool success =
 		(actualAverageConfidence >= expectedAverageConfidence) &&
