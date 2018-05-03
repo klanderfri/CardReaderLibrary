@@ -102,7 +102,7 @@ bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {
 
 	bool folderExists = true;
 	if (!boost::filesystem::exists(fullFolderPath)) {
-		folderExists = boost::filesystem::create_directory(fullFolderPath);
+		folderExists = boost::filesystem::create_directories(fullFolderPath);
 	}
 
 	m_createFolderLock.unlock();
