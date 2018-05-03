@@ -192,7 +192,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 
 	//Get the bounded rectangle.
 	double angleAdjustment = -0.020; // *shruggs* Seems to work with the test cases, so...
-	RotatedRect textArea = AlgorithmHelper::GetRotatedRectangle(verticalBounds, horizontalBounds, angleAdjustment);
+	RotatedRect textArea = ImageHelper::GetRotatedRectangle(verticalBounds, horizontalBounds, angleAdjustment);
 
 	//Debug
 	Mat textAreaImage;

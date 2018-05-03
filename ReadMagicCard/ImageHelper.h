@@ -18,6 +18,8 @@ public:
 	static cv::Mat ToGreyImage(const cv::Mat imageToConvert);
 	//Creates a colour image out of the provided image. Note: This method doesn't add any colours to the image.
 	static cv::Mat ToColourImage(const cv::Mat imageToConvert);
+	//Creates the rectangle bound by the the specified borders.
+	static cv::RotatedRect GetRotatedRectangle(std::vector<TrendLine> verticalBorders, std::vector<TrendLine> horizontalBorders, double angleAdjustment = 0.0);
 	//Displays a specified image in a window.
 	static int ShowImage(const cv::Mat imageToShow);
 	//Rotates an image.
