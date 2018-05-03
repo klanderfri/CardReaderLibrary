@@ -168,6 +168,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
   <ItemGroup>
     <ClInclude Include="ApplicationMessages.h" />
     <ClInclude Include="CardNameInfo.h" />
+    <ClInclude Include="CardTestRunner.h" />
     <ClInclude Include="CardTitleType.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Contour.h" />
@@ -206,6 +207,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
   <ItemGroup>
     <ClCompile Include="ApplicationMessages.cpp" />
     <ClCompile Include="CardNameInfo.cpp" />
+    <ClCompile Include="CardTestRunner.cpp" />
     <ClCompile Include="LetterArea.cpp" />
     <ClCompile Include="AlgorithmHelper.cpp" />
     <ClCompile Include="CardCollectionReader.cpp" />

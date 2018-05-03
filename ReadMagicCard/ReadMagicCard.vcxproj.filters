@@ -162,6 +162,9 @@
     <ClInclude Include="TrendLine.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="CardTestRunner.h">
+      <Filter>Testing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -253,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="TrendLine.cpp">
       <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="CardTestRunner.cpp">
+      <Filter>Testing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

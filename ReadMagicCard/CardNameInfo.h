@@ -11,6 +11,10 @@ public:
 
 	//Checks if we got a confident decode of a MtG title.
 	bool IsConfidentTitle(int minimumConfidence = 1);
+	//Compares two card info sets by the card name. Returns true if they are in the right order.
+	static bool CompareByCardName(CardNameInfo info1, CardNameInfo info2);
+	//Compares two card info set by the file name. Returns true if they are in the right order.
+	static bool CompareByFileName(CardNameInfo info1, CardNameInfo info2);
 
 	//The name of the file containing the card.
 	std::wstring FileName = L"";

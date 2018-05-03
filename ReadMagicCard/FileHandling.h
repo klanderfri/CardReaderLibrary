@@ -22,6 +22,8 @@ public:
 	static bool CreateFileDirectory(std::wstring fullFolderPath);
 	//Creates a string that could be used to postfix files with the same filename.
 	static std::wstring CreateFileNumberPostfix(int currentFileNumber, int amountOfFiles = 0);
+	//Compares two file names.
+	static double CompareFilenames(std::wstring filename1, std::wstring filename2);
 
 private:
 

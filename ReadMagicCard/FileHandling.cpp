@@ -2,6 +2,7 @@
 #include "FileHandling.h"
 #include <experimental\filesystem>
 #include <chrono>
+#include "boost\algorithm\string.hpp"
 #include "boost\filesystem.hpp"
 
 namespace fs = std::experimental::filesystem;
@@ -123,4 +124,14 @@ wstring FileHandling::CreateFileNumberPostfix(int currentFileNumber, int amountO
 	else {
 		return L" (" + numberStr + L")";
 	}
+}
+
+double FileHandling::CompareFilenames(std::wstring filename1, std::wstring filename2) {
+
+	wstring temp_name1 = filename1;
+	wstring temp_name2 = filename2;
+	boost::to_lower(temp_name1);
+	boost::to_lower(temp_name2);
+
+	return temp_name1.compare(temp_name2);
 }
