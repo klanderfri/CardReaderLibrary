@@ -351,6 +351,27 @@ bool ImageHelper::IsInitialized(RotatedRect rectangleToCheck) {
 	return sum != 0;
 }
 
+bool ImageHelper::DoesRectangleContainPoint(RotatedRect rectangle, Point2f point) {
+
+	//Implemented as suggested at:
+	//http://answers.opencv.org/question/30330/check-if-a-point-is-inside-a-rotatedrect/?answer=190773#post-id-190773
+
+	//Get the corner points.
+	Point2f corners[4];
+	rectangle.points(corners);
+
+	//Convert the point array to a vector.
+	//https://stackoverflow.com/a/8777619/1997617
+	Point2f* lastItemPointer = (corners + sizeof corners / sizeof corners[0]);
+	vector<Point2f> contour(corners, lastItemPointer);
+
+	//Check if the point is within the rectangle.
+	double indicator = pointPolygonTest(contour, point, false);
+	bool rectangleContainsPoint = (indicator >= 0);
+
+	return rectangleContainsPoint;
+}
+
 Contour ImageHelper::ContoursConvexHull(const Contours contours)
 {
 	//Implemented as suggested at:

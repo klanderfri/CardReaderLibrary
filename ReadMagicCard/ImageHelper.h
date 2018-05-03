@@ -62,6 +62,8 @@ public:
 	static bool IsIdenticalContours(Contour contour1, Contour contour2);
 	//Checks if a rotated rectangle has been initialized.
 	static bool IsInitialized(cv::RotatedRect rectangle);
+	//Checks if a rectangle contains the specified point.
+	static bool DoesRectangleContainPoint(cv::RotatedRect rectangle, cv::Point2f point);
 	//Finds the convex hull of multiple contours.
 	static Contour ContoursConvexHull(const Contours contours);
 	//Gives the combined contour of several letters.
