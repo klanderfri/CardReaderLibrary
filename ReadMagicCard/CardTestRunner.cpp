@@ -32,14 +32,14 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 	else {
 
 		//Test the cards.
-		vector<CardNameInfo> incorrectResults;
-		bool cardTestsSucceded = runCardTests(result, incorrectResults);
+		vector<CardNameInfo> incorrectNameResults;
+		bool cardNameTestsSucceded = runCardNameTests(result, incorrectNameResults);
 
 		//Inform about card identifying trouble.
-		if (!cardTestsSucceded) {
+		if (!cardNameTestsSucceded) {
 
-			wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
-			for (CardNameInfo subResult : incorrectResults) {
+			wcout << L"There are " + to_wstring(incorrectNameResults.size()) + L" cards with the wrong name!" << endl;
+			for (CardNameInfo subResult : incorrectNameResults) {
 				wcout << L"\t" + subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
 			}
 		}
@@ -56,9 +56,23 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 			wcout << L"\tLowest confidence is " + to_wstring(actualLowestConfidence) + L", expected at least " + to_wstring(expectedLowestConfidence) + L"." << endl;
 		}
 
+		//Test the card type.
+		vector<CardNameInfo> incorrectTypeResults;
+		bool cardTypeTestsSucceded = runCardTypeTests(result, incorrectTypeResults);
+
+		//Inform about card type trouble.
+		if (!cardTypeTestsSucceded) {
+
+			wcout << L"There are " + to_wstring(incorrectTypeResults.size()) + L" cards with the wrong type!" << endl;
+			for (CardNameInfo subResult : incorrectTypeResults) {
+				wcout << L"\t" + subResult.FileName + L" got enum number '" + to_wstring(subResult.CardType) + L"'" << endl;
+			}
+		}
+
 		//Check if any test failed.
 		allTestsWasSuccessful =
-			cardTestsSucceded &&
+			cardNameTestsSucceded &&
+			cardTypeTestsSucceded &&
 			confidenceTestSucceded;
 	}
 
@@ -132,7 +146,27 @@ vector<CardNameInfo> CardTestRunner::getExpectedCardResult() {
 	return expectedResults;
 }
 
-bool CardTestRunner::runCardTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
+bool CardTestRunner::runCardNameTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
+
+	return runCardTests(actualResults, incorrectResults, cardNameIsOK);
+}
+
+bool CardTestRunner::cardNameIsOK(CardNameInfo expectedResult, CardNameInfo actualResult) {
+
+	return actualResult.IsConfidentTitle() && resultsCorresponds(expectedResult, actualResult);
+}
+
+bool CardTestRunner::runCardTypeTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {
+
+	return runCardTests(actualResults, incorrectResults, cardTypeIsOK);
+}
+
+bool CardTestRunner::cardTypeIsOK(CardNameInfo expectedResult, CardNameInfo actualResult) {
+
+	return expectedResult.CardType == actualResult.CardType;
+}
+
+bool CardTestRunner::runCardTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults, bool (*resultSanityCheckMethod)(CardNameInfo, CardNameInfo)) {
 
 	vector<CardNameInfo> expectedResults = getExpectedCardResult();
 
@@ -144,8 +178,9 @@ bool CardTestRunner::runCardTests(vector<CardNameInfo> actualResults, vector<Car
 	bool success = true;
 	for (size_t i = 0; i < expectedResults.size(); i++) {
 
-		if (!actualResults[i].IsConfidentTitle() ||
-			!resultsCorresponds(expectedResults[i], actualResults[i])) {
+		bool actualResultIsOK = (*resultSanityCheckMethod)(expectedResults[i], actualResults[i]);
+
+		if (!actualResultIsOK) {
 
 			incorrectResults.push_back(actualResults[i]);
 			success = false;
