@@ -26,10 +26,16 @@ StoreCardProcessingData::~StoreCardProcessingData()
 
 wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 
-	wstring textToAdd = L"Image file name\tCard name\tOCR confidence\tSuccess\n";
+	wstring textToAdd = L"Image file name\tCard name\tCard type\tOCR confidence\tSuccess\n";
 	for (CardNameInfo info : result) {
 
-		textToAdd += info.FileName + L"\t" + info.CardName + L"\t" + to_wstring(info.Confidence) + L"\t" + to_wstring(info.IsConfidentTitle()) + L"\n";
+		textToAdd +=
+			info.FileName +
+			L"\t" + info.CardName +
+			L"\t" + to_wstring(info.CardType) +
+			L"\t" + to_wstring(info.Confidence) +
+			L"\t" + to_wstring(info.IsConfidentTitle()) +
+			L"\n";
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
 
