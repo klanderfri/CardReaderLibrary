@@ -165,6 +165,9 @@
     <ClInclude Include="CardTestRunner.h">
       <Filter>Testing</Filter>
     </ClInclude>
+    <ClInclude Include="AlgorithmTestRunner.h">
+      <Filter>Testing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -258,6 +261,9 @@
       <Filter>Core\Containers</Filter>
     </ClCompile>
     <ClCompile Include="CardTestRunner.cpp">
+      <Filter>Testing</Filter>
+    </ClCompile>
+    <ClCompile Include="AlgorithmTestRunner.cpp">
       <Filter>Testing</Filter>
     </ClCompile>
   </ItemGroup>

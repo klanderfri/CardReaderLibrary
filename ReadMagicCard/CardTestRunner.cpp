@@ -17,6 +17,8 @@ CardTestRunner::~CardTestRunner()
 
 bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 
+	bool allTestsWasSuccessful;
+
 	//Indicate errors by using red text colour.
 	systemMethods->SetCommandLineTextColour(Colour::Red);
 
@@ -24,45 +26,50 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 	bool cardTestCasesMissing = (getExpectedCardResult().size() != result.size());
 	if (cardTestCasesMissing) {
 
-		wcout << L"There are missing card test cases!" << endl << endl;
-		return false;
+		wcout << L"There are missing card test cases!" << endl;
+		allTestsWasSuccessful = false;
 	}
+	else {
 
-	//Test the cards.
-	vector<CardNameInfo> incorrectResults;
-	bool cardTestsSucceded = runCardTests(result, incorrectResults);
+		//Test the cards.
+		vector<CardNameInfo> incorrectResults;
+		bool cardTestsSucceded = runCardTests(result, incorrectResults);
 
-	//Inform about card identifying trouble.
-	if (!cardTestsSucceded) {
+		//Inform about card identifying trouble.
+		if (!cardTestsSucceded) {
 
-		wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
-		for (CardNameInfo subResult : incorrectResults) {
-			wcout << L"\t" + subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+			wcout << L"There are " + to_wstring(incorrectResults.size()) + L" broken card test cases!" << endl;
+			for (CardNameInfo subResult : incorrectResults) {
+				wcout << L"\t" + subResult.FileName + L" got '" + subResult.CardName + L"'" << endl;
+			}
 		}
-		wcout << endl;
+
+		//Test the confidence.
+		double actualAverageConfidence, expectedAverageConfidence = 83.3125;
+		int actualLowestConfidence, expectedLowestConfidence = 78;
+		bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
+
+		//Inform about degraded confidence.
+		if (!confidenceTestSucceded) {
+			wcout << L"The average confidence of the title text decoding has degraded!" << endl;
+			wcout << L"\tAverage confidence is " + to_wstring(actualAverageConfidence) + L", expected at least " + to_wstring(expectedAverageConfidence) + L"." << endl;
+			wcout << L"\tLowest confidence is " + to_wstring(actualLowestConfidence) + L", expected at least " + to_wstring(expectedLowestConfidence) + L"." << endl;
+		}
+
+		//Check if any test failed.
+		allTestsWasSuccessful =
+			cardTestsSucceded &&
+			confidenceTestSucceded;
 	}
 
-	//Test the confidence.
-	double actualAverageConfidence, expectedAverageConfidence = 83.3125;
-	int actualLowestConfidence, expectedLowestConfidence = 78;
-	bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
-
-	//Inform about degraded confidence.
-	if (!confidenceTestSucceded) {
-		wcout << L"The average confidence of the title text decoding has degraded!" << endl;
-		wcout << L"\tAverage confidence is " + to_wstring(actualAverageConfidence) + L", expected at least " + to_wstring(expectedAverageConfidence) + L"." << endl;
-		wcout << L"\tLowest confidence is " + to_wstring(actualLowestConfidence) + L", expected at least " + to_wstring(expectedLowestConfidence) + L"." << endl << endl;
+	if (!allTestsWasSuccessful) {
+		wcout << endl;
 	}
 
 	//Reset the consol colour.
 	systemMethods->ResetCommandLineTextColour();
 
-	//Check if any test failed.
-	bool allTestWasSuccessful =
-		cardTestsSucceded &&
-		confidenceTestSucceded;
-
-	return allTestWasSuccessful;
+	return allTestsWasSuccessful;
 }
 
 vector<CardNameInfo> CardTestRunner::getExpectedCardResult() {
