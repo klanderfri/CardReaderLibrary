@@ -10,9 +10,18 @@ CardNameInfo::CardNameInfo()
 }
 
 CardNameInfo::CardNameInfo(wstring fileName, wstring cardName)
+	: CardNameInfo(fileName, cardName, (CardTitleType)(-1))
+{
+}
+
+CardNameInfo::CardNameInfo(wstring fileName, wstring cardName, CardTitleType cardType)
 {
 	this->FileName = fileName;
 	this->CardName = cardName;
+
+	if (cardType >= NormalTitle) {
+		this->CardType = cardType;
+	}
 }
 
 CardNameInfo::~CardNameInfo()

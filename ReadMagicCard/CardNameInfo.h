@@ -7,6 +7,7 @@ class CardNameInfo
 public:
 	CardNameInfo();
 	CardNameInfo(std::wstring fileName, std::wstring cardName);
+	CardNameInfo(std::wstring fileName, std::wstring cardName, CardTitleType cardType);
 	~CardNameInfo();
 
 	//Checks if we got a confident decode of a MtG title.
