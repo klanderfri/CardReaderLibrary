@@ -156,6 +156,11 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, const vecto
 		if (isResultGoodEnoughToQuit(bestResult)) { break; }
 	}
 
+	//Check if the card is an emblem.
+	if (MtgCardInfoHelper::IsEmblem(bestResult.CardName)) {
+		bestResult.CardType = Emblem;
+	}
+
 	return bestResult;
 }
 
