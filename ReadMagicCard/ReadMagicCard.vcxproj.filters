@@ -141,9 +141,6 @@
     <ClInclude Include="OcrDecodeResult.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="StoreCardProcessingData.h">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClInclude>
     <ClInclude Include="ApplicationMessages.h">
       <Filter>Application</Filter>
     </ClInclude>
@@ -167,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="AlgorithmTestRunner.h">
       <Filter>Testing</Filter>
+    </ClInclude>
+    <ClInclude Include="StoreCardProcessingData.h">
+      <Filter>Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +233,6 @@
     <ClCompile Include="WindowsMethods.cpp">
       <Filter>Libraries\SystemMethods</Filter>
     </ClCompile>
-    <ClCompile Include="StoreCardProcessingData.cpp">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClCompile>
     <ClCompile Include="ApplicationMessages.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -265,6 +262,9 @@
     </ClCompile>
     <ClCompile Include="AlgorithmTestRunner.cpp">
       <Filter>Testing</Filter>
+    </ClCompile>
+    <ClCompile Include="StoreCardProcessingData.cpp">
+      <Filter>Application</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
