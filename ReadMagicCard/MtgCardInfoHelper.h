@@ -30,6 +30,8 @@ public:
 	static std::vector<wchar_t> GetAllowedNotRelevantForSortingCharacters();
 	//Checks if a card is an emblem.
 	static bool IsEmblem(const std::wstring title);
+	//Checks if a card is a token.
+	static bool IsToken(const std::wstring title);
 
 private:
 

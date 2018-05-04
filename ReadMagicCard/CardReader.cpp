@@ -156,9 +156,12 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, const vecto
 		if (isResultGoodEnoughToQuit(bestResult)) { break; }
 	}
 
-	//Check if the card is an emblem.
+	//Check if the card title indicates that the card is not a regular playing card.
 	if (MtgCardInfoHelper::IsEmblem(bestResult.CardName)) {
 		bestResult.CardType = Emblem;
+	}
+	else if (MtgCardInfoHelper::IsToken(bestResult.CardName)) {
+		bestResult.CardType = Token;
 	}
 
 	return bestResult;

@@ -22,6 +22,8 @@ int MtgCardInfoHelper::LettersInShortestCardName() {
 
 bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
+	if (title.size() < LettersInShortestCardName()) { return false; }
+
 	int lettersInName = 0;
 
 	for (wchar_t character : title) {
@@ -179,7 +181,7 @@ vector<wchar_t> MtgCardInfoHelper::GetAllowedNotRelevantForSortingCharacters() {
 	return vector<wchar_t> { L'-', L'\'', L',', L'/' };
 }
 
-bool MtgCardInfoHelper::IsEmblem(const std::wstring title) {
+bool MtgCardInfoHelper::IsEmblem(const wstring title) {
 
 	if (title.size() != 6) { return false; }
 
@@ -188,4 +190,34 @@ bool MtgCardInfoHelper::IsEmblem(const std::wstring title) {
 	bool isEmblem = (titleCopy == L"emblem");
 
 	return isEmblem;
+}
+
+bool MtgCardInfoHelper::IsToken(const wstring title) {
+
+	if (!IsNameLongEnough(title)) { return false; }
+	if (ContainsInvalidCharacters(title)) { return false; }
+
+	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();
+	int lowercase = 0;
+	int uppercase = 0;
+
+	for (wchar_t letter : title) {
+
+		if (isupper(letter)) {
+			uppercase++;
+		}
+		else if (islower(letter)) {
+			lowercase++;
+		}
+		else if (AlgorithmHelper::VectorContains(nonLetters, letter)) {
+			continue;
+		}
+		else {
+			string letterNumber = to_string(letter);
+			string message = "Could not determine if the letter number '" + letterNumber + "' is uppercase or lowercase!";
+			throw OperationException(message);
+		}
+	}
+
+	return uppercase > lowercase;
 }
