@@ -31,6 +31,8 @@ private:
 	std::vector<ReadingConfiguration> createReadingConfigurations();
 	//Reads the title of the card when we don't know if the card is upside-down or not.
 	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, const std::vector<ReadingConfiguration> configs, const CardTitleType cardTitleTypeToSearch);
+	//Gets the title type the card should have.
+	CardTitleType getTitleType(const CardNameInfo info);
 	//Checks if the result is so confident that we can assume we got the title.
 	bool isResultGoodEnoughToQuit(const CardNameInfo result);
 	//Checks if we have come to a situation when it's time to search for any secondary Amonkhet split card title .
@@ -50,7 +52,7 @@ private:
 	//Reads the OCR preparied titles and returnes the best result.
 	CardNameInfo ocrReadTitle(const std::vector<cv::Mat> ocrTitles);
 	//Extracts and preprocesses the title.
-	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, const CardTitleType titleType, const int binaryThreshold);
+	bool extractOcrReadyTitle(const cv::Mat cardImage, std::vector<cv::Mat>& outImages, const CardTitleType titleType, const int binaryThreshold, bool& titleHasDarkBackground);
 	//Crops out the card title.
 	void cropImageToTitleSection(const cv::Mat cardImage, cv::Mat& outImage, const CardTitleType titleType);
 

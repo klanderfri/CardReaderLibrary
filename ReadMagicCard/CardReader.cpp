@@ -53,6 +53,7 @@ void CardReader::ReadCardName() {
 	vector<ReadingConfiguration> configs = createReadingConfigurations();
 	finalResult = readUnrotatedCardTitle(cardImage, configs, NormalTitle);
 	finalResult.FileName = imageFileName;
+	finalResult.CardType = getTitleType(finalResult);
 
 	//Oops! Seems like we couldn't get any title text.
 	if (!finalResult.IsConfidentTitle()) {
@@ -156,15 +157,29 @@ CardNameInfo CardReader::readUnrotatedCardTitle(const Mat cardImage, const vecto
 		if (isResultGoodEnoughToQuit(bestResult)) { break; }
 	}
 
-	//Check if the card title indicates that the card is not a regular playing card.
-	if (MtgCardInfoHelper::IsEmblem(bestResult.CardName)) {
-		bestResult.CardType = Emblem;
-	}
-	else if (MtgCardInfoHelper::IsToken(bestResult.CardName)) {
-		bestResult.CardType = Token;
-	}
-
 	return bestResult;
+}
+
+CardTitleType CardReader::getTitleType(const CardNameInfo info) {
+
+	bool isEmblem = info.HasDarkTitleBackground && MtgCardInfoHelper::IsEmblem(info.CardName);
+	bool isToken = !isEmblem && info.HasDarkTitleBackground && MtgCardInfoHelper::IsToken(info.CardName);
+	bool isTransformed = !isToken && !info.HasDarkTitleBackground && MtgCardInfoHelper::IsToken(info.CardName);
+
+	assert(isToken + isEmblem + isTransformed <= 1);
+
+	if (isEmblem) {
+		return Emblem;
+	}
+	else if (isToken) {
+		return Token;
+	}
+	else if (isTransformed) {
+		return TransformedTitle;
+	}
+	else {
+		return info.CardType;
+	}
 }
 
 bool CardReader::isResultGoodEnoughToQuit(const CardNameInfo result) {
@@ -219,7 +234,8 @@ CardNameInfo CardReader::readStraightCardTitle(const Mat cardImage, const Readin
 
 	//Get title image assuming we got a normal card.
 	vector<Mat> ocrReadyTitles;
-	couldExtractTitleImage = extractOcrReadyTitle(cardImage, ocrReadyTitles, cardTitleTypeToSearch, config.BinaryThreshold);
+	bool hasDarkBackground;
+	couldExtractTitleImage = extractOcrReadyTitle(cardImage, ocrReadyTitles, cardTitleTypeToSearch, config.BinaryThreshold, hasDarkBackground);
 	
 	if (couldExtractTitleImage) {
 
@@ -235,6 +251,7 @@ CardNameInfo CardReader::readStraightCardTitle(const Mat cardImage, const Readin
 	}
 
 	result = (resultNormalCard.Confidence > resultSplitCard.Confidence) ? resultNormalCard : resultSplitCard;
+	result.HasDarkTitleBackground = hasDarkBackground;
 	return result;
 }
 
@@ -330,7 +347,7 @@ CardNameInfo CardReader::ocrReadTitle(const vector<Mat> ocrTitles) {
 	return cardInfo;
 }
 
-bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, const CardTitleType titleType, const int binaryThreshold) {
+bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImages, const CardTitleType titleType, const int binaryThreshold, bool& titleHasDarkBackground) {
 
 	//Extract the title part.
 	Mat titleSection;
@@ -344,6 +361,9 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	if (!success) {
 		return false;
 	}
+
+	//Store the background colour for later "Token or Transformed" check.
+	titleHasDarkBackground = titleExtractor.HasOriginalTitleBlackBackground();
 
 	//Make white text on black background.
 	for (size_t i = 0; i < outImages.size(); i++) {
