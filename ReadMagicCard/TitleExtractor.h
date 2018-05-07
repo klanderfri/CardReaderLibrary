@@ -13,6 +13,8 @@ public:
 
 	//Extracts an image containing the card title.
 	bool ExtractTitle(std::vector<cv::Mat>& outImages, int binaryThreshold, int& numberOfTries, CardTitleType titleType);
+	//Tells if the original title image has a black background.
+	bool HasOriginalTitleBlackBackground();
 
 private:
 
@@ -24,4 +26,9 @@ private:
 	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages, int& numberOfTries);
 	//Gets the rectangle bounding the text area.
 	cv::RotatedRect getTextArea(Contour letters, TrendLine centerLine, TrendLine baseLine, cv::Mat titleImage, int numberOfTries);
+
+	//Tells if the original title image has a black background.
+	bool hasOriginalTitleBlackBackground;
+	//Tells if the mehtod extracting the title has been run.
+	bool hasRunTitleExtraction = false;
 };

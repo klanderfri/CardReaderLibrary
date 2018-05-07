@@ -38,7 +38,21 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 	//Extract a clean image containing the title.
 	bool success = getTitleText(outImage, outImages, numberOfTries);
 
+	//Store that the extration has been run, indicating that we can
+	//extract extra data (such as if the title has black background colour).
+	hasRunTitleExtraction = true;
+
 	return success;
+}
+
+bool TitleExtractor::HasOriginalTitleBlackBackground() {
+	
+	if (!hasRunTitleExtraction) {
+		string message = "The information about the title background colour cannot be given until the title extraction is run!";
+		throw OperationException(message);
+	}
+
+	return hasOriginalTitleBlackBackground;
 }
 
 Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, CardTitleType titleType) {
@@ -49,9 +63,9 @@ Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, Ca
 
 	bool couldHaveBlackBackground = titleType == NormalTitle || titleType == Emblem || titleType == Token;
 	double percentageOfWhite = ImageHelper::PercentageOfNonZero(binaryImage);
-	bool hasBlackBackground = couldHaveBlackBackground && percentageOfWhite < 0.3;
+	hasOriginalTitleBlackBackground = couldHaveBlackBackground && percentageOfWhite < 0.3;
 
-	if (hasBlackBackground) {
+	if (hasOriginalTitleBlackBackground) {
 		workOriginal = ~workOriginal;
 	}
 
