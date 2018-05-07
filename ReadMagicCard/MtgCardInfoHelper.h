@@ -32,7 +32,7 @@ public:
 	static bool IsEmblem(const std::wstring title);
 	//Checks if a card is a token.
 	static bool IsToken(const std::wstring title);
-	//Checks if the title letters mostly are uppercase.
+	//Checks if the title letters are mostly uppercase.
 	static bool IsMostlyUppercase(const std::wstring title);
 
 private:
