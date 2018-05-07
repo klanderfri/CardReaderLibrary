@@ -45,7 +45,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 		}
 
 		//Test the confidence.
-		double actualAverageConfidence, expectedAverageConfidence = 83.3125;
+		double actualAverageConfidence, expectedAverageConfidence = 83.196078;
 		int actualLowestConfidence, expectedLowestConfidence = 78;
 		bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
 
@@ -140,7 +140,10 @@ vector<CardNameInfo> CardTestRunner::getExpectedCardResult() {
 		CardNameInfo(L"Ill-tempered Cyclops.jpg", L"Ill-Tempered Cyclops", NormalTitle),
 		CardNameInfo(L"Tah-Crop Elite.jpg", L"Tah-Crop Elite", NormalTitle),
 		CardNameInfo(L"Nimble-Blade Khenra.jpg", L"Nimble-Blade Khenra", NormalTitle),
-		CardNameInfo(L"Ill-tempered Cyclops - Blurry.jpg", L"Ill-Tempered Cyclops", NormalTitle)
+		CardNameInfo(L"Ill-tempered Cyclops - Blurry.jpg", L"Ill-Tempered Cyclops", NormalTitle),
+		CardNameInfo(L"Hijack.jpg", L"Hijack", NormalTitle),
+		CardNameInfo(L"Pirate's Prize.jpg", L"Pirate's Prize", NormalTitle),
+		CardNameInfo(L"Renewed Faith.jpg", L"Renewed Faith", NormalTitle)
 	};
 
 	return expectedResults;
