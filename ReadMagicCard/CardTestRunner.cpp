@@ -45,7 +45,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 		}
 
 		//Test the confidence.
-		double actualAverageConfidence, expectedAverageConfidence = 83.196078;
+		double actualAverageConfidence, expectedAverageConfidence = 83.166666;
 		int actualLowestConfidence, expectedLowestConfidence = 78;
 		bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
 
@@ -134,8 +134,11 @@ vector<CardNameInfo> CardTestRunner::getExpectedCardResult() {
 		CardNameInfo(L"Start Finish.jpg", L"Start // Finish", AkhSplitCardTitle),
 		CardNameInfo(L"Shipwreck Looter - 1 - Straight.jpg", L"Shipwreck Looter", NormalTitle),
 		CardNameInfo(L"Shipwreck Looter - 2 - Slightly rotated.jpg", L"Shipwreck Looter", NormalTitle),
-		CardNameInfo(L"Shipwreck Looter - 6 - Upside-down.jpg", L"Shipwreck Looter", NormalTitle),
-		CardNameInfo(L"Shipwreck Looter - 7 - Very upside-down.jpg", L"Shipwreck Looter", NormalTitle),
+		CardNameInfo(L"Shipwreck Looter - 3 - Very rotated.jpg", L"Shipwreck Looter", NormalTitle),
+		CardNameInfo(L"Shipwreck Looter - 4 - On side.jpg", L"Shipwreck Looter", NormalTitle),
+		CardNameInfo(L"Shipwreck Looter - 5 - Slightly upside-down.jpg", L"Shipwreck Looter", NormalTitle),
+		CardNameInfo(L"Shipwreck Looter - 6 - Very upside-down.jpg", L"Shipwreck Looter", NormalTitle),
+		CardNameInfo(L"Shipwreck Looter - 7 - Completely Upside-down.jpg", L"Shipwreck Looter", NormalTitle),
 		CardNameInfo(L"Impeccable Timing.jpg", L"Impeccable Timing", NormalTitle),
 		CardNameInfo(L"Ill-tempered Cyclops.jpg", L"Ill-Tempered Cyclops", NormalTitle),
 		CardNameInfo(L"Tah-Crop Elite.jpg", L"Tah-Crop Elite", NormalTitle),
