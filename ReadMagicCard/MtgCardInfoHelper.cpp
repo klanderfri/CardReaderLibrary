@@ -22,7 +22,7 @@ int MtgCardInfoHelper::LettersInShortestCardName() {
 
 bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
-	if (title.size() < LettersInShortestCardName()) { return false; }
+	if (title.size() < (size_t)LettersInShortestCardName()) { return false; }
 
 	int lettersInName = 0;
 
@@ -183,11 +183,31 @@ vector<wchar_t> MtgCardInfoHelper::GetAllowedNotRelevantForSortingCharacters() {
 
 bool MtgCardInfoHelper::IsEmblem(const wstring title) {
 
-	if (title.size() != 6) { return false; }
+	//Emblems could be considered a subset of tokens.
+	//Perhaps not from a judge's point of view but
+	//both token and emblems are uppercase on black background.
+	if (!IsToken(title)) { return false; }
 
-	wstring titleCopy = title;
-	boost::algorithm::to_lower(titleCopy);
-	bool isEmblem = (titleCopy == L"emblem");
+	//Titles at emblems are always at least six letters long.
+	size_t titleSize = title.size();
+	if (titleSize < 6) { return false; }
+
+	//All emblems has a title starting with the word "Emblem".
+	wstring titleBeginning = title.substr(0, 6);
+	boost::algorithm::to_lower(titleBeginning);
+	bool isEmblem = (titleBeginning == L"emblem");
+	
+	//Handle the "Emblem of the Warmind" special case.
+	wstring emblemOfTheWarmind = L"Emblem of the Warmind";
+	size_t emblemOfTheWarmindSize = emblemOfTheWarmind.size();
+	if (titleSize >= emblemOfTheWarmindSize) {
+		wstring lowercaseTitle = title;
+		boost::algorithm::to_lower(lowercaseTitle);
+		wstring titleBeginning = lowercaseTitle.substr(0, emblemOfTheWarmindSize);
+		if (titleBeginning == emblemOfTheWarmind) {
+			return false;
+		}
+	}
 
 	return isEmblem;
 }
@@ -196,6 +216,12 @@ bool MtgCardInfoHelper::IsToken(const wstring title) {
 
 	if (!IsNameLongEnough(title)) { return false; }
 	if (ContainsInvalidCharacters(title)) { return false; }
+	if (!IsMostlyUppercase(title)) { return false; }
+
+	return true;
+}
+
+bool MtgCardInfoHelper::IsMostlyUppercase(const wstring title) {
 
 	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();
 	int lowercase = 0;
