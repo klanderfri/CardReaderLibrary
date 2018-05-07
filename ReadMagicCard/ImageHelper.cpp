@@ -250,7 +250,7 @@ double ImageHelper::GetAnglesToStrightenUp(const RotatedRect rotatedRectangle, b
 
 	if (enforcePortraitMode) {
 
-		return rotatedRectangle.angle < -45 ? rotatedRectangle.angle + 90 : rotatedRectangle.angle;
+		return (rotatedRectangle.size.height < rotatedRectangle.size.width) ? rotatedRectangle.angle + 90 : rotatedRectangle.angle;
 	}
 	else {
 
