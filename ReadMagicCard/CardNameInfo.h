@@ -27,5 +27,7 @@ public:
 	CardTitleType CardType = NormalTitle;
 	//The OCR-prepared images containing the card name.
 	std::vector<cv::Mat> OcrTitleImages;
+	//Tells if the title background of the original image is so dark it causes the background of a binary image to be black.
+	bool HasDarkTitleBackground = false;
 };
 
