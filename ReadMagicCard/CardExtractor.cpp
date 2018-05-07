@@ -56,7 +56,7 @@ RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size 
 
 	//The sides relative size indicate if we got the card or just parts of it.
 	//That in turn might indicate that the card has white or silver borders.
-	if (sideFactor < 1.36 || sideFactor>1.44) {
+	if (sideFactor < 1.36 || sideFactor > 1.44) {
 		workingCardSquare = findCardSquare(thumbImage, 170);
 	}
 
