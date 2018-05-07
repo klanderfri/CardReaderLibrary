@@ -30,17 +30,17 @@ private:
 	//Creates the reading configurations to use when searching for the title.
 	std::vector<ReadingConfiguration> createReadingConfigurations();
 	//Reads the title of the card when we don't know if the card is upside-down or not.
-	CardNameInfo readUnrotatedCardTitle(const cv::Mat cardImage, const std::vector<ReadingConfiguration> configs, const CardTitleType cardTitleTypeToSearch);
+	CardNameInfo readTitleOfCardWithUnknownOrientation(const cv::Mat cardImage, const std::vector<ReadingConfiguration> configs, const CardTitleType cardTitleTypeToSearch);
 	//Gets the title type the card should have.
 	CardTitleType getTitleType(const CardNameInfo info);
 	//Checks if the result is so confident that we can assume we got the title.
 	bool isResultGoodEnoughToQuit(const CardNameInfo result);
 	//Checks if we have come to a situation when it's time to search for any secondary Amonkhet split card title .
-	bool shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardTitleTypeToSearch);
+	bool shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo currentBestResult, const size_t currentIterationIndex, const CardTitleType cardTitleTypeOfParentCard);
 	//Reads the secondary title of an Amonkhet split card.
 	CardNameInfo readAmonkhetSplitTitle(const cv::Mat cardImageGivingBestResult, const ReadingConfiguration currentConfig);
 	//Reads the title of the card when we can assume it's not upside down.
-	CardNameInfo readStraightCardTitle(const cv::Mat cardImage, const ReadingConfiguration config, const CardTitleType cardTitleTypeToSearch);
+	CardNameInfo readTitleOfStraightCard(const cv::Mat cardImage, const ReadingConfiguration config, const CardTitleType cardTitleTypeToSearch);
 	//Reads the title of a split card.
 	CardNameInfo readSplitCardTitle(const cv::Mat cardImage, const ReadingConfiguration config);
 	//Joins the titles of two halves of a split card into one title.
@@ -66,4 +66,6 @@ private:
 	int numberOfCardReadTries;
 	//The number of times we have tried to extract a title text image.
 	int numberOfTitleImageExtractions;
+	//Tells if the image of the card needs to be rotated to not be upside-down.
+	bool rotateFinalCardImage180Degrees = false;
 };

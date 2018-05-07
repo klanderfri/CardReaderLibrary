@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StoreCardProcessingData.h"
-#include "FileHandling.h"
+#include "SaveOcvImage.h"
 
 using namespace std;
 
@@ -36,6 +36,9 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 			L"\t" + to_wstring(info.Confidence) +
 			L"\t" + to_wstring(info.IsConfidentTitle()) +
 			L"\n";
+
+		//Store the extracted card so the user can use it (for example, to showing before selling it).
+		SaveOcvImage::SaveImageData(systemMethods, info.ExtractedCardImage, info.FileName, SubfolderName + L"\\Extracted Cards");
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
 

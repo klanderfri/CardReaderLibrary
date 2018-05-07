@@ -69,7 +69,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		trendImage = ImageHelper::DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = ImageHelper::DrawLine(trendImage, bLine[0], bLine[1]);
 
-		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"6 - Title Center Line", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
 	}
 
 	return letters;

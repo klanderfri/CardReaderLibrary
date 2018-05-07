@@ -29,5 +29,7 @@ public:
 	std::vector<cv::Mat> OcrTitleImages;
 	//Tells if the title background of the original image is so dark it causes the background of a binary image to be black.
 	bool HasDarkTitleBackground = false;
+	//An image holding the card and only the card.
+	cv::Mat ExtractedCardImage;
 };
 

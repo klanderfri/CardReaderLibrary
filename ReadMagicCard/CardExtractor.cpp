@@ -89,8 +89,10 @@ Mat CardExtractor::getCardPart(const Mat rawImage, const RotatedRect rawCardArea
 	//Crop out the card.
 	ImageHelper::CropImage(workingImage, workingImage, straightCardArea);
 
-	//Store the extracted card so the user can use it (for example, to showing before selling it).
-	SaveOcvImage::SaveImageData(systemMethods, workingImage, imageFileName, L"Image Data\\Extracted Cards");
+	//Store result for debugging.
+	if (runDebugging) {
+		SaveOcvImage::SaveImageData(systemMethods, workingImage, imageFileName, L"5 - Extracted Cards");
+	}
 
 	return workingImage;
 }

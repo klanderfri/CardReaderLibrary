@@ -150,9 +150,9 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	//Store result for debugging.
 	if (runDebugging) {
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"8 - Only Title Letters", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"9 - Possible Title Area", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"10 - Title Text", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"9 - Only Title Letters", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"10 - Possible Title Area", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"11 - Title Text", numberOfTries);
 	}
 
 	return true;
@@ -201,7 +201,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[0]);
 		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[1]);
 
-		SaveOcvImage::SaveImageData(systemMethods, lineImages, imageFileName, L"7 - Bounded Characters", numberOfTries);
+		SaveOcvImage::SaveImageData(systemMethods, lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
 	}
 
 	//Get the bounded rectangle.
