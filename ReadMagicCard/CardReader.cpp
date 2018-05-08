@@ -94,7 +94,7 @@ Mat CardReader::extractCardImage(const Mat originalCardImage) {
 
 vector<ReadingConfiguration> CardReader::createReadingConfigurations() {
 
-	vector<ReadingConfiguration> configs{
+	vector<ReadingConfiguration> configs {
 		ReadingConfiguration(120, false),
 		ReadingConfiguration(120, true),
 		ReadingConfiguration(80, false),
@@ -103,6 +103,7 @@ vector<ReadingConfiguration> CardReader::createReadingConfigurations() {
 		ReadingConfiguration(140, true)
 	};
 
+	assert(!configs.empty());
 	return configs;
 }
 
@@ -203,23 +204,18 @@ bool CardReader::shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo curre
 	//First and formost, the loop most be the main one
 	//(i.e working with a card that might contain an Amonkhet split card)
 	//and not the one searching for the Amonkhet split card title.
-	if (cardTitleTypeOfParentCard != NormalTitle) { return false; }
-
-	//Continue searching for a better main title if the current one us just acceptable.
-	bool acceptableResult = (currentBestResult.Confidence >= NORMAL_OCR_CONFIDENCE_THRESH);
-	if (!acceptableResult) { return false; }
-
-	//Emblems are not split cards.
-	bool isEmblem = MtgCardInfoHelper::IsEmblem(currentBestResult.CardName);
-	if (isEmblem) { return false; }
+	bool couldHaveAmonkhetSubCard =
+		cardTitleTypeOfParentCard == NormalTitle &&
+		getTitleType(currentBestResult) == NormalTitle;
+	if (!couldHaveAmonkhetSubCard) { return false; }
 
 	//We can skip any further searches for the main title and go for the Amonkhet split one if the main one is excellent clear.
 	bool excellentResult = isResultGoodEnoughToQuit(currentBestResult);
 	if (excellentResult) { return true; }
-	
+
 	//The last iteration should include an Amonkhet title search as long as the main one is acceptable.
-	bool isLastIteration = (currentIterationIndex == createReadingConfigurations().size() - 1);
-	if (isLastIteration) { return true; }
+	bool isLastIterationSearchingForTitle = (currentIterationIndex == createReadingConfigurations().size() - 1);
+	if (isLastIterationSearchingForTitle) { return true; }
 
 	return false;
 }
