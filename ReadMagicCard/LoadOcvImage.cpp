@@ -14,7 +14,7 @@ LoadOcvImage::~LoadOcvImage()
 {
 }
 
-Mat LoadOcvImage::LoadImageData(SystemMethods* systemMethods, std::wstring imageFilePath) {
+Mat LoadOcvImage::LoadImageData(SystemMethods* systemMethods, wstring imageFilePath) {
 
 	//Read the file.
 	wstring fullImageFilePath = FileHandling::GetMtgImageFileFolderPath(systemMethods) + imageFilePath;
