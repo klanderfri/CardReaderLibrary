@@ -38,7 +38,9 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 			L"\n";
 
 		//Store the extracted card so the user can use it (for example, to showing before selling it).
-		SaveOcvImage::SaveImageData(systemMethods, info.ExtractedCardImage, info.FileName, SubfolderName + L"\\Extracted Cards");
+		if (!info.ExtractedCardImage.empty()) {
+			SaveOcvImage::SaveImageData(systemMethods, info.ExtractedCardImage, info.FileName, SubfolderName + L"\\Extracted Cards");
+		}
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
 
