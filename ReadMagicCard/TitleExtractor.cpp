@@ -130,9 +130,6 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	}
 	ImageHelper::StraightenUpImage(titleImage, straightenTitleImage, textArea, straightTextArea, false);
 
-	//Make black text on white background.
-	ImageHelper::SetBackgroundByInverting(straightenTitleImage, false);
-
 	//Cut out the title text.
 	int borderThickness = 10;
 	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, borderThickness);
