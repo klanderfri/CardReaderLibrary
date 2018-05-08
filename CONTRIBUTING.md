@@ -79,4 +79,4 @@ It will check if there are any broken test cases, indicating broken code. You'll
 
 ### Test Data
 A zip files with test data (aka photos of *Magic: the Gathering*-cards) can be downloaded from the link below.
-http://tankarochkuriosa.se/documents/mtg-cards.zip (187 MB)
+http://tankarochkuriosa.se/documents/mtg-cards.zip (208 MB)
