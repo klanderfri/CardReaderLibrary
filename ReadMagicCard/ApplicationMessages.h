@@ -11,8 +11,12 @@ public:
 	void printWelcomeMessage();
 	//Prints a message telling the user where the program is looking for card image files.
 	void printWorkingFolderMessage(std::wstring mtgFolderPath);
+	//Prints a message telling the user that the result of the read is being saved to disk.
+	void printSavingResultsToDiskMessage();
+	//Prints a message telling the user that the result of the read has been saved to disk.
+	void printResultsHasBeenSavedToDiskMessage(std::wstring pathToResultFolder);
 	//Prints a message telling the user how the execution went.
-	void printResultMessage(int numberOfErrors, std::wstring pathToResultFile);
+	void printResultMessage(int numberOfErrors);
 	//Prints a message telling the user that there are no files to read.
 	void printNoImagesMessage();
 	//Prints a message telling the user that there are to many files to successfully read them all.

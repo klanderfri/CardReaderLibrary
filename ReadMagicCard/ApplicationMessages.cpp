@@ -30,7 +30,21 @@ void ApplicationMessages::printWorkingFolderMessage(wstring mtgFolderPath) {
 	}
 }
 
-void ApplicationMessages::printResultMessage(int numberOfErrors, wstring pathToResultFile) {
+void ApplicationMessages::printSavingResultsToDiskMessage() {
+
+	if (!runSilent) {
+		wcout << L"Saving the results to disk . . ." << endl;
+	}
+}
+
+void ApplicationMessages::printResultsHasBeenSavedToDiskMessage(wstring pathToResultFolder) {
+
+	if (!runSilent) {
+		wcout << L"The results has been written to a folder on disk:" << endl << pathToResultFolder << endl << endl;
+	}
+}
+
+void ApplicationMessages::printResultMessage(int numberOfErrors) {
 	
 	if (!runSilent) {
 		wstring message;
@@ -45,10 +59,8 @@ void ApplicationMessages::printResultMessage(int numberOfErrors, wstring pathToR
 			wstring errorWord = (numberOfErrors == 1) ? L"error" : L"errors";
 			message = L"Oh no! There was " + amountOfErrorsStr + L" " + errorWord + L" when reading the cards! :-(";
 		}
-		wcout << endl << message << endl;
+		wcout << message << endl;
 		systemMethods->ResetCommandLineTextColour();
-
-		wcout << endl << L"The results has been written to a result file:" << endl << pathToResultFile << endl;
 	}
 }
 

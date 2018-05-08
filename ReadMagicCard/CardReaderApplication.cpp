@@ -122,11 +122,13 @@ vector<CardNameInfo> CardReaderApplication::readAllCards(SystemMethods* systemMe
 	vector<CardNameInfo> result = readers->ExtractCardNames();
 
 	//Write the card names to a separate file.
+	messages.printSavingResultsToDiskMessage();
 	StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
-	wstring pathToResultFile = storer.StoreFinalResult(result);
+	wstring pathToResultFolder = storer.StoreFinalResult(result);
+	messages.printResultsHasBeenSavedToDiskMessage(pathToResultFolder);
 
 	//Give a reassuring message... or not.
-	messages.printResultMessage(readers->AmountOfErrors(), pathToResultFile);
+	messages.printResultMessage(readers->AmountOfErrors());
 
 	//Since we don't need the readers anymore...
 	delete readers;

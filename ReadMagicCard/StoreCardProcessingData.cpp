@@ -43,8 +43,10 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 		}
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
+	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
 
-	return FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
+	wstring resultFolder = FileHandling::GetSubFolderPath(systemMethods, SubfolderName);
+	return resultFolder;
 }
 
 wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfCardReadTries, wstring ocrResult, int ocrConfidence) {

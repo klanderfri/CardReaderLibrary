@@ -79,6 +79,10 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 		cardNameExtraction(range, result, range.end, lengthOfLongestFilename);
 	}
 
+	if (!runSilent) {
+		wcout << endl;
+	}
+
 	return result;
 }
 
