@@ -8,7 +8,9 @@ public:
 	CardExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
 	~CardExtractor();
 
-	//Extracts an image containing the card.
+	//Extracts the part of the image containing the card.
+	static cv::Mat ExtractCard(SystemMethods* systemMethods, std::wstring imageFileName, bool runDebugging);
+	//Extracts the part of the image containing the card.
 	bool ExtractCard(cv::Mat& outImage);
 
 private:

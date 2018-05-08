@@ -10,8 +10,10 @@ public:
 	CardNameInfo(std::wstring fileName, std::wstring cardName, CardTitleType cardType);
 	~CardNameInfo();
 
+	//Checks if there is a result.
+	bool HasGotResult() const;
 	//Checks if we got a confident decode of a MtG title.
-	bool IsConfidentTitle(int minimumConfidence = 1);
+	bool IsConfidentTitle(int minimumConfidence) const;
 	//Compares two card info sets by the card name. Returns true if they are in the right order.
 	static bool CompareByCardName(CardNameInfo info1, CardNameInfo info2);
 	//Compares two card info set by the file name. Returns true if they are in the right order.

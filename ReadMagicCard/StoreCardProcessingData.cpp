@@ -34,7 +34,7 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 			L"\t" + info.CardName +
 			L"\t" + to_wstring(info.CardType) +
 			L"\t" + to_wstring(info.Confidence) +
-			L"\t" + to_wstring(info.IsConfidentTitle()) +
+			L"\t" + to_wstring(info.HasGotResult()) +
 			L"\n";
 
 		//Store the extracted card so the user can use it (for example, to showing before selling it).

@@ -159,7 +159,7 @@ bool CardTestRunner::runCardNameTests(vector<CardNameInfo> actualResults, vector
 
 bool CardTestRunner::cardNameIsOK(CardNameInfo expectedResult, CardNameInfo actualResult) {
 
-	return actualResult.IsConfidentTitle() && resultsCorresponds(expectedResult, actualResult);
+	return actualResult.HasGotResult() && resultsCorresponds(expectedResult, actualResult);
 }
 
 bool CardTestRunner::runCardTypeTests(vector<CardNameInfo> actualResults, vector<CardNameInfo>& incorrectResults) {

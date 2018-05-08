@@ -28,7 +28,15 @@ CardNameInfo::~CardNameInfo()
 {
 }
 
-bool CardNameInfo::IsConfidentTitle(int minimumConfidence) {
+bool CardNameInfo::HasGotResult() const {
+
+	return (Confidence > 0 && !CardName.empty());
+}
+
+bool CardNameInfo::IsConfidentTitle(int minimumConfidence) const {
+
+	//An empty result cannot be considered a confident title.
+	if (!HasGotResult()) { return false; }
 
 	//The Tesseract algorithm needs to be confident with the result otherwise we shouldn't either.
 	if (Confidence < minimumConfidence) { return false; }

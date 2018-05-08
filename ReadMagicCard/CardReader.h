@@ -14,7 +14,7 @@ public:
 	//Get the name of the file containing the image.
 	std::wstring GetImageFileName();
 	//Extracts the card name from the image.
-	void ReadCardName();
+	void ReadCardName(cv::Mat cardImage);
 	//Get the result of the card reading.
 	CardNameInfo GetResult();
 
@@ -25,8 +25,6 @@ private:
 	//The level of confidence to be considered so good a result that no future processing is needed.
 	int HIGH_OCR_CONFIDENCE_THRESH;
 
-	//Extracts the part of the image containing the card.
-	cv::Mat extractCardImage(const cv::Mat originalCardImage);
 	//Creates the reading configurations to use when searching for the title.
 	std::vector<ReadingConfiguration> createReadingConfigurations();
 	//Reads the title of the card when we don't know if the card is upside-down or not.

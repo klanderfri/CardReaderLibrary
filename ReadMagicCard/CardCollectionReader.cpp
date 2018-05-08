@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CardCollectionReader.h"
+#include "CardExtractor.h"
 #include <iomanip>
 #include <iostream>
 
@@ -86,25 +87,35 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 	for (int i = range.start; i < range.end; i++) {
 
 		CardNameInfo info;
+		Mat cardImage;
+		wstring imageFileName = readers[i].GetImageFileName();
+		bool gotCardImage = false;
 
 		try {
 
+			//Extract the card from the image.
+			cardImage = CardExtractor::ExtractCard(systemMethods, imageFileName, runDebugging);
+			gotCardImage = true;
+			
 			//Extract the card name.
-			readers[i].ReadCardName();
+			readers[i].ReadCardName(cardImage);
 			info = readers[i].GetResult();
 		}
 		catch (exception& ex) {
 
 			info.CardName = systemMethods->ToWString((string)ex.what());
 			info.FileName = readers[i].GetImageFileName();
+			info.ExtractedCardImage = cardImage;
 		}
+
+		assert(!gotCardImage || !info.ExtractedCardImage.empty());
 
 		//Print that we have read the image.
 		if (!runSilent) {
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 
-		if (!info.IsConfidentTitle()) {
+		if (!info.HasGotResult()) {
 			amountOfErrors++;
 		}
 

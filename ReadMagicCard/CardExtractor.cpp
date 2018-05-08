@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CardExtractor.h"
 #include "FileHandling.h"
+#include "LoadOcvImage.h"
 #include "SaveOcvImage.h"
 #include "StoreCardProcessingData.h"
 
@@ -15,6 +16,24 @@ CardExtractor::CardExtractor(wstring imageFileName, Mat originalImageData, Syste
 
 CardExtractor::~CardExtractor()
 {
+}
+
+Mat CardExtractor::ExtractCard(SystemMethods* systemMethods, wstring imageFileName, bool runDebugging) {
+
+	//Load the image.
+	Mat originalCardImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
+
+	//Extract the card part.
+	Mat cardImage;
+	CardExtractor cardExtractor(imageFileName, originalCardImage, systemMethods, runDebugging);
+	bool success = cardExtractor.ExtractCard(cardImage);
+
+	//See if we need to stop.
+	if (!success) {
+		throw OperationException("ERROR: Could not extract the card section!");
+	}
+
+	return cardImage;
 }
 
 bool CardExtractor::ExtractCard(Mat& outImage) {

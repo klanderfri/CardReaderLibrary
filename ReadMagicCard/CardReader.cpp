@@ -2,7 +2,6 @@
 #include "CardReader.h"
 #include "CardExtractor.h"
 #include "FileHandling.h"
-#include "LoadOcvImage.h"
 #include "MtgCardInfoHelper.h"
 #include "SaveOcvImage.h"
 #include "TitleExtractor.h"
@@ -19,6 +18,9 @@ CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool
 	NORMAL_OCR_CONFIDENCE_THRESH(75),
 	HIGH_OCR_CONFIDENCE_THRESH(80)
 {
+	if (imageFileName.empty()) {
+		throw ParameterException("The provided image file name was empty!", "imageFileName");
+	}
 }
 
 CardReader::~CardReader()
@@ -35,19 +37,13 @@ CardNameInfo CardReader::GetResult() {
 	return finalResult;
 }
 
-void CardReader::ReadCardName() {
+void CardReader::ReadCardName(Mat cardImage) {
 
 	//Reset variables keeping track of the number of X tries.
 	numberOfOcrTitleImagesStoredForDebug = 0;
 	numberOfTitleImagesStoredForDebug = 0;
 	numberOfCardReadTries = 0;
 	numberOfTitleImageExtractions = 0;
-
-	//Load the image.
-	Mat originalCardImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
-
-	//Extract the card part.
-	Mat cardImage = extractCardImage(originalCardImage);
 
 	//Extract the title text.
 	vector<ReadingConfiguration> configs = createReadingConfigurations();
@@ -62,7 +58,7 @@ void CardReader::ReadCardName() {
 	finalResult.ExtractedCardImage = cardImage;
 
 	//Oops! Seems like we couldn't get any title text.
-	if (!finalResult.IsConfidentTitle()) {
+	if (!finalResult.HasGotResult()) {
 		finalResult.CardName = L"ERROR: Could not OCR-read the title!";
 		finalResult.Confidence = 0;
 	}
@@ -76,20 +72,6 @@ void CardReader::ReadCardName() {
 			SaveOcvImage::SaveImageData(systemMethods, finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
 		}
 	}
-}
-
-Mat CardReader::extractCardImage(const Mat originalCardImage) {
-
-	Mat cardImage;
-	CardExtractor cardExtractor(imageFileName, originalCardImage, systemMethods, runDebugging);
-	bool success = cardExtractor.ExtractCard(cardImage);
-
-	//See if we need to stop.
-	if (!success) {
-		throw OperationException("ERROR: Could not extract the card section!");
-	}
-
-	return cardImage;
 }
 
 vector<ReadingConfiguration> CardReader::createReadingConfigurations() {
@@ -208,6 +190,9 @@ bool CardReader::shouldWeExecuteAmonkhetSplitHalfSearch(const CardNameInfo curre
 		cardTitleTypeOfParentCard == NormalTitle &&
 		getTitleType(currentBestResult) == NormalTitle;
 	if (!couldHaveAmonkhetSubCard) { return false; }
+	
+	//No use to look for the Amonkhet split card title if the main title extraction was a complete failure.
+	if (!currentBestResult.HasGotResult()) { return false; }
 
 	//We can skip any further searches for the main title and go for the Amonkhet split one if the main one is excellent clear.
 	bool excellentResult = isResultGoodEnoughToQuit(currentBestResult);
@@ -274,12 +259,12 @@ CardNameInfo CardReader::readSplitCardTitle(const Mat cardImage, const ReadingCo
 	resultA = readTitleOfStraightCard(halves[0], config, SplitCardTitle);
 
 	//Result B is useless if result A has failed.
-	if (resultA.IsConfidentTitle()) {
+	if (resultA.HasGotResult()) {
 		resultB = readTitleOfStraightCard(halves[1], config, SplitCardTitle);
 	}
 
 	//Check if we got success.
-	if (resultB.IsConfidentTitle()) {
+	if (resultB.HasGotResult()) {
 
 		//Join the titles to a split card name.
 		result = joinSplitCardTitles(resultA, resultB);
