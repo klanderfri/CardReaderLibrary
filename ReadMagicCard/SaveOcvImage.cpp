@@ -20,6 +20,9 @@ void SaveOcvImage::SaveImageData(SystemMethods* systemMethods, Mat imageToSave, 
 	if (subFolder.empty()) {
 		throw ParameterException("The subfolder cannot be empty!", "subFolder");
 	}
+	if (imageToSave.empty()) {
+		throw ParameterException("The image to save cannot be empty!", "imageToSave");
+	}
 	
 	//Add postfix.
 	wstring imageNumberPostfix = L"";
