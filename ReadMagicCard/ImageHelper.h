@@ -18,6 +18,8 @@ public:
 	static cv::Mat ToGreyImage(const cv::Mat imageToConvert);
 	//Creates a colour image out of the provided image. Note: This method doesn't add any colours to the image.
 	static cv::Mat ToColourImage(const cv::Mat imageToConvert);
+	//Gets letter area data from a set of contours.
+	static LetterAreas ToLetterAreas(Contours contours);
 	//Creates the rectangle bound by the the specified borders.
 	static cv::RotatedRect GetRotatedRectangle(std::vector<TrendLine> verticalBorders, std::vector<TrendLine> horizontalBorders, double angleAdjustment = 0.0);
 	//Displays a specified image in a window.
@@ -36,6 +38,8 @@ public:
 	static cv::Mat DrawLimits(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
 	//Draws the specified center point to the image.
 	static cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, cv::Scalar colour = cv::Scalar(0, 0, 255), int radius = 3);
+	//Fills a contour in the image with the specified colour.
+	static void FillContour(cv::Mat& image, const Contour contour, const cv::Scalar colour);
 	//Gets how many degrees the rectangle needs to be rotated in positive direction (counter-clockwise) to be straight.
 	static double GetAnglesToStrightenUp(const cv::RotatedRect rotatedRectangle, bool enforcePortraitMode = true);
 	//Gets the center point of an image.

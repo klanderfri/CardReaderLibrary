@@ -22,8 +22,6 @@ private:
 	TrendLine findCenterLine(LetterAreas letters);
 	//Finds the base line (the line marking the bottom) for a set of letters.
 	TrendLine findBaseLine(LetterAreas letters);
-	//Gets the areas that might contain a title letter.
-	LetterAreas getPossibleLetterAreas(Contours contours);
 	//Filter out letter areas that are identical, ie letter areas pointing at the same letter.
 	LetterAreas filterOutDuplicates(LetterAreas lettersToFilter);
 	//Removes the areas that are noise.

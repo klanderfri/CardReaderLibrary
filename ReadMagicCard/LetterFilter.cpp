@@ -33,7 +33,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	textBaseLine = textCenterLine = TrendLine(0, originalImageData.rows / 2);
 
 	//Do a crude filtering of the the letters.
-	LetterAreas allPossibleLetters = getPossibleLetterAreas(contours);
+	LetterAreas allPossibleLetters = ImageHelper::ToLetterAreas(contours);
 	LetterAreas letters = filterOutNonTitleSymbols(allPossibleLetters);
 
 	//Check if there was any letters at all.
@@ -133,28 +133,6 @@ TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 
 	baseLine = TrendLine(bottomPoints);
 	return baseLine;
-}
-
-LetterAreas LetterFilter::getPossibleLetterAreas(Contours contours) {
-
-	LetterAreas possibleLetterAreas;
-
-	for (size_t i = 0; i < contours.size(); i++) {
-
-		Contour letterContour = ImageHelper::ContoursConvexHull({ contours[i] });
-		RotatedRect letterBox = minAreaRect(letterContour);
-
-		LetterArea area;
-		area.TightContour = contours[i];
-		area.OuterContour = letterContour;
-		area.Box = letterBox;
-
-		possibleLetterAreas.push_back(area);
-	}
-
-	sort(possibleLetterAreas.begin(), possibleLetterAreas.end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
-
-	return possibleLetterAreas;
 }
 
 LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) {

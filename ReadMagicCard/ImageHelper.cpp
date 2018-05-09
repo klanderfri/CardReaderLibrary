@@ -61,6 +61,28 @@ Mat ImageHelper::ToColourImage(const Mat imageToConvert) {
 	return changeImageMode(imageToConvert, COLOR_GRAY2BGR);
 }
 
+LetterAreas ImageHelper::ToLetterAreas(Contours contours) {
+
+	LetterAreas allAreas;
+
+	for (size_t i = 0; i < contours.size(); i++) {
+
+		Contour letterContour = ImageHelper::ContoursConvexHull({ contours[i] });
+		RotatedRect letterBox = minAreaRect(letterContour);
+
+		LetterArea area;
+		area.TightContour = contours[i];
+		area.OuterContour = letterContour;
+		area.Box = letterBox;
+
+		allAreas.push_back(area);
+	}
+
+	sort(allAreas.begin(), allAreas.end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
+
+	return allAreas;
+}
+
 RotatedRect ImageHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders, double angleAdjustment) {
 
 	//Make sure the borders are correct.
@@ -244,6 +266,11 @@ Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, Scala
 	circle(workingImage, imageCenter, radius, colour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
 
 	return workingImage;
+}
+
+void ImageHelper::FillContour(Mat& image, const Contour contour, const Scalar colour) {
+
+	fillConvexPoly(image, contour, colour);
 }
 
 double ImageHelper::GetAnglesToStrightenUp(const RotatedRect rotatedRectangle, bool enforcePortraitMode) {
