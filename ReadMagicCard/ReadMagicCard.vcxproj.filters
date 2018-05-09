@@ -168,6 +168,9 @@
     <ClInclude Include="StoreCardProcessingData.h">
       <Filter>Application</Filter>
     </ClInclude>
+    <ClInclude Include="OcrImageNoiseCleaner.h">
+      <Filter>Engine\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -265,6 +268,9 @@
     </ClCompile>
     <ClCompile Include="StoreCardProcessingData.cpp">
       <Filter>Application</Filter>
+    </ClCompile>
+    <ClCompile Include="OcrImageNoiseCleaner.cpp">
+      <Filter>Engine\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

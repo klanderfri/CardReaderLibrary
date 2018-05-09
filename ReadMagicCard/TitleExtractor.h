@@ -26,6 +26,8 @@ private:
 	bool getTitleText(const cv::Mat titleImage, std::vector<cv::Mat>& textImages, int& numberOfTries);
 	//Gets the rectangle bounding the text area.
 	cv::RotatedRect getTextArea(Contour letters, TrendLine centerLine, TrendLine baseLine, cv::Mat titleImage, int numberOfTries);
+	//Cleans the text images from noise and clutter.
+	void cleanOcrImages(std::vector<cv::Mat>& outImages);
 
 	//Tells if the original title image has a black background.
 	bool hasOriginalTitleBlackBackground;

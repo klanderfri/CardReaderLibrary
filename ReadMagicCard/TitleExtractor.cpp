@@ -5,6 +5,7 @@
 #include "AlgorithmHelper.h"
 #include "SaveOcvImage.h"
 #include "LetterFilter.h"
+#include "OcrImageNoiseCleaner.h"
 
 using namespace cv;
 using namespace std;
@@ -37,6 +38,9 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 
 	//Extract a clean image containing the title.
 	bool success = getTitleText(outImage, outImages, numberOfTries);
+
+	//Clean the text images from noise and clutter.
+	cleanOcrImages(outImages);
 
 	//Store that the extration has been run, indicating that we can
 	//extract extra data (such as if the title has black background colour).
@@ -133,7 +137,6 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	//Cut out the title text.
 	int borderThickness = 10;
 	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, borderThickness);
-
 	textImages.push_back(straightenTitleImage);
 
 	if (letters.size() < 7) {
@@ -211,4 +214,14 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	textAreaImage = ImageHelper::DrawLimits(textAreaImage, textArea, Rect(), letters);
 
 	return textArea;
+}
+
+void TitleExtractor::cleanOcrImages(vector<Mat>& outImages) {
+
+	OcrImageNoiseCleaner cleaner(imageFileName, originalImageData, systemMethods, runDebugging);
+
+	for (Mat dirtyImage : outImages) {
+
+		cleaner.CleanImage(dirtyImage);
+	}
 }

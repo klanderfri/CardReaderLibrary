@@ -189,6 +189,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="LoadOcvImage.h" />
     <ClInclude Include="MtgCardInfoHelper.h" />
     <ClInclude Include="OcrDecodeResult.h" />
+    <ClInclude Include="OcrImageNoiseCleaner.h" />
     <ClInclude Include="ReadingConfiguration.h" />
     <ClInclude Include="SaveOcvImage.h" />
     <ClInclude Include="SectionExtractor.h" />
@@ -224,6 +225,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="LoadOcvImage.cpp" />
     <ClCompile Include="MtgCardInfoHelper.cpp" />
     <ClCompile Include="OcrDecodeResult.cpp" />
+    <ClCompile Include="OcrImageNoiseCleaner.cpp" />
     <ClCompile Include="ReadingConfiguration.cpp" />
     <ClCompile Include="SaveOcvImage.cpp" />
     <ClCompile Include="SectionExtractor.cpp" />
