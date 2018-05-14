@@ -9,10 +9,10 @@
 
 using namespace std;
 
-CardReaderApplication::CardReaderApplication(const bool runSilent, const bool runParallelized, const bool runDebugging)
+CardReaderApplication::CardReaderApplication(char* runArguments[], int numberOfRunArguments)
 {
 	WindowsMethods* systemMethods = new WindowsMethods();
-	session = new Session(systemMethods, runSilent, runParallelized, runDebugging);
+	session = new Session(systemMethods, runArguments, numberOfRunArguments);
 	messages = new ApplicationMessages(session);
 }
 

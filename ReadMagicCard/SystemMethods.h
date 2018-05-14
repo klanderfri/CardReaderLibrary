@@ -15,6 +15,8 @@ public:
 	static std::wstring ToWString(long double doubleToConvert, int numberOfDecimals);
 	//Converts an UTF8 string to an ANSI wide string.
 	static std::wstring UTF8ToWstring(const char *utf8ToConvert);
+	//Converts a string to a bool.
+	static bool ToBool(const std::string& stringToConvert);
 	//Gets the user name of the current user.
 	virtual std::wstring GetCurrentUserName() = 0;
 	//Gets the picture folder of the current user.

@@ -6,7 +6,7 @@
 class CardReaderApplication
 {
 public:
-	CardReaderApplication(const bool runSilent, const bool runParallelized, const bool runDebugging);
+	CardReaderApplication(char* runArguments[], int numberOfRunArguments);
 	~CardReaderApplication();
 
 	//Runs the card reader application.

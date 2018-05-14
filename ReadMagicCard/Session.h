@@ -3,8 +3,7 @@
 class Session
 {
 public:
-	Session();
-	Session(SystemMethods* systemMethods, const bool runSilent, const bool runParallelized, const bool runDebugging);
+	Session(SystemMethods* systemMethods, char* runArguments[], int numberOfRunArguments);
 	~Session();
 
 	//The height of the shrinked card image we work with to maximize performance.
@@ -18,5 +17,10 @@ public:
 	bool runSilent;
 	//Tells if the program should read each card in a separate thread.
 	bool runParallelized;
+
+private:
+
+	//Converts the input argument to a bool value.
+	bool getInputArgumentValue(char* runArguments[], int numberOfRunArguments, int index, bool defaultValue);
 };
 

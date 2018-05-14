@@ -3,22 +3,34 @@
 
 using namespace std;
 
-Session::Session()
+Session::Session(SystemMethods* systemMethods, char* runArguments[], int numberOfRunArguments)
 	: WORKING_CARD_HEIGHT(680)
 {
-}
-
-Session::Session(SystemMethods* systemMethods, const bool runSilent, const bool runParallelized, const bool runDebugging)
-	: Session()
-{
-	this->runDebugging = runDebugging;
 	this->systemMethods = systemMethods;
-	this->runSilent = runSilent;
-	this->runParallelized = runParallelized;
+
+	//Running the program silent will prevent it from doing
+	//outputs in the command line window.
+	this->runSilent = getInputArgumentValue(runArguments, numberOfRunArguments, 1, false);
+	//Running the program parallelized will read the cards
+	//quicker but makes it harder to debug.
+	this->runParallelized = getInputArgumentValue(runArguments, numberOfRunArguments, 2, true);
+	//Enable debug if you want the program to output images and
+	//text showing the different steps in the card identification.
+	this->runDebugging = getInputArgumentValue(runArguments, numberOfRunArguments, 3, false);
 }
 
 Session::~Session()
 {
 	//Go memory! Be FREEEE!!
 	delete systemMethods;
+}
+
+bool Session::getInputArgumentValue(char* runArguments[], int numberOfRunArguments, int index, bool defaultValue) {
+
+	if (index >= numberOfRunArguments) { return defaultValue; }
+
+	char* argumentPtr = runArguments[index];
+	string argumentStr = string(argumentPtr);
+	
+	return systemMethods->ToBool(argumentStr);
 }

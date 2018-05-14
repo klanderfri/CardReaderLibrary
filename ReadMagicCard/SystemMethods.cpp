@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "SystemMethods.h"
 #include <codecvt>
-#include "boost/lexical_cast.hpp"
+#include "boost\lexical_cast.hpp"
+#include "boost\algorithm\string.hpp"
 
 using namespace std;
 using boost::lexical_cast;
@@ -28,4 +29,17 @@ wstring SystemMethods::ToWString(long double doubleToConvert, int numberOfDecima
 	wstring numberStr = boost::lexical_cast<wstring>(nearest);
 	numberStr = numberStr.substr(0, numberStr.find(L'.') + numberOfDecimals + 1);
 	return numberStr;
+}
+
+bool SystemMethods::ToBool(const string& stringToConvert) {
+
+	string strCopy = stringToConvert;
+	boost::algorithm::to_lower(strCopy);
+
+	if (strCopy == "true") { return true; }
+	if (strCopy == "false") { return false; }
+	if (strCopy == "1") { return true; }
+	if (strCopy == "0") { return false; }
+
+	throw ParameterException("The provided string cannot be converted to a boolean!", "stringToConvert");
 }
