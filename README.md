@@ -1,5 +1,5 @@
 # Read Magic Card
-A computer vision project for identifying *Magic: the Gathering*-cards.
+An open source computer vision library for *Magic: the Gathering* card recognition.
 
 ## I just want to run the code!
 Go to the page for releases and read the instructions for the latest release.
