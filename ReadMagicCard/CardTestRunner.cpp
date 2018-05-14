@@ -6,9 +6,9 @@
 
 using namespace std;
 
-CardTestRunner::CardTestRunner(SystemMethods* systemMethods)
+CardTestRunner::CardTestRunner(Session* session) :
+	SessionBound(session)
 {
-	this->systemMethods = systemMethods;
 }
 
 CardTestRunner::~CardTestRunner()
@@ -20,7 +20,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 	bool allTestsWasSuccessful;
 
 	//Indicate errors by using red text colour.
-	systemMethods->SetCommandLineTextColour(Colour::Red);
+	session->systemMethods->SetCommandLineTextColour(Colour::Red);
 
 	//Check that all test cases are accounted for.
 	bool cardTestCasesMissing = (getExpectedCardResult().size() != result.size());
@@ -81,7 +81,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 	}
 
 	//Reset the consol colour.
-	systemMethods->ResetCommandLineTextColour();
+	session->systemMethods->ResetCommandLineTextColour();
 
 	return allTestsWasSuccessful;
 }

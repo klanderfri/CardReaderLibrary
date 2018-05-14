@@ -20,10 +20,10 @@ FileHandling::~FileHandling()
 {
 }
 
-wstring FileHandling::GetMtgImageFileFolderPath(SystemMethods* systemMethods) {
+wstring FileHandling::GetMtgImageFileFolderPath(Session* session) {
 
 	//Create the file path.
-	return systemMethods->GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
+	return session->systemMethods->GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
 }
 
 vector<wstring> FileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
@@ -50,14 +50,14 @@ vector<wstring> FileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
 	return filenames;
 }
 
-wstring FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder) {
+wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstring fileName, wstring subFolder) {
 
-	return AddRowToFile(systemMethods, textToWrite, fileName, subFolder, m_fileLock);
+	return AddRowToFile(session, textToWrite, fileName, subFolder, m_fileLock);
 }
 
-wstring FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
+wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
 
-	wstring folderPath = GetSubFolderPath(systemMethods, subFolder);
+	wstring folderPath = GetSubFolderPath(session, subFolder);
 	wstring fullFilePath = folderPath + fileName;
 
 	if (CreateFileDirectory(folderPath))
@@ -77,13 +77,13 @@ wstring FileHandling::AddRowToFile(SystemMethods* systemMethods, wstring textToW
 	else
 	{
 		//Failed to create directory.
-		throw SaveException("Could not create file directory: " + systemMethods->ToString(folderPath));
+		throw SaveException("Could not create file directory: " + session->systemMethods->ToString(folderPath));
 	}
 
 	return fullFilePath;
 }
 
-wstring FileHandling::GetSubFolderPath(SystemMethods* systemMethods, wstring subFolder)
+wstring FileHandling::GetSubFolderPath(Session* session, wstring subFolder)
 {
 	//Check that we actually got a subfolder.
 	if (subFolder.empty()) {
@@ -91,7 +91,7 @@ wstring FileHandling::GetSubFolderPath(SystemMethods* systemMethods, wstring sub
 	}
 
 	//Create the file path.
-	return FileHandling::GetMtgImageFileFolderPath(systemMethods) + subFolder + L"\\";
+	return FileHandling::GetMtgImageFileFolderPath(session) + subFolder + L"\\";
 }
 
 bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {

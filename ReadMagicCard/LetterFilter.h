@@ -7,7 +7,7 @@ class LetterFilter :
 	public BasicReaderData
 {
 public:
-	LetterFilter(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
+	LetterFilter(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
 	~LetterFilter();
 
 	//Runs the filter and returns the letters.

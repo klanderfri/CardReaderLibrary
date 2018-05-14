@@ -1,12 +1,14 @@
 #pragma once
 #include "CardReader.h"
+#include "SessionBound.h"
 #include "CardNameInfo.h"
 #include <mutex>
 //A collection of card readers.
-class CardCollectionReader
+class CardCollectionReader :
+	public SessionBound
 {
 public:
-	CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool runDebugging);
+	CardCollectionReader(Session* session);
 	~CardCollectionReader();
 
 	//Adds a card to the collection.
@@ -31,14 +33,6 @@ private:
 	//Gets the range of the internal readers.
 	cv::Range getRange();
 
-	//Pointer to object handling the system dependent methods.
-	SystemMethods* systemMethods;
-	//Telling if the program should run without any prints to the command line.
-	const bool runSilent;
-	//Telling if the extraction should be done parallelized.
-	const bool runParallelized;
-	//Telling if the program should do debugging such as exporting the images to files.
-	const bool runDebugging;
 	//The container holding all the card readers.
 	std::vector<CardReader> readers;
 	//The current amount of readers in the collection.

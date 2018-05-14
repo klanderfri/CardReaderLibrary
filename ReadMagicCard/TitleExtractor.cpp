@@ -10,8 +10,8 @@
 using namespace cv;
 using namespace std;
 
-TitleExtractor::TitleExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
-	: SectionExtractor(imageFileName, originalImageData, systemMethods, runDebugging)
+TitleExtractor::TitleExtractor(Session* session, wstring imageFileName, Mat originalImageData)
+	: BasicReaderData(session, imageFileName, originalImageData)
 {
 }
 
@@ -27,7 +27,7 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 	//Make the title grey scale.
 	Mat outImage = ImageHelper::ToGreyImage(originalImageData);
 
-	int normalizedTitleHeight = (int)(WORKING_CARD_HEIGHT / 3.67);
+	int normalizedTitleHeight = (int)(session->WORKING_CARD_HEIGHT / 3.67);
 	ImageHelper::ResizeImage(outImage, outImage, normalizedTitleHeight);
 
 	//Blur the image to smoothing it out.
@@ -104,7 +104,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	numberOfTries++;
 
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
-	LetterFilter filter(imageFileName, titleImage, systemMethods, runDebugging);
+	LetterFilter filter(session, imageFileName, titleImage);
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
 
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
@@ -117,9 +117,9 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 	//Store result for debugging.
 	Mat dbg_onlyLettersBoundImage, dbg_possibleTitleAreaImage;
-	if (runDebugging) {
+	if (session->runDebugging) {
 
-		int radius = (int)(WORKING_CARD_HEIGHT / 226.5); //3
+		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
 		dbg_onlyLettersBoundImage = ImageHelper::DrawLimits(titleImage, letters, radius);
 		dbg_possibleTitleAreaImage = ImageHelper::DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
 	}
@@ -148,11 +148,11 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	}
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 
-		SaveOcvImage::SaveImageData(systemMethods, dbg_onlyLettersBoundImage, imageFileName, L"9 - Only Title Letters", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, dbg_possibleTitleAreaImage, imageFileName, L"10 - Possible Title Area", numberOfTries);
-		SaveOcvImage::SaveImageData(systemMethods, straightenTitleImage, imageFileName, L"11 - Title Text", numberOfTries);
+		SaveOcvImage::SaveImageData(session, dbg_onlyLettersBoundImage, imageFileName, L"9 - Only Title Letters", numberOfTries);
+		SaveOcvImage::SaveImageData(session, dbg_possibleTitleAreaImage, imageFileName, L"10 - Possible Title Area", numberOfTries);
+		SaveOcvImage::SaveImageData(session, straightenTitleImage, imageFileName, L"11 - Title Text", numberOfTries);
 	}
 
 	return true;
@@ -180,7 +180,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	//Make sure there is a margin between the botton bounds and the base line, otherwise letters like 'p' and 'g' will be cut.
 	assert(horizontalBounds[1].Slope == baseLine.Slope);
 	double marginBottomToBase = TrendLine::GetPerpendicularDistance(horizontalBounds[1], baseLine);
-	int minimumMargin = (int)(WORKING_CARD_HEIGHT / 45.333); //15
+	int minimumMargin = (int)(session->WORKING_CARD_HEIGHT / 45.333); //15
 	if (marginBottomToBase < minimumMargin) {
 		horizontalBounds[1] = TrendLine(baseLine.Slope, baseLine.Offset + minimumMargin);
 	}
@@ -191,7 +191,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	vector<TrendLine> verticalBounds = perpendicularLine.GetBoundLines(dLettersContour);
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 
 		Mat lineImages;
 		titleImage.copyTo(lineImages);
@@ -201,7 +201,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[0]);
 		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[1]);
 
-		SaveOcvImage::SaveImageData(systemMethods, lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
+		SaveOcvImage::SaveImageData(session, lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
 	}
 
 	//Get the bounded rectangle.
@@ -218,7 +218,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 
 void TitleExtractor::cleanOcrImages(vector<Mat>& outImages) {
 
-	OcrImageNoiseCleaner cleaner(imageFileName, originalImageData, systemMethods, runDebugging);
+	OcrImageNoiseCleaner cleaner(session, imageFileName, originalImageData);
 
 	for (Mat dirtyImage : outImages) {
 

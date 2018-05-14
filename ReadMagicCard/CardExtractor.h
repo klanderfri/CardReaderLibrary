@@ -1,15 +1,15 @@
 #pragma once
-#include "SectionExtractor.h"
+#include "BasicReaderData.h"
 //Class for extracting the card from an image.
 class CardExtractor :
-	public SectionExtractor
+	public BasicReaderData
 {
 public:
-	CardExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
+	CardExtractor(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
 	~CardExtractor();
 
 	//Extracts the part of the image containing the card.
-	static cv::Mat ExtractCard(SystemMethods* systemMethods, std::wstring imageFileName, bool runDebugging);
+	static cv::Mat ExtractCard(Session* session, std::wstring imageFileName);
 	//Extracts the part of the image containing the card.
 	bool ExtractCard(cv::Mat& outImage);
 

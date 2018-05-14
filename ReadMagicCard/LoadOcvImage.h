@@ -9,5 +9,5 @@ public:
 	~LoadOcvImage();
 
 	//Loads the image data from the specified image file.
-	static cv::Mat LoadImageData(SystemMethods* systemMethods, std::wstring imageFilePath);
+	static cv::Mat LoadImageData(Session* session, std::wstring imageFilePath);
 };

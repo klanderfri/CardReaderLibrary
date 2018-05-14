@@ -15,7 +15,7 @@ SaveOcvImage::~SaveOcvImage()
 }
 
 //Saves the image and gives the specified name to the file.
-void SaveOcvImage::SaveImageData(SystemMethods* systemMethods, Mat imageToSave, wstring fileNameOfSavedFile, wstring subFolder, int currentFileNumber, int amountOfFiles)
+void SaveOcvImage::SaveImageData(Session* session, Mat imageToSave, wstring fileNameOfSavedFile, wstring subFolder, int currentFileNumber, int amountOfFiles)
 {
 	if (subFolder.empty()) {
 		throw ParameterException("The subfolder cannot be empty!", "subFolder");
@@ -32,25 +32,25 @@ void SaveOcvImage::SaveImageData(SystemMethods* systemMethods, Mat imageToSave, 
 	else if (currentFileNumber > 0) {
 		imageNumberPostfix = FileHandling::CreateFileNumberPostfix(currentFileNumber);
 	}
-	fileNameOfSavedFile = systemMethods->AddToEndOfFilename(fileNameOfSavedFile, imageNumberPostfix);
+	fileNameOfSavedFile = session->systemMethods->AddToEndOfFilename(fileNameOfSavedFile, imageNumberPostfix);
 
 	//Get the path the image should be saved to.
-	wstring saveInFolderPath = FileHandling::GetSubFolderPath(systemMethods, subFolder);
+	wstring saveInFolderPath = FileHandling::GetSubFolderPath(session, subFolder);
 	wstring savePath = saveInFolderPath + fileNameOfSavedFile;
 
 	if (FileHandling::CreateFileDirectory(saveInFolderPath))
 	{
 		//Create grey scale image.
-		string pathParameter = systemMethods->ToString(savePath);
+		string pathParameter = session->systemMethods->ToString(savePath);
 		bool couldWriteToFile = imwrite(pathParameter, imageToSave);
 
 		if (!couldWriteToFile) {
-			throw SaveException("Could not write image to file: " + systemMethods->ToString(savePath));
+			throw SaveException("Could not write image to file: " + session->systemMethods->ToString(savePath));
 		}
 	}
 	else
 	{
 		//Failed to create directory.
-		throw SaveException("Could not create file directory: " + systemMethods->ToString(saveInFolderPath));
+		throw SaveException("Could not create file directory: " + session->systemMethods->ToString(saveInFolderPath));
 	}
 }

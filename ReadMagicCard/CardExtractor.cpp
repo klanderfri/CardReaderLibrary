@@ -8,9 +8,9 @@
 using namespace cv;
 using namespace std;
 
-CardExtractor::CardExtractor(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging) :
-	SectionExtractor(imageFileName, originalImageData, systemMethods, runDebugging),
-	WORKING_IMAGE_HEIGHT((int)(WORKING_CARD_HEIGHT * 1.4))
+CardExtractor::CardExtractor(Session* session, wstring imageFileName, Mat originalImageData) :
+	BasicReaderData(session, imageFileName, originalImageData),
+	WORKING_IMAGE_HEIGHT((int)(session->WORKING_CARD_HEIGHT * 1.4))
 {
 }
 
@@ -18,14 +18,14 @@ CardExtractor::~CardExtractor()
 {
 }
 
-Mat CardExtractor::ExtractCard(SystemMethods* systemMethods, wstring imageFileName, bool runDebugging) {
+Mat CardExtractor::ExtractCard(Session* session, wstring imageFileName) {
 
 	//Load the image.
-	Mat originalCardImage = LoadOcvImage::LoadImageData(systemMethods, imageFileName);
+	Mat originalCardImage = LoadOcvImage::LoadImageData(session, imageFileName);
 
 	//Extract the card part.
 	Mat cardImage;
-	CardExtractor cardExtractor(imageFileName, originalCardImage, systemMethods, runDebugging);
+	CardExtractor cardExtractor(session, imageFileName, originalCardImage);
 	bool success = cardExtractor.ExtractCard(cardImage);
 
 	//See if we need to stop.
@@ -48,9 +48,9 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	RotatedRect cardArea = getOriginalCardArea(outImage, originalImageData.size());
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 		Mat debugImage = ImageHelper::DrawLimits(originalImageData, cardArea);
-		SaveOcvImage::SaveImageData(systemMethods, debugImage, imageFileName, L"3 - HD with Limit");
+		SaveOcvImage::SaveImageData(session, debugImage, imageFileName, L"3 - HD with Limit");
 	}
 
 	//Extract the card.
@@ -68,8 +68,8 @@ RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size 
 	float shortSide = min(workingCardSquare.size.height, workingCardSquare.size.width);
 	float sideFactor = longSide / shortSide;
 
-	if (runDebugging) {
-		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+	if (session->runDebugging) {
+		StoreCardProcessingData storer = StoreCardProcessingData(session);
 		storer.StoreSideRelations(imageFileName, sideFactor);
 	}
 
@@ -99,18 +99,18 @@ Mat CardExtractor::getCardPart(const Mat rawImage, const RotatedRect rawCardArea
 	ImageHelper::StraightenUpImage(rawImage, workingImage, rawCardArea, straightCardArea);
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 		Mat debugImage = ImageHelper::DrawCenterPoint(workingImage, rawCardArea.center);
 		debugImage = ImageHelper::DrawLimits(debugImage, RotatedRect(), straightCardArea, Contour());
-		SaveOcvImage::SaveImageData(systemMethods, debugImage, imageFileName, L"4 - Rotated Cards");
+		SaveOcvImage::SaveImageData(session, debugImage, imageFileName, L"4 - Rotated Cards");
 	}
 
 	//Crop out the card.
 	ImageHelper::CropImage(workingImage, workingImage, straightCardArea);
 
 	//Store result for debugging.
-	if (runDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, workingImage, imageFileName, L"5 - Extracted Cards");
+	if (session->runDebugging) {
+		SaveOcvImage::SaveImageData(session, workingImage, imageFileName, L"5 - Extracted Cards");
 	}
 
 	return workingImage;
@@ -129,8 +129,8 @@ RotatedRect CardExtractor::findCardSquare(const Mat rawImage, int thresh) {
 	threshold(workingImage, workingImage, thresh, 255, THRESH_BINARY);
 
 	//Store result for debugging.
-	if (runDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, workingImage, imageFileName, L"1 - Black and White");
+	if (session->runDebugging) {
+		SaveOcvImage::SaveImageData(session, workingImage, imageFileName, L"1 - Black and White");
 	}
 
 	//Find the countours of the card.
@@ -143,10 +143,10 @@ RotatedRect CardExtractor::findCardSquare(const Mat rawImage, int thresh) {
 	RotatedRect rotatedCardRectangle = minAreaRect(Mat(maxContour));
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 		Rect straightCardRectangle = getContourRectangle(maxContour); //Get the smallest straight rectangle containing the card.
 		Mat debugImage = ImageHelper::DrawLimits(rawImage, rotatedCardRectangle, straightCardRectangle, maxContour);
-		SaveOcvImage::SaveImageData(systemMethods, debugImage, imageFileName, L"2 - Cards with Limits");
+		SaveOcvImage::SaveImageData(session, debugImage, imageFileName, L"2 - Cards with Limits");
 	}
 
 	//Return the result.

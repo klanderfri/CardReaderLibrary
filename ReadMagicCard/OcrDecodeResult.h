@@ -1,5 +1,4 @@
 #pragma once
-#include "SystemMethods.h"
 //Class holding information about the OCR decoding result.
 class OcrDecodeResult
 {

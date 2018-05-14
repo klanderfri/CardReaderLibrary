@@ -1,11 +1,12 @@
 #pragma once
-#include "SystemMethods.h"
+#include "SessionBound.h"
 #include "CardNameInfo.h"
 #include <mutex>
-class StoreCardProcessingData
+class StoreCardProcessingData : 
+	public SessionBound
 {
 public:
-	StoreCardProcessingData(SystemMethods* systemMethods);
+	StoreCardProcessingData(Session* session);
 	~StoreCardProcessingData();
 
 	//Stores the final result.
@@ -29,10 +30,6 @@ private:
 	//Writes the card information data to an external file.
 	std::wstring writeToFile(std::wstring textfileName, std::mutex& fileLock, bool& hasWrittenFileHeader, std::vector<std::wstring> headers, std::vector<std::wstring> rowData);
 	
-	//Tells if the object handling the system dependent methods has been set.
-	static bool hasSetSystemMethods;
-	//Pointer to object handling the system dependent methods.
-	static SystemMethods* systemMethods;
 	//Lock preventing multiple threads from writing the header in the file storing the title OCR confidence.
 	static std::mutex fl_OcrConfidence;
 	//Lock preventing multiple threads from writing the header in the file storing the card side relations.

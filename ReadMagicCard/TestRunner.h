@@ -1,19 +1,15 @@
 #pragma once
-#include "SystemMethods.h"
+#include "SessionBound.h"
 #include "CardNameInfo.h"
 //Class running tests of the program.
-class TestRunner
+class TestRunner :
+	public SessionBound
 {
 public:
-	TestRunner(SystemMethods* systemMethods);
+	TestRunner(Session* session);
 	~TestRunner();
 
 	//Runs tests to see if there are any broken code.
 	void RunTestCases(std::vector<CardNameInfo> result);
-
-private:
-
-	//An object holding OS-specific methods.
-	SystemMethods* systemMethods;
 };
 

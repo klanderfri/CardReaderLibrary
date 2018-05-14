@@ -4,8 +4,8 @@
 using namespace cv;
 using namespace std;
 
-OcrImageNoiseCleaner::OcrImageNoiseCleaner(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
-	: BasicReaderData(imageFileName, originalImageData, systemMethods, runDebugging)
+OcrImageNoiseCleaner::OcrImageNoiseCleaner(Session* session, wstring imageFileName, Mat originalImageData)
+	: BasicReaderData(session, imageFileName, originalImageData)
 {
 }
 
@@ -63,14 +63,14 @@ bool OcrImageNoiseCleaner::isSmallEnoughToBeNoise(LetterArea figure) {
 
 	bool isOpen = !isContourConvex(figure.TightContour);
 	double area = contourArea(isOpen ? figure.OuterContour : figure.TightContour);
-	int maxNoiseArea = (int)(WORKING_CARD_HEIGHT / 8.5); //80
+	int maxNoiseArea = (int)(session->WORKING_CARD_HEIGHT / 8.5); //80
 
 	return (area <= maxNoiseArea);
 }
 
 bool OcrImageNoiseCleaner::isInCenter(LetterArea figure, Size imageArea) {
 
-	int borderMargin = (int)(WORKING_CARD_HEIGHT / 27.2); //25
+	int borderMargin = (int)(session->WORKING_CARD_HEIGHT / 27.2); //25
 	Rect rCenter(borderMargin, borderMargin, imageArea.width - 2 * borderMargin, imageArea.height - 2 * borderMargin);
 	RotatedRect rrCenter = ImageHelper::ToRotatedRectangle(rCenter);
 	bool placedInCenter = ImageHelper::DoesRectangleContainPoint(rrCenter, figure.Box.center);

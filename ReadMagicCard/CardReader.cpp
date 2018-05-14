@@ -13,8 +13,8 @@
 using namespace cv;
 using namespace std;
 
-CardReader::CardReader(wstring imageFileName, SystemMethods* systemMethods, bool runDebugging)
-	: BasicReaderData(imageFileName, Mat(), systemMethods, runDebugging),
+CardReader::CardReader(Session* session, wstring imageFileName)
+	: BasicReaderData(session, imageFileName, Mat()),
 	NORMAL_OCR_CONFIDENCE_THRESH(75),
 	HIGH_OCR_CONFIDENCE_THRESH(80)
 {
@@ -64,12 +64,12 @@ void CardReader::ReadCardName(Mat cardImage) {
 	}
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 
 		size_t size = finalResult.OcrTitleImages.size();
 		for (size_t i = 0; i < size; i++) {
 
-			SaveOcvImage::SaveImageData(systemMethods, finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
+			SaveOcvImage::SaveImageData(session, finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
 		}
 	}
 }
@@ -286,9 +286,9 @@ CardNameInfo CardReader::joinSplitCardTitles(const CardNameInfo resultA, const C
 
 void CardReader::storeOcrConfidence(const CardNameInfo result, const int numberOfTries) {
 
-	if (runDebugging) {
+	if (session->runDebugging) {
 
-		StoreCardProcessingData storer = StoreCardProcessingData(systemMethods);
+		StoreCardProcessingData storer = StoreCardProcessingData(session);
 		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.CardName, result.Confidence);
 	}
 }
@@ -305,7 +305,7 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat cardImage, const CardTitleT
 	if (titleType != AkhSplitCardTitle) {
 
 		//The extra border limit is because the card border is bigger in relation to the split card half.
-		int extraBorderLimit = (int)(WORKING_CARD_HEIGHT / 9.7); //70
+		int extraBorderLimit = (int)(session->WORKING_CARD_HEIGHT / 9.7); //70
 		Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
 		ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
 	}
@@ -320,8 +320,8 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat cardImage, const CardTitleT
 CardNameInfo CardReader::ocrReadTitle(const vector<Mat> ocrTitles) {
 
 	OcrDecodeResult bestResult;
-	ImageOcrHelper ocrReader(systemMethods);
-	TitleLetterFixer titleFixer(systemMethods);
+	ImageOcrHelper ocrReader(session);
+	TitleLetterFixer titleFixer(session);
 	
 	for (Mat ocrTitle : ocrTitles) {
 
@@ -348,7 +348,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	cropImageToTitleSection(cardImage, titleSection, titleType);
 
 	//Prepare the title for OCR reading.
-	TitleExtractor titleExtractor(imageFileName, titleSection, systemMethods, runDebugging);
+	TitleExtractor titleExtractor(session, imageFileName, titleSection);
 	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold, numberOfTitleImageExtractions, titleType);
 
 	//See if we need to stop.
@@ -365,8 +365,8 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 		ImageHelper::SetBackgroundByInverting(outImages[i], true);
 
 		//Store result for debugging.
-		if (runDebugging) {
-			SaveOcvImage::SaveImageData(systemMethods, outImages[i], imageFileName, L"12 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
+		if (session->runDebugging) {
+			SaveOcvImage::SaveImageData(session, outImages[i], imageFileName, L"12 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
 		}
 	}
 
@@ -391,7 +391,7 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 	ImageHelper::CropImage(cardImage, outImage, titleBox);
 
 	//Store result for debugging.
-	if (runDebugging) {
-		SaveOcvImage::SaveImageData(systemMethods, outImage, imageFileName, L"6 - Title Section", ++numberOfTitleImagesStoredForDebug);
+	if (session->runDebugging) {
+		SaveOcvImage::SaveImageData(session, outImage, imageFileName, L"6 - Title Section", ++numberOfTitleImagesStoredForDebug);
 	}
 }

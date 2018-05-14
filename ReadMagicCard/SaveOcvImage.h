@@ -9,5 +9,5 @@ public:
 	~SaveOcvImage();
 
 	//Saves the image data to the specified image file.
-	static void SaveImageData(SystemMethods* systemMethods, cv::Mat imageToSave, std::wstring fileNameOfSavedFile, std::wstring subFolder = L"", int currentFileNumber = 0, int amountOfFiles = 0);
+	static void SaveImageData(Session* session, cv::Mat imageToSave, std::wstring fileNameOfSavedFile, std::wstring subFolder = L"", int currentFileNumber = 0, int amountOfFiles = 0);
 };

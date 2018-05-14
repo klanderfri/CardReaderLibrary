@@ -1,9 +1,11 @@
 #pragma once
+#include "SessionBound.h"
 #include "CardNameInfo.h"
-class AlgorithmTestRunner
+class AlgorithmTestRunner :
+	public SessionBound
 {
 public:
-	AlgorithmTestRunner(SystemMethods* systemMethods);
+	AlgorithmTestRunner(Session* session);
 	~AlgorithmTestRunner();
 
 	//Runs tests to see if there are any broken code.
@@ -19,8 +21,5 @@ private:
 	std::wstring getExpectedSortResult();
 	//Tests the method calculating the angle between two lines.
 	bool testLineAngleCalculation();
-
-	//An object holding OS-specific methods.
-	SystemMethods* systemMethods;
 };
 

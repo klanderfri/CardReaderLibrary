@@ -5,10 +5,9 @@ using namespace std;
 using namespace cv;
 using namespace tesseract;
 
-ImageOcrHelper::ImageOcrHelper(SystemMethods* systemMethods)
+ImageOcrHelper::ImageOcrHelper(Session* session) :
+	SessionBound(session)
 {
-	this->systemMethods = systemMethods;
-
 	//Setup the OCR API.
 	pathToTrainedData = getTrainedDataPath();
 	setupTessBaseAPI(pathToTrainedData);
@@ -25,7 +24,7 @@ OcrDecodeResult ImageOcrHelper::DecodeImage(Mat originalImageData) {
 
 	//Read the image.
 	OcrDecodeResult result;
-	result.Text = getUTF8Text(systemMethods);
+	result.Text = getUTF8Text();
 	result.Confidence = ocr.MeanTextConf();
 	result.Image = originalImageData;
 
@@ -34,7 +33,10 @@ OcrDecodeResult ImageOcrHelper::DecodeImage(Mat originalImageData) {
 
 string ImageOcrHelper::getTrainedDataPath() {
 
-	return systemMethods->ToString(systemMethods->GetPathToExeParentDirectory()) + "tessdata";
+	wstring exePath = session->systemMethods->GetPathToExeParentDirectory();
+	string tesseractDataPath = session->systemMethods->ToString(exePath) + "tessdata";
+	
+	return tesseractDataPath;
 }
 
 void ImageOcrHelper::setupTessBaseAPI(string trainedDataPath) {
@@ -48,10 +50,10 @@ void ImageOcrHelper::setImage(Mat originalImageData) {
 	ocr.SetImage((uchar*)originalImageData.data, originalImageData.cols, originalImageData.rows, originalImageData.channels(), originalImageData.step1());
 }
 
-wstring ImageOcrHelper::getUTF8Text(SystemMethods* systemMethods) {
+wstring ImageOcrHelper::getUTF8Text() {
 
 	char* rawOutText = ocr.GetUTF8Text();
-	wstring outText = systemMethods->UTF8ToWstring(rawOutText);
+	wstring outText = session->systemMethods->UTF8ToWstring(rawOutText);
 	outText = removeTrailingNewline(outText);
 
 	delete[] rawOutText; //As instructed by documentation in the GetUTF8Text method.

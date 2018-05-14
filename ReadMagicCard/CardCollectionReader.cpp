@@ -7,10 +7,9 @@
 using namespace std;
 using namespace cv;
 
-CardCollectionReader::CardCollectionReader(SystemMethods* systemMethods, const bool runSilent, bool runParallelized, bool runDebugging)
-	: runSilent(runSilent), runParallelized(runParallelized), runDebugging(runDebugging)
+CardCollectionReader::CardCollectionReader(Session* session)
+	: SessionBound(session)
 {
-	this->systemMethods = systemMethods;
 	currentAmountOfReaders = 0;
 	readers = vector<CardReader>();
 	longestFilename = L"";
@@ -24,7 +23,7 @@ void CardCollectionReader::AddCard(wstring imageFileName) {
 
 	if (currentAmountOfReaders < MaxSize()) {
 
-		readers.push_back(CardReader(imageFileName, systemMethods, runDebugging));
+		readers.push_back(CardReader(session, imageFileName));
 		currentAmountOfReaders++;
 
 		//Check if the new card has the longest filename.
@@ -66,11 +65,11 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 	amountOfErrors = 0;
 	int lengthOfLongestFilename = LengthOfLongestFilename();
 
-	if (!runSilent) {
+	if (!session->runSilent) {
 		wcout << L"Reading cards . . ." << endl;
 	}
 
-	if (runParallelized) {
+	if (session->runParallelized) {
 		parallel_for_(range, [&](const Range& internalRange) {
 			cardNameExtraction(internalRange, result, range.end, lengthOfLongestFilename);
 		});
@@ -79,7 +78,7 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 		cardNameExtraction(range, result, range.end, lengthOfLongestFilename);
 	}
 
-	if (!runSilent) {
+	if (!session->runSilent) {
 		wcout << endl;
 	}
 
@@ -98,7 +97,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		try {
 
 			//Extract the card from the image.
-			cardImage = CardExtractor::ExtractCard(systemMethods, imageFileName, runDebugging);
+			cardImage = CardExtractor::ExtractCard(session, imageFileName);
 			gotCardImage = true;
 			
 			//Extract the card name.
@@ -107,7 +106,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		}
 		catch (exception& ex) {
 
-			info.CardName = systemMethods->ToWString((string)ex.what());
+			info.CardName = session->systemMethods->ToWString((string)ex.what());
 			info.FileName = readers[i].GetImageFileName();
 			info.ExtractedCardImage = cardImage;
 		}
@@ -115,7 +114,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		assert(!gotCardImage || !info.ExtractedCardImage.empty());
 
 		//Print that we have read the image.
-		if (!runSilent) {
+		if (!session->runSilent) {
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 

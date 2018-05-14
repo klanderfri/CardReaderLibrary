@@ -1,9 +1,11 @@
 #pragma once
+#include "SessionBound.h"
 #include "CardNameInfo.h"
-class CardTestRunner
+class CardTestRunner :
+	public SessionBound
 {
 public:
-	CardTestRunner(SystemMethods* systemMethods);
+	CardTestRunner(Session* session);
 	~CardTestRunner();
 
 	//Runs tests to see if there are any broken code.
@@ -27,8 +29,5 @@ private:
 	bool runConfidenceTest(std::vector<CardNameInfo> actualResults, double expectedAverageConfidence, double& actualAverageConfidence, int expectedLowestConfidence, int& actualLowestConfidence);
 	//Checks if two result pairs corresponds, i.e if the actual result corresponds with the expected result.
 	static bool resultsCorresponds(CardNameInfo expectedResult, CardNameInfo actualResult);
-
-	//An object holding OS-specific methods.
-	SystemMethods* systemMethods;
 };
 

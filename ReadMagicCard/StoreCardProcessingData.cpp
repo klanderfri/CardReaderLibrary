@@ -5,19 +5,14 @@
 using namespace std;
 
 const wstring StoreCardProcessingData::SubfolderName = L"Image Data";
-bool StoreCardProcessingData::hasSetSystemMethods = false;
-SystemMethods* StoreCardProcessingData::systemMethods;
 mutex StoreCardProcessingData::fl_OcrConfidence;
 mutex StoreCardProcessingData::fl_SideRelations;
 bool StoreCardProcessingData::hwfh_OcrConfidence = false;
 bool StoreCardProcessingData::hwfh_SideRelations = false;
 
-StoreCardProcessingData::StoreCardProcessingData(SystemMethods* systemMethods)
+StoreCardProcessingData::StoreCardProcessingData(Session* session) :
+	SessionBound(session)
 {
-	if (!hasSetSystemMethods) {
-		this->systemMethods = systemMethods;
-		this->hasSetSystemMethods = true;
-	}
 }
 
 StoreCardProcessingData::~StoreCardProcessingData()
@@ -39,13 +34,13 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 
 		//Store the extracted card so the user can use it (for example, to showing before selling it).
 		if (!info.ExtractedCardImage.empty()) {
-			SaveOcvImage::SaveImageData(systemMethods, info.ExtractedCardImage, info.FileName, SubfolderName + L"\\Extracted Cards");
+			SaveOcvImage::SaveImageData(session, info.ExtractedCardImage, info.FileName, SubfolderName + L"\\Extracted Cards");
 		}
 	}
 	textToAdd = textToAdd.substr(0, textToAdd.size() - 1);
-	FileHandling::AddRowToFile(systemMethods, textToAdd, L"CardTitles.txt", SubfolderName);
+	FileHandling::AddRowToFile(session, textToAdd, L"CardTitles.txt", SubfolderName);
 
-	wstring resultFolder = FileHandling::GetSubFolderPath(systemMethods, SubfolderName);
+	wstring resultFolder = FileHandling::GetSubFolderPath(session, SubfolderName);
 	return resultFolder;
 }
 
@@ -60,7 +55,7 @@ wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int n
 wstring StoreCardProcessingData::StoreSideRelations(wstring imageFileName, float sideFactor) {
 
 	vector<wstring> headers{ L"Image file name", L"Long side to short side" };
-	vector<wstring> rowData{ imageFileName, systemMethods->ToWString(sideFactor) };
+	vector<wstring> rowData{ imageFileName, session->systemMethods->ToWString(sideFactor) };
 
 	return writeToFile(L"CardSidesRelations.txt", fl_SideRelations, hwfh_SideRelations, headers, rowData);
 }
@@ -76,7 +71,7 @@ wstring StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLo
 			rowToAdd += L"\t" + headers[i];
 		}
 
-		FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName);
+		FileHandling::AddRowToFile(session, rowToAdd, textfileName, SubfolderName);
 
 		hasWrittenFileHeader = true;
 	}
@@ -87,5 +82,5 @@ wstring StoreCardProcessingData::writeToFile(wstring textfileName, mutex& fileLo
 		rowToAdd += L"\t" + rowData[i];
 	}
 
-	return FileHandling::AddRowToFile(systemMethods, rowToAdd, textfileName, SubfolderName, fileLock);
+	return FileHandling::AddRowToFile(session, rowToAdd, textfileName, SubfolderName, fileLock);
 }

@@ -4,9 +4,9 @@
 
 using namespace std;
 
-TitleLetterFixer::TitleLetterFixer(SystemMethods* systemMethods)
+TitleLetterFixer::TitleLetterFixer(Session* session) :
+	SessionBound(session)
 {
-	this->systemMethods = systemMethods;
 }
 
 TitleLetterFixer::~TitleLetterFixer()
@@ -15,13 +15,13 @@ TitleLetterFixer::~TitleLetterFixer()
 
 wstring TitleLetterFixer::FixTitleLetters(const wstring title) {
 
-	string outText = systemMethods->ToString(title);
+	string outText = session->systemMethods->ToString(title);
 
 	outText = changeNumbersToLetters(outText);
 	outText = fixLtoIJ(outText);
 	outText = fixLigature(outText);
 
-	return systemMethods->ToWString(outText);
+	return session->systemMethods->ToWString(outText);
 }
 
 string TitleLetterFixer::changeNumbersToLetters(const string title) {

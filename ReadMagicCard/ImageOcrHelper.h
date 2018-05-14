@@ -1,12 +1,13 @@
 #pragma once
-#include "BasicReaderData.h"
+#include "SessionBound.h"
 #include "OcrDecodeResult.h"
 #include <tesseract\baseapi.h>
 //Class for decoding the characters in a card title image.
-class ImageOcrHelper
+class ImageOcrHelper :
+	public SessionBound
 {
 public:
-	ImageOcrHelper(SystemMethods* systemMethods);
+	ImageOcrHelper(Session* session);
 	~ImageOcrHelper();
 
 	//Decodes the image and turns it into a wstring. The result also contains the OCR API confidence.
@@ -21,7 +22,7 @@ private:
 	//Sets the current image to read.
 	void setImage(cv::Mat originalImageData);
 	//Gets the text in the image (formated as UTF8).
-	std::wstring getUTF8Text(SystemMethods* systemMethods);
+	std::wstring getUTF8Text();
 	//Removes the newlines from the end of the title.
 	std::wstring removeTrailingNewline(std::wstring title);
 
@@ -29,6 +30,4 @@ private:
 	tesseract::TessBaseAPI ocr;
 	//The path to the folder containing the trained language data files.
 	std::string pathToTrainedData;
-	//Pointer to object handling the system dependent methods.
-	SystemMethods* systemMethods;
 };

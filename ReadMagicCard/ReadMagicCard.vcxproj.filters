@@ -52,6 +52,9 @@
     <Filter Include="Deployment">
       <UniqueIdentifier>{b69851ff-db45-49c8-83b1-b3c3f2139085}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Session">
+      <UniqueIdentifier>{0de93391-ce28-47b7-8990-9c0fbbf85ddc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Contour.h">
@@ -97,9 +100,6 @@
       <Filter>Engine\Helpers</Filter>
     </ClInclude>
     <ClInclude Include="CardExtractor.h">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClInclude>
-    <ClInclude Include="SectionExtractor.h">
       <Filter>Engine\SectionExtractors</Filter>
     </ClInclude>
     <ClInclude Include="TitleExtractor.h">
@@ -171,6 +171,12 @@
     <ClInclude Include="OcrImageNoiseCleaner.h">
       <Filter>Engine\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="Session.h">
+      <Filter>Engine\Session</Filter>
+    </ClInclude>
+    <ClInclude Include="SessionBound.h">
+      <Filter>Engine\Session</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -204,9 +210,6 @@
       <Filter>Engine\Helpers</Filter>
     </ClCompile>
     <ClCompile Include="CardExtractor.cpp">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClCompile>
-    <ClCompile Include="SectionExtractor.cpp">
       <Filter>Engine\SectionExtractors</Filter>
     </ClCompile>
     <ClCompile Include="TitleExtractor.cpp">
@@ -271,6 +274,12 @@
     </ClCompile>
     <ClCompile Include="OcrImageNoiseCleaner.cpp">
       <Filter>Engine\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="Session.cpp">
+      <Filter>Engine\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="SessionBound.cpp">
+      <Filter>Engine\Session</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

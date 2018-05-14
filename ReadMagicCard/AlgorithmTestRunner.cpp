@@ -4,9 +4,9 @@
 
 using namespace std;
 
-AlgorithmTestRunner::AlgorithmTestRunner(SystemMethods* systemMethods)
+AlgorithmTestRunner::AlgorithmTestRunner(Session* session) :
+	SessionBound(session)
 {
-	this->systemMethods = systemMethods;
 }
 
 AlgorithmTestRunner::~AlgorithmTestRunner()
@@ -22,7 +22,7 @@ bool AlgorithmTestRunner::RunTestCases() {
 	//Check the test results.
 	if (!sortTestsSucceded || !lineAngleSucceded) {
 
-		systemMethods->SetCommandLineTextColour(Colour::Red);
+		session->systemMethods->SetCommandLineTextColour(Colour::Red);
 
 		//Inform about trouble in the sorting.
 		if (!sortTestsSucceded) {
@@ -35,7 +35,7 @@ bool AlgorithmTestRunner::RunTestCases() {
 		}
 
 		wcout << endl;
-		systemMethods->ResetCommandLineTextColour();
+		session->systemMethods->ResetCommandLineTextColour();
 
 		return false;
 	}

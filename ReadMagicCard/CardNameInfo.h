@@ -1,5 +1,4 @@
 #pragma once
-#include "SystemMethods.h"
 #include "CardTitleType.h"
 //Class holding information about a card.
 class CardNameInfo

@@ -1,9 +1,10 @@
 #pragma once
-#include "SystemMethods.h"
-class TitleLetterFixer
+#include "SessionBound.h"
+class TitleLetterFixer :
+	public SessionBound
 {
 public:
-	TitleLetterFixer(SystemMethods* systemMethods);
+	TitleLetterFixer(Session* session);
 	~TitleLetterFixer();
 
 	//Fixes incorrectly decoded characters in a title.
@@ -21,8 +22,5 @@ private:
 	std::string fixLigature(const std::string title);
 	//Checks if a letter is the first letter in a word.
 	bool isFirstWordLetter(size_t indexOfLetter, std::string text);
-
-	//Pointer to object handling the system dependent methods.
-	SystemMethods* systemMethods;
 };
 

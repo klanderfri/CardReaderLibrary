@@ -1,10 +1,11 @@
 #pragma once
+#include "SessionBound.h"
 #include "TimePoint.h"
-#include "SystemMethods.h"
-class ApplicationMessages
+class ApplicationMessages : 
+	public SessionBound
 {
 public:
-	ApplicationMessages(SystemMethods * systemMethods, const bool runSilent);
+	ApplicationMessages(Session* session);
 	~ApplicationMessages();
 
 	//Prints a welcome message for the user.
@@ -23,12 +24,5 @@ public:
 	void printToManyFilesMessage();
 	//Prints a message telling the user the length of the execution time.
 	void printExecutionTimeMessage(TimePoint startTime, TimePoint endTime, int numberOfFilesExecuted, bool showTimeInSeconds);
-
-private:
-
-	//Pointer to object handling the system dependent methods.
-	SystemMethods * systemMethods;
-	//Telling if the program should run without any prints to the command line.
-	const bool runSilent;
 };
 

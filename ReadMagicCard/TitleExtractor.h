@@ -1,14 +1,14 @@
 #pragma once
-#include "SectionExtractor.h"
+#include "BasicReaderData.h"
 #include "LetterArea.h"
 #include "TrendLine.h"
 #include "CardTitleType.h"
 //Class for extracting the title section from a card.
 class TitleExtractor :
-	public SectionExtractor
+	public BasicReaderData
 {
 public:
-	TitleExtractor(std::wstring imageFileName, cv::Mat originalImageData, SystemMethods* systemMethods, bool runDebugging);
+	TitleExtractor(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
 	~TitleExtractor();
 
 	//Extracts an image containing the card title.

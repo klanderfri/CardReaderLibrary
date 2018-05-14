@@ -8,8 +8,8 @@
 using namespace cv;
 using namespace std;
 
-LetterFilter::LetterFilter(wstring imageFileName, Mat originalImageData, SystemMethods* systemMethods, bool runDebugging)
-	: BasicReaderData(imageFileName, originalImageData, systemMethods, runDebugging)
+LetterFilter::LetterFilter(Session* session, wstring imageFileName, Mat originalImageData)
+	: BasicReaderData(session, imageFileName, originalImageData)
 {
 }
 
@@ -54,7 +54,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	findCenterLine(letters);
 
 	//Store result for debugging.
-	if (runDebugging) {
+	if (session->runDebugging) {
 
 		bool hasLetters = !letters.empty();
 		float leftLimit = hasLetters ? letters[0].Box.center.x : 0;
@@ -69,7 +69,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		trendImage = ImageHelper::DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = ImageHelper::DrawLine(trendImage, bLine[0], bLine[1]);
 
-		SaveOcvImage::SaveImageData(systemMethods, trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
+		SaveOcvImage::SaveImageData(session, trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
 	}
 
 	return letters;
@@ -77,7 +77,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 TrendLine LetterFilter::findCenterLine(LetterAreas letters) {
 
-	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
+	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	vector<long double> xCoordinates, yCoordinates;
 
 	for (LetterArea letter : letters) {
@@ -107,7 +107,7 @@ TrendLine LetterFilter::findCenterLine(LetterAreas letters) {
 
 TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 
-	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
+	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	vector<Point2d> bottomPoints;
 	LetterAreas baseLineLetters;
 
@@ -120,7 +120,7 @@ TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 	}
 
 	TrendLine baseLine(bottomPoints);
-	double allowedPerpendicularDistance = (double)(WORKING_CARD_HEIGHT / 85.0); //8
+	double allowedPerpendicularDistance = (double)(session->WORKING_CARD_HEIGHT / 85.0); //8
 	bottomPoints.clear();
 
 	for (LetterArea letter : baseLineLetters) {
@@ -180,7 +180,7 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 
 LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
 
-	LetterCheckHelper letterCheck(WORKING_CARD_HEIGHT, textCenterLine);
+	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	LetterAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++)
@@ -254,7 +254,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 			}
 		}
 		float verticalSpread = bottomestY - toppestY;
-		float allowedSpread = (float)(WORKING_CARD_HEIGHT / 10.46); //65
+		float allowedSpread = (float)(session->WORKING_CARD_HEIGHT / 10.46); //65
 		if (verticalSpread > allowedSpread) {
 			continue;
 		}
@@ -330,7 +330,7 @@ LetterAreas LetterFilter::filterOutTransformSymbol(LetterAreas lettersToFilter) 
 		biggestCenterDistance = max(biggestCenterDistance, distance);
 	}
 
-	int allowedDistance = (int)(WORKING_CARD_HEIGHT / 136); //5
+	int allowedDistance = (int)(session->WORKING_CARD_HEIGHT / 136); //5
 
 	if (biggestCenterDistance < allowedDistance && hasOneRotated) {
 
@@ -376,7 +376,7 @@ bool LetterFilter::hasWideLimitDistance(RotatedRect leftLetterArea, RotatedRect 
 	//The first letter probably isn't a mana symbol.
 	if (!ImageHelper::IsInitialized(leftLetterArea)) { return false; }
 
-	float wideDistance = (float)(WORKING_CARD_HEIGHT / 13.062478); //52.0575-ish
+	float wideDistance = (float)(session->WORKING_CARD_HEIGHT / 13.062478); //52.0575-ish
 
 	//The distance between the centers.
 	float centerDistance = rightLetterArea.center.x - leftLetterArea.center.x;

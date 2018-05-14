@@ -192,7 +192,8 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="OcrImageNoiseCleaner.h" />
     <ClInclude Include="ReadingConfiguration.h" />
     <ClInclude Include="SaveOcvImage.h" />
-    <ClInclude Include="SectionExtractor.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="SessionBound.h" />
     <ClInclude Include="StoreCardProcessingData.h" />
     <ClInclude Include="SystemMethods.h" />
     <ClInclude Include="TimePoint.h" />
@@ -228,7 +229,8 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="OcrImageNoiseCleaner.cpp" />
     <ClCompile Include="ReadingConfiguration.cpp" />
     <ClCompile Include="SaveOcvImage.cpp" />
-    <ClCompile Include="SectionExtractor.cpp" />
+    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="SessionBound.cpp" />
     <ClCompile Include="StoreCardProcessingData.cpp" />
     <ClCompile Include="SystemMethods.cpp" />
     <ClCompile Include="TimePoint.cpp" />

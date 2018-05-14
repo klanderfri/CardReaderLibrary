@@ -8,7 +8,7 @@ class CardReader :
 	BasicReaderData
 {
 public:
-	CardReader(std::wstring imageFileName, SystemMethods* systemMethods, bool runDebugging);
+	CardReader(Session* session, std::wstring imageFileName);
 	~CardReader();
 
 	//Get the name of the file containing the image.
