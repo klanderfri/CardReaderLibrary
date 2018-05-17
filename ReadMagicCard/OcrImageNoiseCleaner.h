@@ -4,7 +4,7 @@ class OcrImageNoiseCleaner :
 	public BasicReaderData
 {
 public:
-	OcrImageNoiseCleaner(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
+	OcrImageNoiseCleaner(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);
 	~OcrImageNoiseCleaner();
 
 	////Cleans the text images from noise and clutter.

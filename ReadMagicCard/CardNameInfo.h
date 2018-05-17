@@ -20,6 +20,8 @@ public:
 
 	//The name of the file containing the card.
 	std::wstring FileName = L"";
+	//The full file path of the file containing the card.
+	std::wstring FilePath = L"";
 	//The extracted card name.
 	std::wstring CardName = L"";
 	//Tells how confident the OCR algorithm was of decoding the title.

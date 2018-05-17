@@ -19,14 +19,15 @@ CardCollectionReader::~CardCollectionReader()
 {
 }
 
-void CardCollectionReader::AddCard(wstring imageFileName) {
+void CardCollectionReader::AddCard(wstring imageFilePath) {
 
 	if (currentAmountOfReaders < MaxSize()) {
 
-		readers.push_back(CardReader(session, imageFileName));
+		readers.push_back(CardReader(session, imageFilePath));
 		currentAmountOfReaders++;
 
 		//Check if the new card has the longest filename.
+		wstring imageFileName = session->systemMethods->GetFileNameFromFilePath(imageFilePath);
 		if (longestFilename.length() < imageFileName.length()) {
 			longestFilename = imageFileName;
 		}
@@ -91,13 +92,13 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 
 		CardNameInfo info;
 		Mat cardImage;
-		wstring imageFileName = readers[i].GetImageFileName();
+		wstring imageFilePath = readers[i].GetimageFilePath();
 		bool gotCardImage = false;
 
 		try {
 
 			//Extract the card from the image.
-			cardImage = CardExtractor::ExtractCard(session, imageFileName);
+			cardImage = CardExtractor::ExtractCard(session, imageFilePath);
 			gotCardImage = true;
 			
 			//Extract the card name.
@@ -107,7 +108,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		catch (exception& ex) {
 
 			info.CardName = session->systemMethods->ToWString((string)ex.what());
-			info.FileName = readers[i].GetImageFileName();
+			info.FileName = readers[i].GetimageFilePath();
 			info.ExtractedCardImage = cardImage;
 		}
 

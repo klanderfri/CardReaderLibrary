@@ -16,14 +16,14 @@ private:
 
 	//Removes lingering old data from previous runs.
 	void removeOldData();
-	//Fetches the file names of the MtG image files.
-	std::vector<std::wstring> getMtgImageFileNames();
-	//Creates an collection holding a reader for evere card image.
-	CardCollectionReader* createCardReaderCollection(const std::vector<std::wstring> filenamesOfImages);
+	//Fetches the file paths of the MtG image files.
+	std::vector<std::wstring> getMtgImageFilePaths();
+	//Creates an collection holding a reader for every card image.
+	CardCollectionReader* createCardReaderCollection(const std::vector<std::wstring> filepathsOfImages);
 	//Resizes the command window to occupy as little space as possible without creating line breakes in its' output texts. 
 	void reziseCommandWindow(size_t numberOfFiles, int lengthOfLongestFilename);
 	//Reads the title of the card in the provided image files.
-	std::vector<CardNameInfo> readAllCards(const std::vector<std::wstring> filenamesOfImages);
+	std::vector<CardNameInfo> readAllCards(const std::vector<std::wstring> filepathsOfImages);
 
 	//The current session.
 	Session* session;

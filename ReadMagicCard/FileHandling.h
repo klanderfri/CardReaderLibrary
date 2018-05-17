@@ -10,8 +10,8 @@ public:
 
 	//Gets the path to the folder containing the images of the MtG-cards that are to be read.
 	static std::wstring GetMtgImageFileFolderPath(Session* session);
-	//Gets the names of the image files with the MtG-cards that are to be read.
-	static std::vector<std::wstring> GetMtgImageFileNames(std::wstring fullFolderPath);
+	//Gets the paths of the image files with the MtG-cards that are to be read.
+	static std::vector<std::wstring> GetMtgImageFilePaths(Session* session, std::wstring fullFolderPath);
 	//Adds a row to the specified file.
 	static std::wstring AddRowToFile(Session* session, std::wstring textToWrite, std::wstring fileName, std::wstring subFolder);
 	//Adds a row to the specified file.

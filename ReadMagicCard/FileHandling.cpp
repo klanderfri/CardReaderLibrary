@@ -26,28 +26,27 @@ wstring FileHandling::GetMtgImageFileFolderPath(Session* session) {
 	return session->systemMethods->GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
 }
 
-vector<wstring> FileHandling::GetMtgImageFileNames(wstring fullFolderPath) {
+vector<wstring> FileHandling::GetMtgImageFilePaths(Session* session, wstring fullFolderPath) {
 
 	//Create a list holding the filenames.
-	vector<wstring> filenames;
+	vector<wstring> filepaths;
 
 	//Run the reader for every card in the working folder.
 	for (auto & p : fs::directory_iterator(fullFolderPath)) {
 
 		//Fetch the file name.
 		wstring filePath = p.path().wstring();
-		wstring fileName = fs::path(filePath).filename().wstring();
 
 		//Skip all folders.
 		if (boost::filesystem::is_directory(filePath)) {
 			continue;
 		}
 
-		//Add the filename to the vector.
-		filenames.push_back(fileName);
+		//Add the file path to the vector.
+		filepaths.push_back(filePath);
 	}
 
-	return filenames;
+	return filepaths;
 }
 
 wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstring fileName, wstring subFolder) {

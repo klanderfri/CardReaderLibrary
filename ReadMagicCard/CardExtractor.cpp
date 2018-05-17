@@ -8,8 +8,8 @@
 using namespace cv;
 using namespace std;
 
-CardExtractor::CardExtractor(Session* session, wstring imageFileName, Mat originalImageData) :
-	BasicReaderData(session, imageFileName, originalImageData),
+CardExtractor::CardExtractor(Session* session, wstring imageFilePath, Mat originalImageData) :
+	BasicReaderData(session, imageFilePath, originalImageData),
 	WORKING_IMAGE_HEIGHT((int)(session->WORKING_CARD_HEIGHT * 1.4))
 {
 }
@@ -18,14 +18,14 @@ CardExtractor::~CardExtractor()
 {
 }
 
-Mat CardExtractor::ExtractCard(Session* session, wstring imageFileName) {
+Mat CardExtractor::ExtractCard(Session* session, wstring imageFilePath) {
 
 	//Load the image.
-	Mat originalCardImage = LoadOcvImage::LoadImageData(session, imageFileName);
+	Mat originalCardImage = LoadOcvImage::LoadImageData(session, imageFilePath);
 
 	//Extract the card part.
 	Mat cardImage;
-	CardExtractor cardExtractor(session, imageFileName, originalCardImage);
+	CardExtractor cardExtractor(session, imageFilePath, originalCardImage);
 	bool success = cardExtractor.ExtractCard(cardImage);
 
 	//See if we need to stop.
@@ -70,7 +70,7 @@ RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size 
 
 	if (session->runDebugging) {
 		StoreCardProcessingData storer = StoreCardProcessingData(session);
-		storer.StoreSideRelations(imageFileName, sideFactor);
+		storer.StoreSideRelations(imageFilePath, sideFactor);
 	}
 
 	//The sides relative size indicate if we got the card or just parts of it.

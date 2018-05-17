@@ -13,13 +13,13 @@
 using namespace cv;
 using namespace std;
 
-CardReader::CardReader(Session* session, wstring imageFileName)
-	: BasicReaderData(session, imageFileName, Mat()),
+CardReader::CardReader(Session* session, wstring imageFilePath)
+	: BasicReaderData(session, imageFilePath, Mat()),
 	NORMAL_OCR_CONFIDENCE_THRESH(75),
 	HIGH_OCR_CONFIDENCE_THRESH(80)
 {
-	if (imageFileName.empty()) {
-		throw ParameterException("The provided image file name was empty!", "imageFileName");
+	if (imageFilePath.empty()) {
+		throw ParameterException("The provided image file name was empty!", "imageFilePath");
 	}
 }
 
@@ -27,9 +27,9 @@ CardReader::~CardReader()
 {
 }
 
-wstring CardReader::GetImageFileName() {
+wstring CardReader::GetimageFilePath() {
 
-	return imageFileName;
+	return imageFilePath;
 }
 
 CardNameInfo CardReader::GetResult() {
@@ -50,7 +50,8 @@ void CardReader::ReadCardName(Mat cardImage) {
 	finalResult = readTitleOfCardWithUnknownOrientation(cardImage, configs, NormalTitle);
 
 	//Add additional data to the result container.
-	finalResult.FileName = imageFileName;
+	finalResult.FilePath = imageFilePath;
+	finalResult.FileName = session->systemMethods->GetFileNameFromFilePath(finalResult.FilePath);
 	finalResult.CardType = getTitleType(finalResult);
 	if (rotateFinalCardImage180Degrees) {
 		rotate(cardImage, cardImage, ROTATE_180);
@@ -289,7 +290,7 @@ void CardReader::storeOcrConfidence(const CardNameInfo result, const int numberO
 	if (session->runDebugging) {
 
 		StoreCardProcessingData storer = StoreCardProcessingData(session);
-		storer.StoreOcrConfidence(imageFileName, numberOfTries, result.CardName, result.Confidence);
+		storer.StoreOcrConfidence(imageFilePath, numberOfTries, result.CardName, result.Confidence);
 	}
 }
 
@@ -348,7 +349,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	cropImageToTitleSection(cardImage, titleSection, titleType);
 
 	//Prepare the title for OCR reading.
-	TitleExtractor titleExtractor(session, imageFileName, titleSection);
+	TitleExtractor titleExtractor(session, imageFilePath, titleSection);
 	bool success = titleExtractor.ExtractTitle(outImages, binaryThreshold, numberOfTitleImageExtractions, titleType);
 
 	//See if we need to stop.

@@ -17,6 +17,8 @@ public:
 	static std::wstring UTF8ToWstring(const char *utf8ToConvert);
 	//Converts a string to a bool.
 	static bool ToBool(const std::string& stringToConvert);
+	//Extracts the filename from a file path.
+	static std::wstring GetFileNameFromFilePath(const std::wstring filePath);
 	//Gets the user name of the current user.
 	virtual std::wstring GetCurrentUserName() = 0;
 	//Gets the picture folder of the current user.

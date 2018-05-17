@@ -12,7 +12,7 @@ public:
 	~CardCollectionReader();
 
 	//Adds a card to the collection.
-	void AddCard(std::wstring imageFileName);
+	void AddCard(std::wstring imageFilePath);
 	//Extracts the card names.
 	std::vector<CardNameInfo> ExtractCardNames();
 	//Gets the maximal amount of cards the reader can hold.

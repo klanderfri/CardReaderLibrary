@@ -8,11 +8,11 @@ class CardReader :
 	BasicReaderData
 {
 public:
-	CardReader(Session* session, std::wstring imageFileName);
+	CardReader(Session* session, std::wstring imageFilePath);
 	~CardReader();
 
 	//Get the name of the file containing the image.
-	std::wstring GetImageFileName();
+	std::wstring GetimageFilePath();
 	//Extracts the card name from the image.
 	void ReadCardName(cv::Mat cardImage);
 	//Get the result of the card reading.

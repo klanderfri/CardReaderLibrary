@@ -33,12 +33,12 @@ int CardReaderApplication::Run() {
 	//Remove old data.
 	removeOldData();
 
-	//Fetch all the file names of the card images.
-	vector<wstring> filenamesOfImages = getMtgImageFileNames();
+	//Fetch all the file paths of the card images.
+	vector<wstring> filepathsOfImages = getMtgImageFilePaths();
 
 	//Check if there are to many files to handle.
 	vector<CardNameInfo> result;
-	size_t numberOfFiles = filenamesOfImages.size();
+	size_t numberOfFiles = filepathsOfImages.size();
 	if (numberOfFiles == 0) {
 		//Tell the user that no files was found.
 		messages->printNoImagesMessage();
@@ -46,7 +46,7 @@ int CardReaderApplication::Run() {
 	else if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
 
 		//Read the cards.
-		result = readAllCards(filenamesOfImages);
+		result = readAllCards(filepathsOfImages);
 	}
 	else {
 
@@ -79,24 +79,32 @@ void CardReaderApplication::removeOldData() {
 	boost::filesystem::remove_all(folderPath);
 }
 
-vector<wstring> CardReaderApplication::getMtgImageFileNames() {
+vector<wstring> CardReaderApplication::getMtgImageFilePaths() {
 
-	wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(session);
-	messages->printWorkingFolderMessage(mtgFolderPath);
-	vector<wstring> filenamesOfImages = FileHandling::GetMtgImageFileNames(mtgFolderPath);
+	vector<wstring> filepaths;
 
-	return filenamesOfImages;
+	if (session->filePathToImageToDecode.empty())
+	{
+		wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(session);
+		messages->printWorkingFolderMessage(mtgFolderPath);
+		filepaths = FileHandling::GetMtgImageFilePaths(session, mtgFolderPath);
+	}
+	else {
+
+		filepaths.push_back(session->filePathToImageToDecode);
+	}
+
+	return filepaths;
 }
 
-CardCollectionReader* CardReaderApplication::createCardReaderCollection(const vector<wstring> filenamesOfImages) {
+CardCollectionReader* CardReaderApplication::createCardReaderCollection(const vector<wstring> filepathsOfImages) {
 
 	CardCollectionReader* readers = new CardCollectionReader(session);
 
 	//Add the cards to the reader collection
-	for (size_t i = 0; i < filenamesOfImages.size(); i++) {
+	for (size_t i = 0; i < filepathsOfImages.size(); i++) {
 
-		wstring filename = filenamesOfImages[i];
-		readers->AddCard(filename);
+		readers->AddCard(filepathsOfImages[i]);
 	}
 
 	return readers;
@@ -108,13 +116,13 @@ void CardReaderApplication::reziseCommandWindow(size_t numberOfFiles, int length
 	session->systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
 }
 
-vector<CardNameInfo> CardReaderApplication::readAllCards(const vector<wstring> filenamesOfImages) {
+vector<CardNameInfo> CardReaderApplication::readAllCards(const vector<wstring> filepathsOfImages) {
 
 	//Create a reader for every card.
-	CardCollectionReader* readers = createCardReaderCollection(filenamesOfImages);
+	CardCollectionReader* readers = createCardReaderCollection(filepathsOfImages);
 
 	//Resize console window to avoid line breaks.
-	reziseCommandWindow(filenamesOfImages.size(), readers->LengthOfLongestFilename());
+	reziseCommandWindow(filepathsOfImages.size(), readers->LengthOfLongestFilename());
 
 	//Fetch the card names.
 	vector<CardNameInfo> result = readers->ExtractCardNames();

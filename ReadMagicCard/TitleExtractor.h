@@ -8,7 +8,7 @@ class TitleExtractor :
 	public BasicReaderData
 {
 public:
-	TitleExtractor(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
+	TitleExtractor(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);
 	~TitleExtractor();
 
 	//Extracts an image containing the card title.

@@ -5,11 +5,11 @@ class CardExtractor :
 	public BasicReaderData
 {
 public:
-	CardExtractor(Session* session, std::wstring imageFileName, cv::Mat originalImageData);
+	CardExtractor(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);
 	~CardExtractor();
 
 	//Extracts the part of the image containing the card.
-	static cv::Mat ExtractCard(Session* session, std::wstring imageFileName);
+	static cv::Mat ExtractCard(Session* session, std::wstring imageFilePath);
 	//Extracts the part of the image containing the card.
 	bool ExtractCard(cv::Mat& outImage);
 

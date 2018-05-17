@@ -17,14 +17,13 @@ LoadOcvImage::~LoadOcvImage()
 Mat LoadOcvImage::LoadImageData(Session* session, wstring imageFilePath) {
 
 	//Read the file.
-	wstring fullImageFilePath = FileHandling::GetMtgImageFileFolderPath(session) + imageFilePath;
-	string pathParameter = session->systemMethods->ToString(fullImageFilePath);
+	string pathParameter = session->systemMethods->ToString(imageFilePath);
 	Mat image = imread(pathParameter, IMREAD_COLOR);
 
 	//Check for invalid input.
 	if (image.empty())
 	{
-		throw LoadException("Could not load the image: " + session->systemMethods->ToString(fullImageFilePath));
+		throw LoadException("Could not load the image: " + session->systemMethods->ToString(imageFilePath));
 	}
 
 	return image;

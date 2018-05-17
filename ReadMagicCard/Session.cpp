@@ -17,6 +17,14 @@ Session::Session(SystemMethods* systemMethods, char* runArguments[], int numberO
 	//Enable debug if you want the program to output images and
 	//text showing the different steps in the card identification.
 	this->runDebugging = getInputArgumentValue(runArguments, numberOfRunArguments, 3, false);
+
+	//Extract the file path of a specific image to decode.
+	int fileArgumentIndex = 4;
+	if (indexIsWithinRange(numberOfRunArguments, fileArgumentIndex)) {
+
+		string fileArg = getInputArgumentString(runArguments, fileArgumentIndex);
+		this->filePathToImageToDecode = systemMethods->ToWString(fileArg);
+	}
 }
 
 Session::~Session()
@@ -27,10 +35,23 @@ Session::~Session()
 
 bool Session::getInputArgumentValue(char* runArguments[], int numberOfRunArguments, int index, bool defaultValue) {
 
-	if (index >= numberOfRunArguments) { return defaultValue; }
+	if (!indexIsWithinRange(numberOfRunArguments, index)) { return defaultValue; }
+
+	string argument = getInputArgumentString(runArguments, index);
+	bool value = systemMethods->ToBool(argument);
+
+	return value;
+}
+
+string Session::getInputArgumentString(char* runArguments[], int index) {
 
 	char* argumentPtr = runArguments[index];
 	string argumentStr = string(argumentPtr);
-	
-	return systemMethods->ToBool(argumentStr);
+
+	return argumentStr;
+}
+
+bool Session::indexIsWithinRange(int numberOfRunArguments, int index) {
+
+	return index < numberOfRunArguments;
 }

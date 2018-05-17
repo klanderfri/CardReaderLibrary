@@ -10,8 +10,8 @@
 using namespace cv;
 using namespace std;
 
-TitleExtractor::TitleExtractor(Session* session, wstring imageFileName, Mat originalImageData)
-	: BasicReaderData(session, imageFileName, originalImageData)
+TitleExtractor::TitleExtractor(Session* session, wstring imageFilePath, Mat originalImageData)
+	: BasicReaderData(session, imageFilePath, originalImageData)
 {
 }
 
@@ -104,7 +104,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	numberOfTries++;
 
 	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
-	LetterFilter filter(session, imageFileName, titleImage);
+	LetterFilter filter(session, imageFilePath, titleImage);
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
 
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
@@ -218,7 +218,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 
 void TitleExtractor::cleanOcrImages(vector<Mat>& outImages) {
 
-	OcrImageNoiseCleaner cleaner(session, imageFileName, originalImageData);
+	OcrImageNoiseCleaner cleaner(session, imageFilePath, originalImageData);
 
 	for (Mat dirtyImage : outImages) {
 

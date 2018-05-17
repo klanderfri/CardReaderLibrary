@@ -21,11 +21,12 @@ StoreCardProcessingData::~StoreCardProcessingData()
 
 wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 
-	wstring textToAdd = L"Image file name\tCard name\tCard type\tOCR confidence\tSuccess\n";
+	wstring textToAdd = L"Image file name\tImage file path\tCard name\tCard type\tOCR confidence\tSuccess\n";
 	for (CardNameInfo info : result) {
 
 		textToAdd +=
 			info.FileName +
+			L"\t" + info.FilePath +
 			L"\t" + info.CardName +
 			L"\t" + to_wstring(info.CardType) +
 			L"\t" + to_wstring(info.Confidence) +
@@ -44,18 +45,18 @@ wstring StoreCardProcessingData::StoreFinalResult(vector<CardNameInfo> result) {
 	return resultFolder;
 }
 
-wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFileName, int numberOfCardReadTries, wstring ocrResult, int ocrConfidence) {
+wstring StoreCardProcessingData::StoreOcrConfidence(wstring imageFilePath, int numberOfCardReadTries, wstring ocrResult, int ocrConfidence) {
 
-	vector<wstring> headers{ L"Image file name", L"Number of tries", L"OCR result", L"OCR confidence" };
-	vector<wstring> rowData{ imageFileName, to_wstring(numberOfCardReadTries), ocrResult, to_wstring(ocrConfidence) };
+	vector<wstring> headers{ L"Image file name", L"Image file path", L"Number of tries", L"OCR result", L"OCR confidence" };
+	vector<wstring> rowData{ session->systemMethods->GetFileNameFromFilePath(imageFilePath), imageFilePath, to_wstring(numberOfCardReadTries), ocrResult, to_wstring(ocrConfidence) };
 
 	return writeToFile(L"TitleDecodeConfidence.txt", fl_OcrConfidence, hwfh_OcrConfidence, headers, rowData);
 }
 
-wstring StoreCardProcessingData::StoreSideRelations(wstring imageFileName, float sideFactor) {
+wstring StoreCardProcessingData::StoreSideRelations(wstring imageFilePath, float sideFactor) {
 
-	vector<wstring> headers{ L"Image file name", L"Long side to short side" };
-	vector<wstring> rowData{ imageFileName, session->systemMethods->ToWString(sideFactor) };
+	vector<wstring> headers{ L"Image file name", L"Image file path", L"Long side to short side" };
+	vector<wstring> rowData{ session->systemMethods->GetFileNameFromFilePath(imageFilePath), imageFilePath, session->systemMethods->ToWString(sideFactor) };
 
 	return writeToFile(L"CardSidesRelations.txt", fl_SideRelations, hwfh_SideRelations, headers, rowData);
 }
