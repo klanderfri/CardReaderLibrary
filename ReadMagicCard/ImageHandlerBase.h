@@ -1,6 +1,6 @@
 #pragma once
 #include "SessionBound.h"
-//Base class for classes that handles card or part of cards.
+//Base class for classes that handles a card or a part of a card.
 class ImageHandlerBase :
 	public SessionBound
 {
