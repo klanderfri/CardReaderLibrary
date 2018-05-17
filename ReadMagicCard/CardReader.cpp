@@ -209,10 +209,10 @@ CardNameInfo CardReader::readAmonkhetSplitTitle(const Mat cardImageGivingBestRes
 	Mat akhSplitHalf = getSplitCardHalves(cardImageGivingBestResult, AkhSplitCardTitle)[1];
 
 	//The split title probably has the same light as the title so try the same threshold.
-	vector<ReadingConfiguration> splitSearchConfigs { ReadingConfiguration(currentConfig.BinaryThreshold, false) };
+	ReadingConfiguration splitSearchConfig(currentConfig.BinaryThreshold, false);
 
 	//Fetch the result for the split half.
-	CardNameInfo splitHalfResult = readTitleOfCardWithUnknownOrientation(akhSplitHalf, splitSearchConfigs, AkhSplitCardTitle);
+	CardNameInfo splitHalfResult = readTitleOfStraightCard(akhSplitHalf, splitSearchConfig, AkhSplitCardTitle);
 	bool successfullResult = splitHalfResult.IsConfidentTitle(NORMAL_OCR_CONFIDENCE_THRESH);
 
 	//Return the result or indicate read failure with empty result.
