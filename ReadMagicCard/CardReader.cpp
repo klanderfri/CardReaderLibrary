@@ -14,13 +14,10 @@ using namespace cv;
 using namespace std;
 
 CardReader::CardReader(Session* session, wstring imageFilePath)
-	: ImageHandlerBase(session, imageFilePath, Mat()),
+	: ImageHandlerBase(session, imageFilePath),
 	NORMAL_OCR_CONFIDENCE_THRESH(75),
 	HIGH_OCR_CONFIDENCE_THRESH(80)
 {
-	if (imageFilePath.empty()) {
-		throw ParameterException("The provided image file name was empty!", "imageFilePath");
-	}
 }
 
 CardReader::~CardReader()

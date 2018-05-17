@@ -5,8 +5,12 @@ class ImageHandlerBase :
 	public SessionBound
 {
 public:
+	ImageHandlerBase(Session* session, std::wstring imageFilePath);
 	ImageHandlerBase(Session* session, std::wstring imageFilePath, cv::Mat imageData);
 	~ImageHandlerBase();
+
+	//Checks if the object has been provided the original image data.
+	bool HasOriginalImageData();
 
 protected:
 
