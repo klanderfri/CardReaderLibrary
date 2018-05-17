@@ -18,5 +18,7 @@ enum Colour {
 	Red = 12,
 	Pink = 13,
 	Yellow = 14,
-	White = 15
+	White = 15,
+	FadedPurple = 16,
+	Purple = 17
 };
