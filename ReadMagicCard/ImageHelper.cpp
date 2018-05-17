@@ -83,6 +83,51 @@ LetterAreas ImageHelper::ToLetterAreas(Contours contours) {
 	return allAreas;
 }
 
+Scalar ImageHelper::ToScalarColour(const Colour colour) {
+
+	//Scalar(BLUE, GREEN, RED)
+
+	switch (colour)
+	{
+	case FadedDarkBlue:
+		return Scalar(180, 117, 42);
+	case FadedGreen:
+		return Scalar(62, 136, 62);
+	case FadedLightBlue:
+		return Scalar(200, 150, 90);
+	case FadedRed:
+		return Scalar(119, 119, 224);
+	case FadedPink:
+		return Scalar(240, 144, 240);
+	case FadedYellow:
+		return Scalar(57, 205, 203);
+	case FadedWhite:
+		return Scalar(196, 196, 196);
+	case FadedGrey:
+		return Scalar(110, 110, 110);
+	case DarkBlue:
+		return Scalar(203, 20, 29);
+	case Green:
+		return Scalar(0, 120, 0);
+	case LightBlue:
+		return Scalar(255, 120, 40);
+	case Red:
+		return Scalar(0, 0, 255);
+	case Pink:
+		return Scalar(240, 107, 240);
+	case Yellow:
+		return Scalar(0, 255, 255);
+	case White:
+		return Scalar(255, 255, 255);
+	case Purple:
+		return Scalar(180, 0, 180);
+	case FadedPurple:
+		return Scalar(180, 76, 180);
+	default:
+		throw ParameterException("Unknown colour!", "colour");
+	}
+}
+
 RotatedRect ImageHelper::GetRotatedRectangle(vector<TrendLine> verticalBorders, vector<TrendLine> horizontalBorders, double angleAdjustment) {
 
 	//Make sure the borders are correct.
@@ -169,21 +214,20 @@ void ImageHelper::RotateImage(const Mat rawImage, Mat& outImage, const double an
 	warpAffine(rawImage, outImage, r, Size(rawImage.cols, rawImage.rows), INTER_LANCZOS4);
 }
 
-Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2) {
+Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2, Colour colour, int borderThickness) {
 	
 	//Create a working RGB image so the border lines are colour even if the image isn't.
 	Mat outImage = ToColourImage(image);
 
-	Scalar lineColour = Scalar(180, 0, 180); //Purple
-	line(outImage, point1, point2, lineColour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+	line(outImage, point1, point2, ToScalarColour(colour), borderThickness, DEBUG_BORDER_LINE_TYPE);
 
 	return outImage;
 }
 
-Mat ImageHelper::DrawLine(const Mat image, TrendLine line) {
+Mat ImageHelper::DrawLine(const Mat image, TrendLine line, Colour colour, int borderThickness) {
 
 	vector<Point2d> points = line.GetEndPoints(0, image.cols);
-	Mat outImage = DrawLine(image, points[0], points[1]);
+	Mat outImage = DrawLine(image, points[0], points[1], colour, borderThickness);
 
 	return outImage;
 }
@@ -193,25 +237,19 @@ Mat ImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRecta
 	//Create a working RGB image so the border lines are colour even if the image isn't.
 	Mat workingImage = ToColourImage(image);
 
-	//Create colours to indicate the border lines' types.
-	Scalar colourContour = Scalar(0, 255, 255); //Yellow
-	Scalar colourStraightRectangle = Scalar(0, 120, 0); //Green
-	Scalar colourRotatedRectangle = Scalar(180, 130, 70); //Blue
-														  //Scalar(BLUE, GREEN, RED)
-
 	//Draw the contours.
 	if (!limitContour.empty()) {
-		drawContours(workingImage, Contours{ limitContour }, 0, colourContour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
+		drawContours(workingImage, Contours{ limitContour }, 0, ToScalarColour(Yellow), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
 	}
 	//Draw the straight rectangle.
 	if (!straightLimitRectangle.empty()) {
-		rectangle(workingImage, straightLimitRectangle.tl(), straightLimitRectangle.br(), colourStraightRectangle, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, 0);
+		rectangle(workingImage, straightLimitRectangle.tl(), straightLimitRectangle.br(), ToScalarColour(Green), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, 0);
 	}
 	//Draw the rotated rectangle
 	Point2f rect_points[4];
 	rotatedLimitRectangle.points(rect_points);
 	for (int j = 0; j < 4; j++) {
-		line(workingImage, rect_points[j], rect_points[(j + 1) % 4], colourRotatedRectangle, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+		line(workingImage, rect_points[j], rect_points[(j + 1) % 4], ToScalarColour(DarkBlue), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
 	}
 
 	return workingImage;
@@ -224,13 +262,9 @@ Mat ImageHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy 
 
 	for (size_t i = 0; i< contours.size(); i++)
 	{
-		Scalar colour;
-		if (useRandomColours) {
-			colour = Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
-		}
-		else {
-			colour = Scalar(0, 0, 200);
-		}
+		Scalar colour = useRandomColours ?
+			Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255)) :
+			ToScalarColour(Red);
 
 		drawContours(drawing, contours, i, colour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, hierarchy, 0, Point());
 	}
@@ -251,26 +285,25 @@ Mat ImageHelper::DrawLimits(const Mat image, const LetterAreas letters, int lett
 		drawing = ImageHelper::DrawLimits(drawing, area.Box, Rect(), area.OuterContour);
 
 		//Draw the center.
-		Scalar colour = Scalar(255, 0, 0); //Blue
-		drawing = ImageHelper::DrawCenterPoint(drawing, area.Box.center, colour, letterCenterRadius);
+		drawing = ImageHelper::DrawCenterPoint(drawing, area.Box.center, DarkBlue, letterCenterRadius);
 	}
 
 	return drawing;
 }
 
-Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, Scalar colour, int radius) {
+Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, const Colour colour, int radius) {
 
 	//Create a working rgb image so the border lines are colour even if the image isn't.
 	Mat workingImage = ToColourImage(image);
 
-	circle(workingImage, imageCenter, radius, colour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+	circle(workingImage, imageCenter, radius, ToScalarColour(colour), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
 
 	return workingImage;
 }
 
-void ImageHelper::FillContour(Mat& image, const Contour contour, const Scalar colour) {
+void ImageHelper::FillContour(Mat& image, const Contour contour, const Colour colour) {
 
-	fillConvexPoly(image, contour, colour);
+	fillConvexPoly(image, contour, ToScalarColour(colour));
 }
 
 double ImageHelper::GetAnglesToStrightenUp(const RotatedRect rotatedRectangle, bool enforcePortraitMode) {
@@ -322,7 +355,7 @@ void ImageHelper::CropImageWithSolidBorder(const Mat rawImage, Mat& outImage, co
 	copyMakeBorder(
 		outImage, outImage,
 		borderThickness, borderThickness, borderThickness, borderThickness,
-		BORDER_ISOLATED, Scalar(255));
+		BORDER_ISOLATED, ToScalarColour(White));
 }
 
 void ImageHelper::ResizeImage(const Mat rawImage, Mat& outImage, int height) {

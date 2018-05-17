@@ -36,8 +36,7 @@ void OcrImageNoiseCleaner::handleFigure(LetterArea figure, Mat& dirtyImage) {
 
 	if (isNoise(figure, dirtyImage.size())) {
 
-		Scalar white(255, 255, 255);
-		ImageHelper::FillContour(dirtyImage, figure.OuterContour, white);
+		ImageHelper::FillContour(dirtyImage, figure.OuterContour, White);
 	}
 }
 
