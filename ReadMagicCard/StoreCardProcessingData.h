@@ -2,6 +2,7 @@
 #include "SessionBound.h"
 #include "CardNameInfo.h"
 #include <mutex>
+//Class storing information about the card processing into files on disk.
 class StoreCardProcessingData : 
 	public SessionBound
 {

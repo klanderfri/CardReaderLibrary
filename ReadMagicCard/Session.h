@@ -1,5 +1,6 @@
 #pragma once
 #include "SystemMethods.h"
+//Class for the session of card reading.
 class Session
 {
 public:

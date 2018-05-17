@@ -1,7 +1,7 @@
 #pragma once
 #include "TrendLine.h"
 #include <vector>
-//Class holding algorithm methods.
+//Class holding generic algorithm methods.
 class AlgorithmHelper
 {
 public:

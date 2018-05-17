@@ -1,4 +1,5 @@
 #pragma once
+//Class holding information about how a card image should be preprocessed.
 class ReadingConfiguration
 {
 public:

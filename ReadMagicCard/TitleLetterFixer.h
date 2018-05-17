@@ -1,5 +1,6 @@
 #pragma once
 #include "SessionBound.h"
+//Class correcting letters in a card title.
 class TitleLetterFixer :
 	public SessionBound
 {

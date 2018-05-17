@@ -1,4 +1,5 @@
 #pragma once
+//Class representing a straight line.
 class TrendLine
 {
 public:

@@ -1,5 +1,6 @@
 #pragma once
 #include "ImageHandlerBase.h"
+//Class cleaning an OCR-image from noises that might disturb and interfere the decoding.
 class OcrImageNoiseCleaner :
 	public ImageHandlerBase
 {

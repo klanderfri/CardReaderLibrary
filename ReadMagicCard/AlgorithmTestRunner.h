@@ -1,6 +1,7 @@
 #pragma once
 #include "SessionBound.h"
 #include "CardNameInfo.h"
+//Class running tests of the generic algorithms in the program.
 class AlgorithmTestRunner :
 	public SessionBound
 {

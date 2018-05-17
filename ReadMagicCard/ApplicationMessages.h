@@ -1,6 +1,7 @@
 #pragma once
 #include "SessionBound.h"
 #include "TimePoint.h"
+//Class holding methods printing the messages of the program.
 class ApplicationMessages : 
 	public SessionBound
 {
