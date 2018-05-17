@@ -5,8 +5,8 @@
 using namespace cv;
 using namespace std;
 
-const int ImageHelper::DEBUG_BORDER_THICKNESS = 1;
-const int ImageHelper::DEBUG_BORDER_LINE_TYPE = 8;
+const int ImageHelper::DEFAULT_BORDER_THICKNESS = 1;
+const int ImageHelper::DEFAULT_BORDER_LINE_TYPE = 8;
 
 ImageHelper::ImageHelper()
 {
@@ -219,7 +219,7 @@ Mat ImageHelper::DrawLine(const Mat image, Point point1, Point point2, Colour co
 	//Create a working RGB image so the border lines are colour even if the image isn't.
 	Mat outImage = ToColourImage(image);
 
-	line(outImage, point1, point2, ToScalarColour(colour), borderThickness, DEBUG_BORDER_LINE_TYPE);
+	line(outImage, point1, point2, ToScalarColour(colour), borderThickness, DEFAULT_BORDER_LINE_TYPE);
 
 	return outImage;
 }
@@ -239,17 +239,17 @@ Mat ImageHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRecta
 
 	//Draw the contours.
 	if (!limitContour.empty()) {
-		drawContours(workingImage, Contours{ limitContour }, 0, ToScalarColour(Yellow), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
+		drawContours(workingImage, Contours{ limitContour }, 0, ToScalarColour(Yellow), DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
 	}
 	//Draw the straight rectangle.
 	if (!straightLimitRectangle.empty()) {
-		rectangle(workingImage, straightLimitRectangle.tl(), straightLimitRectangle.br(), ToScalarColour(Green), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, 0);
+		rectangle(workingImage, straightLimitRectangle.tl(), straightLimitRectangle.br(), ToScalarColour(Green), DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, 0);
 	}
 	//Draw the rotated rectangle
 	Point2f rect_points[4];
 	rotatedLimitRectangle.points(rect_points);
 	for (int j = 0; j < 4; j++) {
-		line(workingImage, rect_points[j], rect_points[(j + 1) % 4], ToScalarColour(DarkBlue), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+		line(workingImage, rect_points[j], rect_points[(j + 1) % 4], ToScalarColour(DarkBlue), DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE);
 	}
 
 	return workingImage;
@@ -266,7 +266,7 @@ Mat ImageHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy 
 			Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255)) :
 			ToScalarColour(Red);
 
-		drawContours(drawing, contours, i, colour, DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE, hierarchy, 0, Point());
+		drawContours(drawing, contours, i, colour, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, hierarchy, 0, Point());
 	}
 
 	return drawing;
@@ -296,7 +296,7 @@ Mat ImageHelper::DrawCenterPoint(const Mat image, const Point imageCenter, const
 	//Create a working rgb image so the border lines are colour even if the image isn't.
 	Mat workingImage = ToColourImage(image);
 
-	circle(workingImage, imageCenter, radius, ToScalarColour(colour), DEBUG_BORDER_THICKNESS, DEBUG_BORDER_LINE_TYPE);
+	circle(workingImage, imageCenter, radius, ToScalarColour(colour), DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE);
 
 	return workingImage;
 }

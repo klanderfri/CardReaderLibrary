@@ -11,6 +11,11 @@ public:
 	ImageHelper();
 	~ImageHelper();
 
+	//The thickness of borders drawn on images for debugging.
+	static const int DEFAULT_BORDER_THICKNESS;
+	//The line type (8-connected line, aka "solid") of borders drawn on images for debugging.
+	static const int DEFAULT_BORDER_LINE_TYPE;
+
 	//Converts a rotated rectangle to a straight rectangle.
 	static cv::Rect2f ToStraightRectangle(const cv::RotatedRect rotatedRectToConvert, bool enforcePortraitMode = true);
 	//Converts a rectangle to a rotated rectangle.
@@ -30,9 +35,9 @@ public:
 	//Rotates an image.
 	static void RotateImage(const cv::Mat rawImage, cv::Mat& outImage, const double angleToRotate, const cv::Point2f centerPoint);
 	//Draws a line on an image between two points.
-	static cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2, Colour colour = Purple, int borderThickness = DEBUG_BORDER_THICKNESS);
+	static cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2, Colour colour = Purple, int borderThickness = DEFAULT_BORDER_THICKNESS);
 	//Draws a line on an image.
-	static cv::Mat DrawLine(const cv::Mat image, TrendLine line, Colour colour = Purple, int borderThickness = DEBUG_BORDER_THICKNESS);
+	static cv::Mat DrawLine(const cv::Mat image, TrendLine line, Colour colour = Purple, int borderThickness = DEFAULT_BORDER_THICKNESS);
 	//Draws the specified limits to the image.
 	static cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.
@@ -89,11 +94,6 @@ public:
 	static Contour ConvertToIntFromDouble(DblContour dContour);
 
 private:
-
-	//The thickness of borders drawn on images for debugging.
-	static const int DEBUG_BORDER_THICKNESS;
-	//The line type (8-connected line, aka "solid") of borders drawn on images for debugging.
-	static const int DEBUG_BORDER_LINE_TYPE;
 
 	//Changes the image mode between grayscale and colour.
 	static cv::Mat changeImageMode(const cv::Mat imageToConvert, cv::ColorConversionCodes code);
