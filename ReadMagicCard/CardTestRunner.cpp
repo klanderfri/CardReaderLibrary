@@ -45,7 +45,7 @@ bool CardTestRunner::RunTestCases(vector<CardNameInfo> result) {
 		}
 
 		//Test the confidence.
-		double actualAverageConfidence, expectedAverageConfidence = 83.035714285714292;
+		double actualAverageConfidence, expectedAverageConfidence = 83.053571428571431;
 		int actualLowestConfidence, expectedLowestConfidence = 78;
 		bool confidenceTestSucceded = runConfidenceTest(result, expectedAverageConfidence, actualAverageConfidence, expectedLowestConfidence, actualLowestConfidence);
 
