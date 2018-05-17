@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "LetterArea.h"
+#include "ImageHelper.h"
 
 using namespace cv;
 using namespace std;

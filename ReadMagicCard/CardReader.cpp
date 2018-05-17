@@ -305,11 +305,11 @@ vector<Mat> CardReader::getSplitCardHalves(const Mat cardImage, const CardTitleT
 		//The extra border limit is because the card border is bigger in relation to the split card half.
 		int extraBorderLimit = (int)(session->WORKING_CARD_HEIGHT / 9.7); //70
 		Rect limitsHalfA(extraBorderLimit, 0, splitCard.cols / 2, splitCard.rows);
-		ImageHelper::CropImage(splitCard, halfA, limitsHalfA);
+		session->imageMethods->CropImage(splitCard, halfA, limitsHalfA);
 	}
 
 	Rect limitsHalfB((splitCard.cols / 2), 0, splitCard.cols / 2, splitCard.rows);
-	ImageHelper::CropImage(splitCard, halfB, limitsHalfB);
+	session->imageMethods->CropImage(splitCard, halfB, limitsHalfB);
 
 	vector<Mat> halves{ halfA, halfB };
 	return halves;
@@ -360,7 +360,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 	//Make white text on black background.
 	for (size_t i = 0; i < outImages.size(); i++) {
 
-		ImageHelper::SetBackgroundByInverting(outImages[i], true);
+		session->imageMethods->SetBackgroundByInverting(outImages[i], true);
 
 		//Store result for debugging.
 		if (session->runDebugging) {
@@ -386,7 +386,7 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 		break;
 	}
 
-	ImageHelper::CropImage(cardImage, outImage, titleBox);
+	session->imageMethods->CropImage(cardImage, outImage, titleBox);
 
 	//Store result for debugging.
 	if (session->runDebugging) {

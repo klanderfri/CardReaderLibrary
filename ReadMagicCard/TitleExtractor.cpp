@@ -25,10 +25,10 @@ bool TitleExtractor::ExtractTitle(vector<Mat>& outImages, int binaryThreshold, i
 	amountOfGauss = errorProtectGaussAmount(amountOfGauss);
 
 	//Make the title grey scale.
-	Mat outImage = ImageHelper::ToGreyImage(originalImageData);
+	Mat outImage = session->imageMethods->ToGreyImage(originalImageData);
 
 	int normalizedTitleHeight = (int)(session->WORKING_CARD_HEIGHT / 3.67);
-	ImageHelper::ResizeImage(outImage, outImage, normalizedTitleHeight);
+	session->imageMethods->ResizeImage(outImage, outImage, normalizedTitleHeight);
 
 	//Blur the image to smoothing it out.
 	GaussianBlur(outImage, outImage, Size(amountOfGauss, amountOfGauss), 0, 0);
@@ -66,7 +66,7 @@ Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, Ca
 	threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
 
 	bool couldHaveBlackBackground = titleType == NormalTitle || titleType == Emblem || titleType == Token;
-	double percentageOfWhite = ImageHelper::PercentageOfNonZero(binaryImage);
+	double percentageOfWhite = session->imageMethods->PercentageOfNonZero(binaryImage);
 	hasOriginalTitleBlackBackground = couldHaveBlackBackground && percentageOfWhite < 0.3;
 
 	if (hasOriginalTitleBlackBackground) {
@@ -76,7 +76,7 @@ Mat TitleExtractor::getBinaryImage(const Mat titleImage, int binaryThreshold, Ca
 	bool isBlackTextOnWhite;
 	do {
 		threshold(workOriginal, binaryImage, binaryThreshold, 255, THRESH_BINARY);
-		isBlackTextOnWhite = ImageHelper::PercentageOfNonZero(binaryImage) > 0.562;
+		isBlackTextOnWhite = session->imageMethods->PercentageOfNonZero(binaryImage) > 0.562;
 		binaryThreshold -= 20;
 
 	} while (!isBlackTextOnWhite && binaryThreshold > 0);
@@ -103,7 +103,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 	numberOfTries++;
 
-	Contours contours = ImageHelper::GetCannyContours(titleImage, 120);
+	Contours contours = session->imageMethods->GetCannyContours(titleImage, 120);
 	LetterFilter filter(session, imageFilePath, titleImage);
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
 
@@ -112,7 +112,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	if (toShortTitle) { return false; }
 
 	//Get the areas of the entire title.
-	Contour combinedLetterContorus = ImageHelper::GetCombinedLetterContorus(letters);
+	Contour combinedLetterContorus = session->imageMethods->GetCombinedLetterContorus(letters);
 	RotatedRect textArea = getTextArea(combinedLetterContorus, filter.GetTextCenterLine(), filter.GetTextBaseLine(), titleImage, numberOfTries);
 
 	//Store result for debugging.
@@ -120,8 +120,8 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	if (session->runDebugging) {
 
 		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
-		dbg_onlyLettersBoundImage = ImageHelper::DrawLimits(titleImage, letters, radius);
-		dbg_possibleTitleAreaImage = ImageHelper::DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
+		dbg_onlyLettersBoundImage = session->imageMethods->DrawLimits(titleImage, letters, radius);
+		dbg_possibleTitleAreaImage = session->imageMethods->DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
 	}
 
 	//The title image cropped using a RotatedRect.
@@ -132,18 +132,18 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	if (textArea.size.height > textArea.size.width) {
 		swap(textArea.size.height, textArea.size.width);
 	}
-	ImageHelper::StraightenUpImage(titleImage, straightenTitleImage, textArea, straightTextArea, false);
+	session->imageMethods->StraightenUpImage(titleImage, straightenTitleImage, textArea, straightTextArea, false);
 
 	//Cut out the title text.
 	int borderThickness = 10;
-	ImageHelper::CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, borderThickness);
+	session->imageMethods->CropImageWithSolidBorder(straightenTitleImage, straightenTitleImage, straightTextArea, borderThickness);
 	textImages.push_back(straightenTitleImage);
 
 	if (letters.size() < 7) {
 
 		Mat boundedTitleImage;
 		Rect bounds = boundingRect(combinedLetterContorus);
-		ImageHelper::CropImageWithSolidBorder(titleImage, boundedTitleImage, bounds, borderThickness);
+		session->imageMethods->CropImageWithSolidBorder(titleImage, boundedTitleImage, bounds, borderThickness);
 		textImages.push_back(boundedTitleImage);
 	}
 
@@ -168,13 +168,13 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	if (centerLine.Slope == 0) {
 
 		Rect bounds = boundingRect(letters);
-		RotatedRect rect = ImageHelper::ToRotatedRectangle(bounds);
+		RotatedRect rect = session->imageMethods->ToRotatedRectangle(bounds);
 		
 		return rect;
 	}
 
 	//Find the top and bottom borders.
-	DblContour dLettersContour = ImageHelper::ConvertToDoubleFromInt(letters);
+	DblContour dLettersContour = session->imageMethods->ConvertToDoubleFromInt(letters);
 	vector<TrendLine> horizontalBounds = centerLine.GetBoundLines(dLettersContour);
 	
 	//Make sure there is a margin between the botton bounds and the base line, otherwise letters like 'p' and 'g' will be cut.
@@ -195,23 +195,23 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 
 		Mat lineImages;
 		titleImage.copyTo(lineImages);
-		lineImages = ImageHelper::DrawLimits(lineImages, RotatedRect(), Rect(), letters);
-		lineImages = ImageHelper::DrawLine(lineImages, horizontalBounds[0]);
-		lineImages = ImageHelper::DrawLine(lineImages, horizontalBounds[1]);
-		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[0]);
-		lineImages = ImageHelper::DrawLine(lineImages, verticalBounds[1]);
+		lineImages = session->imageMethods->DrawLimits(lineImages, RotatedRect(), Rect(), letters);
+		lineImages = session->imageMethods->DrawLine(lineImages, horizontalBounds[0]);
+		lineImages = session->imageMethods->DrawLine(lineImages, horizontalBounds[1]);
+		lineImages = session->imageMethods->DrawLine(lineImages, verticalBounds[0]);
+		lineImages = session->imageMethods->DrawLine(lineImages, verticalBounds[1]);
 
 		SaveOcvImage::SaveImageData(session, lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
 	}
 
 	//Get the bounded rectangle.
 	double angleAdjustment = -0.020; // *shruggs* Seems to work with the test cases, so...
-	RotatedRect textArea = ImageHelper::GetRotatedRectangle(verticalBounds, horizontalBounds, angleAdjustment);
+	RotatedRect textArea = session->imageMethods->GetRotatedRectangle(verticalBounds, horizontalBounds, angleAdjustment);
 
 	//Debug
 	Mat textAreaImage;
 	titleImage.copyTo(textAreaImage);
-	textAreaImage = ImageHelper::DrawLimits(textAreaImage, textArea, Rect(), letters);
+	textAreaImage = session->imageMethods->DrawLimits(textAreaImage, textArea, Rect(), letters);
 
 	return textArea;
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "SystemMethods.h"
+#include "ImageHelper.h"
 //Class for the session of card reading.
 class Session
 {
@@ -12,6 +13,8 @@ public:
 
 	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;
+	//Pointer to object containing image methods.
+	ImageHelper* imageMethods;
 	//Tells if the program should do debugging such as exporting the images to files.
 	bool runDebugging;
 	//Tells if the program should run without printing any messages.

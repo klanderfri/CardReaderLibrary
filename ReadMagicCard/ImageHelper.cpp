@@ -67,7 +67,7 @@ LetterAreas ImageHelper::ToLetterAreas(Contours contours) {
 
 	for (size_t i = 0; i < contours.size(); i++) {
 
-		Contour letterContour = ImageHelper::ContoursConvexHull({ contours[i] });
+		Contour letterContour = ContoursConvexHull({ contours[i] });
 		RotatedRect letterBox = minAreaRect(letterContour);
 
 		LetterArea area;
@@ -282,10 +282,10 @@ Mat ImageHelper::DrawLimits(const Mat image, const LetterAreas letters, int lett
 		
 		//Draw the area.
 		drawing = drawing.empty() ? image : drawing;
-		drawing = ImageHelper::DrawLimits(drawing, area.Box, Rect(), area.OuterContour);
+		drawing = DrawLimits(drawing, area.Box, Rect(), area.OuterContour);
 
 		//Draw the center.
-		drawing = ImageHelper::DrawCenterPoint(drawing, area.Box.center, DarkBlue, letterCenterRadius);
+		drawing = DrawCenterPoint(drawing, area.Box.center, DarkBlue, letterCenterRadius);
 	}
 
 	return drawing;
