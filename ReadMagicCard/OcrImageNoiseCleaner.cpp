@@ -15,11 +15,11 @@ OcrImageNoiseCleaner::~OcrImageNoiseCleaner()
 
 void OcrImageNoiseCleaner::CleanImage(Mat& dirtyImage) {
 
-	Mat originalImage;
+	Mat originalImage, binaryImage;
 	dirtyImage.copyTo(originalImage);
 
-	threshold(dirtyImage, dirtyImage, 130, 255, THRESH_BINARY);
-	Contours contours = ImageHelper::GetCannyContours(dirtyImage, 120);
+	threshold(dirtyImage, binaryImage, 240, 255, THRESH_BINARY);
+	Contours contours = ImageHelper::GetCannyContours(binaryImage, 120);
 	LetterAreas figures = ImageHelper::ToLetterAreas(contours);
 
 	for (size_t i = 0; i < figures.size(); i++) {
