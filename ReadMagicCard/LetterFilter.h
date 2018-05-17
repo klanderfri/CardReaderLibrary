@@ -1,10 +1,10 @@
 #pragma once
 #include "LetterArea.h"
 #include "TrendLine.h"
-#include "BasicReaderData.h"
+#include "ImageHandlerBase.h"
 //Class for filtering out image parts that are noise.
 class LetterFilter : 
-	public BasicReaderData
+	public ImageHandlerBase
 {
 public:
 	LetterFilter(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);

@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 
 CardExtractor::CardExtractor(Session* session, wstring imageFilePath, Mat originalImageData) :
-	BasicReaderData(session, imageFilePath, originalImageData),
+	ImageHandlerBase(session, imageFilePath, originalImageData),
 	WORKING_IMAGE_HEIGHT((int)(session->WORKING_CARD_HEIGHT * 1.4))
 {
 }

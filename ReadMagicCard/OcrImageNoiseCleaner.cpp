@@ -5,7 +5,7 @@ using namespace cv;
 using namespace std;
 
 OcrImageNoiseCleaner::OcrImageNoiseCleaner(Session* session, wstring imageFilePath, Mat originalImageData)
-	: BasicReaderData(session, imageFilePath, originalImageData)
+	: ImageHandlerBase(session, imageFilePath, originalImageData)
 {
 }
 

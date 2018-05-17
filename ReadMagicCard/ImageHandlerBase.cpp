@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "BasicReaderData.h"
+#include "ImageHandlerBase.h"
 
 using namespace cv;
 using namespace std;
 
-BasicReaderData::BasicReaderData(Session* session, wstring imageFilePath, Mat originalImageData)
+ImageHandlerBase::ImageHandlerBase(Session* session, wstring imageFilePath, Mat originalImageData)
 	: SessionBound(session)
 {
 	this->imageFilePath = imageFilePath;
@@ -12,6 +12,6 @@ BasicReaderData::BasicReaderData(Session* session, wstring imageFilePath, Mat or
 	this->imageFileName = session->systemMethods->GetFileNameFromFilePath(imageFilePath);
 }
 
-BasicReaderData::~BasicReaderData()
+ImageHandlerBase::~ImageHandlerBase()
 {
 }

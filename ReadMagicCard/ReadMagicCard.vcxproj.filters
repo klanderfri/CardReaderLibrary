@@ -43,9 +43,6 @@
     <Filter Include="Engine\SectionExtractors">
       <UniqueIdentifier>{014d17a5-869b-43bb-9262-b7f310de960c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ReaderData">
-      <UniqueIdentifier>{71c71539-a35b-4f3e-82d7-ad10fab4acc9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Enums">
       <UniqueIdentifier>{cb86f848-54bc-4bec-aa5a-300498ef7a72}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="Engine\Session">
       <UniqueIdentifier>{0de93391-ce28-47b7-8990-9c0fbbf85ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ImageHandler">
+      <UniqueIdentifier>{71c71539-a35b-4f3e-82d7-ad10fab4acc9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +83,6 @@
     </ClInclude>
     <ClInclude Include="ImageOcrHelper.h">
       <Filter>Engine\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="BasicReaderData.h">
-      <Filter>Engine\ReaderData</Filter>
     </ClInclude>
     <ClInclude Include="Exception.h">
       <Filter>Core\Exceptions</Filter>
@@ -177,6 +174,9 @@
     <ClInclude Include="SessionBound.h">
       <Filter>Engine\Session</Filter>
     </ClInclude>
+    <ClInclude Include="ImageHandlerBase.h">
+      <Filter>Engine\ImageHandler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -196,9 +196,6 @@
     </ClCompile>
     <ClCompile Include="ImageOcrHelper.cpp">
       <Filter>Engine\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="BasicReaderData.cpp">
-      <Filter>Engine\ReaderData</Filter>
     </ClCompile>
     <ClCompile Include="CardCollectionReader.cpp">
       <Filter>Engine\CardReaders</Filter>
@@ -280,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="SessionBound.cpp">
       <Filter>Engine\Session</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageHandlerBase.cpp">
+      <Filter>Engine\ImageHandler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

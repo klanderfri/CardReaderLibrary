@@ -1,8 +1,8 @@
 #pragma once
-#include "BasicReaderData.h"
+#include "ImageHandlerBase.h"
 //Class for extracting the card from an image.
 class CardExtractor :
-	public BasicReaderData
+	public ImageHandlerBase
 {
 public:
 	CardExtractor(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);

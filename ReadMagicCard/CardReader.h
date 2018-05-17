@@ -1,11 +1,11 @@
 #pragma once
-#include "BasicReaderData.h"
+#include "ImageHandlerBase.h"
 #include "CardTitleType.h"
 #include "CardNameInfo.h"
 #include "ReadingConfiguration.h"
 //Class for reading a card.
 class CardReader :
-	BasicReaderData
+	ImageHandlerBase
 {
 public:
 	CardReader(Session* session, std::wstring imageFilePath);

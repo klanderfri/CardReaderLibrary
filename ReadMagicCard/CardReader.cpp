@@ -14,7 +14,7 @@ using namespace cv;
 using namespace std;
 
 CardReader::CardReader(Session* session, wstring imageFilePath)
-	: BasicReaderData(session, imageFilePath, Mat()),
+	: ImageHandlerBase(session, imageFilePath, Mat()),
 	NORMAL_OCR_CONFIDENCE_THRESH(75),
 	HIGH_OCR_CONFIDENCE_THRESH(80)
 {

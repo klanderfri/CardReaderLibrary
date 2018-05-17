@@ -11,7 +11,7 @@ using namespace cv;
 using namespace std;
 
 TitleExtractor::TitleExtractor(Session* session, wstring imageFilePath, Mat originalImageData)
-	: BasicReaderData(session, imageFilePath, originalImageData)
+	: ImageHandlerBase(session, imageFilePath, originalImageData)
 {
 }
 

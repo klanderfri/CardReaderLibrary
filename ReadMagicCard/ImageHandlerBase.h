@@ -1,12 +1,12 @@
 #pragma once
 #include "SessionBound.h"
 //Base class for classes that handles card or part of cards.
-class BasicReaderData :
+class ImageHandlerBase :
 	public SessionBound
 {
 public:
-	BasicReaderData(Session* session, std::wstring imageFilePath, cv::Mat imageData);
-	~BasicReaderData();
+	ImageHandlerBase(Session* session, std::wstring imageFilePath, cv::Mat imageData);
+	~ImageHandlerBase();
 
 protected:
 

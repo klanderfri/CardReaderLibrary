@@ -178,7 +178,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="AlgorithmHelper.h" />
     <ClInclude Include="CardCollectionReader.h" />
     <ClInclude Include="CardExtractor.h" />
-    <ClInclude Include="BasicReaderData.h" />
+    <ClInclude Include="ImageHandlerBase.h" />
     <ClInclude Include="CardReader.h" />
     <ClInclude Include="CardReaderApplication.h" />
     <ClInclude Include="Exception.h" />
@@ -216,7 +216,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="AlgorithmHelper.cpp" />
     <ClCompile Include="CardCollectionReader.cpp" />
     <ClCompile Include="CardExtractor.cpp" />
-    <ClCompile Include="BasicReaderData.cpp" />
+    <ClCompile Include="ImageHandlerBase.cpp" />
     <ClCompile Include="CardReader.cpp" />
     <ClCompile Include="CardReaderApplication.cpp" />
     <ClCompile Include="FileHandling.cpp" />

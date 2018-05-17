@@ -1,7 +1,7 @@
 #pragma once
-#include "BasicReaderData.h"
+#include "ImageHandlerBase.h"
 class OcrImageNoiseCleaner :
-	public BasicReaderData
+	public ImageHandlerBase
 {
 public:
 	OcrImageNoiseCleaner(Session* session, std::wstring imageFilePath, cv::Mat originalImageData);
