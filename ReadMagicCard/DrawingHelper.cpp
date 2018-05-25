@@ -45,17 +45,17 @@ Mat DrawingHelper::DrawLimits(const Mat image, const Contour contourLimit, const
 
 	//Draw the contours.
 	if (!contourLimit.empty()) {
-		DrawContours(workingImage, Contours{ contourLimit });
+		workingImage = DrawContours(workingImage, Contours{ contourLimit });
 	}
 
 	//Draw the straight rectangle.
 	if (!straightRectangleLimit.empty()) {
-		DrawRectangle(workingImage, straightRectangleLimit);
+		workingImage = DrawRectangle(workingImage, straightRectangleLimit);
 	}
 
 	//Draw the rotated rectangle
 	if (rotatedRectangleLimit.size.area() > 0) {
-		DrawRectangle(workingImage, rotatedRectangleLimit);
+		workingImage = DrawRectangle(workingImage, rotatedRectangleLimit);
 	}
 
 	return workingImage;
@@ -117,7 +117,7 @@ Mat DrawingHelper::DrawLetterAreas(const Mat image, const LetterAreas letters, i
 		workingImage = DrawLimits(workingImage, area.OuterContour, area.Box);
 
 		//Draw the center.
-		workingImage = DrawCircle(workingImage, area.Box.center, letterCenterRadius, DarkBlue);
+		workingImage = DrawCircle(workingImage, area.Box.center, letterCenterRadius, Green);
 	}
 
 	return workingImage;
