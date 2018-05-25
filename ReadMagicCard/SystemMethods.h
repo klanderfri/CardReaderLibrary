@@ -33,7 +33,7 @@ public:
 	virtual std::wstring GetPathToExeFile() = 0;
 	//Gets the fiulkname of the current running executable file (.exe in Windows).
 	virtual std::wstring GetExeFileName() = 0;
-	//Sets the command line text colour to the specified color.
+	//Sets the command line text colour to the specified colour.
 	virtual void SetCommandLineTextColour(Colour colour) = 0;
 	//Resets the command line text colour to the OS default one.
 	virtual void ResetCommandLineTextColour() = 0;
