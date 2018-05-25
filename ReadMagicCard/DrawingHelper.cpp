@@ -19,25 +19,6 @@ DrawingHelper::~DrawingHelper()
 	delete converter;
 }
 
-Mat DrawingHelper::DrawLine(const Mat image, Point point1, Point point2, Colour colour, int borderThickness) {
-
-	//Create a working RGB image so the border lines are colour even if the image isn't.
-	Mat outImage = converter->ToColourImage(image);
-	Scalar sColour = converter->ToScalarColour(colour);
-
-	line(outImage, point1, point2, sColour, borderThickness, DEFAULT_BORDER_THICKNESS);
-
-	return outImage;
-}
-
-Mat DrawingHelper::DrawLine(const Mat image, TrendLine line, Colour colour, int borderThickness) {
-
-	vector<Point2d> points = line.GetEndPoints(0, image.cols);
-	Mat outImage = DrawLine(image, points[0], points[1], colour, borderThickness);
-
-	return outImage;
-}
-
 Mat DrawingHelper::DrawLimits(const Mat image, const Contour contourLimit, const RotatedRect rotatedRectangleLimit, const Rect straightRectangleLimit)
 {
 	//Create a working RGB image so the border lines are colour even if the image isn't.
@@ -59,6 +40,25 @@ Mat DrawingHelper::DrawLimits(const Mat image, const Contour contourLimit, const
 	}
 
 	return workingImage;
+}
+
+Mat DrawingHelper::DrawLine(const Mat image, Point point1, Point point2, Colour colour, int borderThickness) {
+
+	//Create a working RGB image so the border lines are colour even if the image isn't.
+	Mat outImage = converter->ToColourImage(image);
+	Scalar sColour = converter->ToScalarColour(colour);
+
+	line(outImage, point1, point2, sColour, borderThickness, DEFAULT_BORDER_THICKNESS);
+
+	return outImage;
+}
+
+Mat DrawingHelper::DrawLine(const Mat image, TrendLine line, Colour colour, int borderThickness) {
+
+	vector<Point2d> points = line.GetEndPoints(0, image.cols);
+	Mat outImage = DrawLine(image, points[0], points[1], colour, borderThickness);
+
+	return outImage;
 }
 
 Mat DrawingHelper::DrawRectangle(const Mat image, const RotatedRect rectangle, Colour colour) {
