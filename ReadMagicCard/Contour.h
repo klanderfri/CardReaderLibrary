@@ -1,5 +1,4 @@
 #pragma once
-#include <opencv2\core.hpp>
 //Type used for specifying a contour (using int).
 typedef std::vector<cv::Point> Contour;
 //Type used for specifying a contour (using double).
