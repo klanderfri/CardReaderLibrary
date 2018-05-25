@@ -1,4 +1,5 @@
 #pragma once
+#include "AllowedTitleCharactersHelper.h"
 //Class holding methods giving information about the MtG card environment.
 class MtgCardInfoHelper
 {
@@ -19,15 +20,9 @@ public:
 	//Compares two card names. Negative if 1st name comes first. Positive if 2nd name comes first. Zero if the names are equal.
 	static double CompareCardNames(std::wstring name1, std::wstring name2);
 	//Removes characters, that are not relevant for sorting, from a card name.
-	static std::wstring RemoveCharactersNotRelevantForNameSorting(const std::wstring cardName);
+	std::wstring RemoveNonSortingRelevantCharacters(const std::wstring cardName);
 	//Checks if there are any illeagal characters in the title.
 	bool ContainsInvalidCharacters(const std::wstring title);
-	//Gets the characters that are allowed in a card name.
-	std::vector<wchar_t> GetAllowedCharacters();
-	//Gets the non-letter characters that are allowed in a card name.
-	std::vector<wchar_t> GetAllowedNonLetterCharacters();
-	//Gets the characters that are ignored when sorting/comparing card names.
-	static std::vector<wchar_t> GetAllowedNotRelevantForSortingCharacters();
 	//Checks if a card is an emblem.
 	bool IsEmblem(const std::wstring title);
 	//Checks if a card is a token.
@@ -36,6 +31,9 @@ public:
 	bool IsMostlyUppercase(const std::wstring title);
 
 private:
+
+	//Pointer to object holding information about which characters are allowed in a card name.
+	AllowedTitleCharactersHelper* allowedCharacters;
 
 	//Gets the section specified by the factors.
 	static cv::Rect getSectionBox(cv::Size cardSize, double xCoordinateFactor, double yCoordinateFactor, double widthFactor, double heightFactor);

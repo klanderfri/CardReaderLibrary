@@ -167,6 +167,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AlgorithmTestRunner.h" />
+    <ClInclude Include="AllowedTitleCharactersHelper.h" />
     <ClInclude Include="ApplicationMessages.h" />
     <ClInclude Include="CardNameInfo.h" />
     <ClInclude Include="CardTestRunner.h" />
@@ -216,6 +217,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlgorithmTestRunner.cpp" />
+    <ClCompile Include="AllowedTitleCharactersHelper.cpp" />
     <ClCompile Include="ApplicationMessages.cpp" />
     <ClCompile Include="CardNameInfo.cpp" />
     <ClCompile Include="CardTestRunner.cpp" />

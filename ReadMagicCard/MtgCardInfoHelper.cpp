@@ -9,10 +9,12 @@ using namespace cv;
 
 MtgCardInfoHelper::MtgCardInfoHelper()
 {
+	this->allowedCharacters = new AllowedTitleCharactersHelper();
 }
 
 MtgCardInfoHelper::~MtgCardInfoHelper()
 {
+	delete allowedCharacters;
 }
 
 int MtgCardInfoHelper::LettersInShortestCardName() {
@@ -28,7 +30,7 @@ bool MtgCardInfoHelper::IsNameLongEnough(const wstring title) {
 
 	for (wchar_t character : title) {
 
-		bool isLetter = !AlgorithmHelper::VectorContains(GetAllowedNonLetterCharacters(), character);
+		bool isLetter = !AlgorithmHelper::VectorContains(allowedCharacters->GetNonLetter(), character);
 
 		if (isLetter) {
 			lettersInName++;
@@ -88,13 +90,19 @@ Rect MtgCardInfoHelper::getSectionBox(Size cardSize, double xCoordinateFactor, d
 
 double MtgCardInfoHelper::CompareCardNames(const wstring name1, const wstring name2) {
 
+	//Create an instance of this class to access methods through.
+	MtgCardInfoHelper* cardInfo = new MtgCardInfoHelper();
+
 	//We dont care about lower case/upper case when it comes to sorting card names.
 	wstring tmp_name1 = name1;
 	wstring tmp_name2 = name2;
 	boost::algorithm::to_lower(tmp_name1);
 	boost::algorithm::to_lower(tmp_name2);
-	tmp_name1 = RemoveCharactersNotRelevantForNameSorting(tmp_name1);
-	tmp_name2 = RemoveCharactersNotRelevantForNameSorting(tmp_name2);
+	tmp_name1 = cardInfo->RemoveNonSortingRelevantCharacters(tmp_name1);
+	tmp_name2 = cardInfo->RemoveNonSortingRelevantCharacters(tmp_name2);
+
+	//Delete the instance since we are done with it now.
+	delete cardInfo;
 
 	if (tmp_name1 == tmp_name2) { return 0; }
 
@@ -118,7 +126,7 @@ double MtgCardInfoHelper::CompareCardNames(const wstring name1, const wstring na
 	return -1; //name1 comes first.
 }
 
-wstring MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstring cardName) {
+wstring MtgCardInfoHelper::RemoveNonSortingRelevantCharacters(const wstring cardName) {
 
 	wstring cleanedName;
 
@@ -126,7 +134,7 @@ wstring MtgCardInfoHelper::RemoveCharactersNotRelevantForNameSorting(const wstri
 	{
 		wchar_t letter = cardName[i];
 
-		bool isIrrelevant = AlgorithmHelper::VectorContains(GetAllowedNotRelevantForSortingCharacters(), letter);
+		bool isIrrelevant = AlgorithmHelper::VectorContains(allowedCharacters->GetNonSortingRelevant(), letter);
 		if (isIrrelevant) { continue; }
 
 		bool isSecondWhitespace = (i > 0 && cleanedName[cleanedName.size() - 1] == L' ' && cardName[i] == L' ');
@@ -146,39 +154,12 @@ bool MtgCardInfoHelper::ContainsInvalidCharacters(const wstring title) {
 
 	//Check for illegal characters.
 	for (wchar_t letter : titleCopy) {
-		if (!AlgorithmHelper::VectorContains(GetAllowedCharacters(), letter)) {
+		if (!AlgorithmHelper::VectorContains(allowedCharacters->GetAll(), letter)) {
 			return true;
 		}
 	}
 
 	return false;
-}
-
-vector<wchar_t> MtgCardInfoHelper::GetAllowedCharacters() {
-
-	vector<wchar_t> allowedCharacters
-	{
-		L'a', L'b', L'c', L'd', L'e', L'f', L'g', L'h', L'i', L'j', L'k', L'l', L'm',
-		L'n', L'o', L'p', L'q', L'r', L's', L't', L'u', L'v', L'w', L'x', L'y', L'z', L'ö'
-
-		//Damn those Scandinavians whith their fancy Ö!
-		//At least Wizards stoped using Æ. ;-)
-		//http://markrosewater.tumblr.com/post/144471532728/this-is-a-bit-weird-but-i-notice-its-the-aether
-	};
-
-	allowedCharacters = AlgorithmHelper::JoinVectors(GetAllowedNonLetterCharacters(), allowedCharacters);
-
-	return allowedCharacters;
-}
-
-vector<wchar_t> MtgCardInfoHelper::GetAllowedNonLetterCharacters() {
-
-	return AlgorithmHelper::JoinVectors(vector<wchar_t> { L' ' }, GetAllowedNotRelevantForSortingCharacters());
-}
-
-vector<wchar_t> MtgCardInfoHelper::GetAllowedNotRelevantForSortingCharacters() {
-
-	return vector<wchar_t> { L'-', L'\'', L',', L'/' };
 }
 
 bool MtgCardInfoHelper::IsEmblem(const wstring title) {
@@ -218,12 +199,12 @@ bool MtgCardInfoHelper::IsToken(const wstring title) {
 	if (ContainsInvalidCharacters(title)) { return false; }
 	if (!IsMostlyUppercase(title)) { return false; }
 
-	return true;
+	return true;te c
 }
 
 bool MtgCardInfoHelper::IsMostlyUppercase(const wstring title) {
 
-	vector<wchar_t> nonLetters = GetAllowedNonLetterCharacters();
+	vector<wchar_t> nonLetters = allowedCharacters->GetNonLetter();
 	int lowercase = 0;
 	int uppercase = 0;
 
