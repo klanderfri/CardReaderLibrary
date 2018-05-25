@@ -196,7 +196,7 @@ bool MtgCardInfoHelper::IsToken(const wstring title) {
 	if (ContainsInvalidCharacters(title)) { return false; }
 	if (!IsMostlyUppercase(title)) { return false; }
 
-	return true;te c
+	return true;
 }
 
 bool MtgCardInfoHelper::IsMostlyUppercase(const wstring title) {

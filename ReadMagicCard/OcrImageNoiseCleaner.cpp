@@ -32,7 +32,7 @@ void OcrImageNoiseCleaner::handleFigure(LetterArea figure, Mat& dirtyImage) {
 
 	if (figure.Box.size.area() == 0) { return; }
 
-	Mat contourImage = session->imageHelper->drawingMethods->DrawLimits(dirtyImage, { figure.TightContour });
+	Mat contourImage = session->imageHelper->drawingMethods->DrawContours(dirtyImage, { figure.TightContour });
 
 	if (isNoise(figure, dirtyImage.size())) {
 

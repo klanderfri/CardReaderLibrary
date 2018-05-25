@@ -27,7 +27,7 @@ Mat ContourHelper::GetContourAreaFromImage(const Contour contour, const Mat rawI
 
 	if (drawContour) {
 		Contours contours{ contour };
-		outImage = drawingMethods->DrawLimits(outImage, contours);
+		outImage = drawingMethods->DrawContours(outImage, contours);
 	}
 
 	Rect bounds = boundingRect(Mat(contour));
@@ -91,7 +91,7 @@ Mat ContourHelper::GetContourDrawing(const Contour contour) {
 
 	Mat contourImage;
 	contourImage.create(bounds.y + bounds.height + 1, bounds.x + bounds.width + 1, 0);
-	contourImage = drawingMethods->DrawLimits(contourImage, Contours{ contour });
+	contourImage = drawingMethods->DrawContours(contourImage, Contours{ contour });
 
 	imageEditor->CropImage(contourImage, contourImage, bounds);
 

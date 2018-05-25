@@ -49,7 +49,7 @@ Mat DrawingHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRec
 
 	//Draw the contours.
 	if (!limitContour.empty()) {
-		drawContours(workingImage, Contours{ limitContour }, 0, yellow, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, Hierarchy(), 0, Point());
+		DrawContours(workingImage, Contours{ limitContour });
 	}
 	//Draw the straight rectangle.
 	if (!straightLimitRectangle.empty()) {
@@ -65,12 +65,12 @@ Mat DrawingHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRec
 	return workingImage;
 }
 
-Mat DrawingHelper::DrawLimits(const Mat image, const Contours contours, bool useRandomColours, Hierarchy hierarchy) {
+Mat DrawingHelper::DrawContours(const Mat image, const Contours contours, bool useRandomColours, Hierarchy hierarchy) {
 
 	RNG rng(time(0));
 	Mat drawing = converter->ToColourImage(image);
 
-	for (size_t i = 0; i< contours.size(); i++)
+	for (size_t i = 0; i < contours.size(); i++)
 	{
 		Scalar colour = useRandomColours ?
 			Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255)) :
@@ -82,7 +82,7 @@ Mat DrawingHelper::DrawLimits(const Mat image, const Contours contours, bool use
 	return drawing;
 }
 
-Mat DrawingHelper::DrawLimits(const Mat image, const LetterAreas letters, int letterCenterRadius) {
+Mat DrawingHelper::DrawLetterAreas(const Mat image, const LetterAreas letters, int letterCenterRadius) {
 
 	Mat drawing = converter->ToColourImage(image);
 

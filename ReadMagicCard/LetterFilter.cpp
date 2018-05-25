@@ -62,7 +62,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		vector<Point2d> cLine = textCenterLine.GetEndPoints(leftLimit, rightLimit);
 		vector<Point2d> bLine = textBaseLine.GetEndPoints(leftLimit, rightLimit);
 
-		Mat trendImage = session->imageHelper->drawingMethods->DrawLimits(originalImageData, letters, 3);
+		Mat trendImage = session->imageHelper->drawingMethods->DrawLetterAreas(originalImageData, letters, 3);
 		for (LetterArea letter : letters) {
 			trendImage = session->imageHelper->drawingMethods->DrawCenterPoint(trendImage, letter.GetMiddleBottomPoint());
 		}

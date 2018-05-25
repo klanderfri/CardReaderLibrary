@@ -120,7 +120,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	if (session->runDebugging) {
 
 		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
-		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawLimits(titleImage, letters, radius);
+		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawLetterAreas(titleImage, letters, radius);
 		dbg_possibleTitleAreaImage = session->imageHelper->drawingMethods->DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
 	}
 
