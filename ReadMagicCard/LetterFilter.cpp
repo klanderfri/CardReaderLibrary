@@ -62,9 +62,10 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		vector<Point2d> cLine = textCenterLine.GetEndPoints(leftLimit, rightLimit);
 		vector<Point2d> bLine = textBaseLine.GetEndPoints(leftLimit, rightLimit);
 
-		Mat trendImage = session->imageHelper->drawingMethods->DrawLetterAreas(originalImageData, letters, 3);
+		int radius = 3;
+		Mat trendImage = session->imageHelper->drawingMethods->DrawLetterAreas(originalImageData, letters, radius);
 		for (LetterArea letter : letters) {
-			trendImage = session->imageHelper->drawingMethods->DrawCircle(trendImage, letter.GetMiddleBottomPoint());
+			trendImage = session->imageHelper->drawingMethods->DrawCircle(trendImage, letter.GetMiddleBottomPoint(), radius, Green);
 		}
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, bLine[0], bLine[1]);

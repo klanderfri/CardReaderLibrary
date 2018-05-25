@@ -16,9 +16,9 @@ public:
 	static const int DEFAULT_BORDER_LINE_TYPE;
 
 	//Draws a line between two points on an image.
-	cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2, Colour colour = Purple, int borderThickness = DEFAULT_BORDER_THICKNESS);
+	cv::Mat DrawLine(const cv::Mat image, cv::Point point1, cv::Point point2, Colour colour = Orange, int borderThickness = DEFAULT_BORDER_THICKNESS);
 	//Draws a line on an image.
-	cv::Mat DrawLine(const cv::Mat image, TrendLine line, Colour colour = Purple, int borderThickness = DEFAULT_BORDER_THICKNESS);
+	cv::Mat DrawLine(const cv::Mat image, TrendLine line, Colour colour = Orange, int borderThickness = DEFAULT_BORDER_THICKNESS);
 	//Draws the specified limits on an image.
 	cv::Mat DrawLimits(const cv::Mat image, const Contour contourLimit = Contour(), const cv::RotatedRect rotatedRectangleLimit = cv::RotatedRect(), const cv::Rect straightRectangleLimit = cv::Rect());
 	//Draws a rectangle on an image.

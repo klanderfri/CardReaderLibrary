@@ -97,6 +97,10 @@ Scalar ConversionHelper::ToScalarColour(const Colour colour) {
 		return Scalar(180, 0, 180);
 	case FadedPurple:
 		return Scalar(180, 76, 180);
+	case Orange:
+		return Scalar(0, 150, 255);
+	case FadedOrange:
+		return Scalar(40, 135, 201);
 	default:
 		throw ParameterException("Unknown colour!", "colour");
 	}
