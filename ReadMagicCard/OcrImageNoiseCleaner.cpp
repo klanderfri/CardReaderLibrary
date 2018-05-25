@@ -19,8 +19,8 @@ void OcrImageNoiseCleaner::CleanImage(Mat& dirtyImage) {
 	dirtyImage.copyTo(originalImage);
 
 	threshold(dirtyImage, binaryImage, 240, 255, THRESH_BINARY);
-	Contours contours = session->imageMethods->GetCannyContours(binaryImage, 120);
-	LetterAreas figures = session->imageMethods->ToLetterAreas(contours);
+	Contours contours = session->imageHelper->contourMethods->GetCannyContours(binaryImage, 120);
+	LetterAreas figures(contours);
 
 	for (size_t i = 0; i < figures.size(); i++) {
 
@@ -32,11 +32,11 @@ void OcrImageNoiseCleaner::handleFigure(LetterArea figure, Mat& dirtyImage) {
 
 	if (figure.Box.size.area() == 0) { return; }
 
-	Mat contourImage = session->imageMethods->DrawLimits(dirtyImage, { figure.TightContour }, Hierarchy(), false);
+	Mat contourImage = session->imageHelper->drawingMethods->DrawLimits(dirtyImage, { figure.TightContour }, Hierarchy(), false);
 
 	if (isNoise(figure, dirtyImage.size())) {
 
-		session->imageMethods->FillContour(dirtyImage, figure.OuterContour, White);
+		session->imageHelper->drawingMethods->FillContour(dirtyImage, figure.OuterContour, White);
 	}
 }
 
@@ -71,8 +71,8 @@ bool OcrImageNoiseCleaner::isInCenter(LetterArea figure, Size imageArea) {
 
 	int borderMargin = (int)(session->WORKING_CARD_HEIGHT / 27.2); //25
 	Rect rCenter(borderMargin, borderMargin, imageArea.width - 2 * borderMargin, imageArea.height - 2 * borderMargin);
-	RotatedRect rrCenter = session->imageMethods->ToRotatedRectangle(rCenter);
-	bool placedInCenter = session->imageMethods->DoesRectangleContainPoint(rrCenter, figure.Box.center);
+	RotatedRect rrCenter = session->imageHelper->converter->ToRotatedRectangle(rCenter);
+	bool placedInCenter = session->imageHelper->rectangleMethods->DoesRectangleContainPoint(rrCenter, figure.Box.center);
 
 	return placedInCenter;
 }

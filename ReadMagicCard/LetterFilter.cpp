@@ -33,7 +33,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	textBaseLine = textCenterLine = TrendLine(0, originalImageData.rows / 2);
 
 	//Do a crude filtering of the the letters.
-	LetterAreas allPossibleLetters = session->imageMethods->ToLetterAreas(contours);
+	LetterAreas allPossibleLetters(contours);
 	LetterAreas letters = filterOutNonTitleSymbols(allPossibleLetters);
 
 	//Check if there was any letters at all.
@@ -62,12 +62,12 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		vector<Point2d> cLine = textCenterLine.GetEndPoints(leftLimit, rightLimit);
 		vector<Point2d> bLine = textBaseLine.GetEndPoints(leftLimit, rightLimit);
 
-		Mat trendImage = session->imageMethods->DrawLimits(originalImageData, letters, 3);
+		Mat trendImage = session->imageHelper->drawingMethods->DrawLimits(originalImageData, letters, 3);
 		for (LetterArea letter : letters) {
-			trendImage = session->imageMethods->DrawCenterPoint(trendImage, letter.GetMiddleBottomPoint());
+			trendImage = session->imageHelper->drawingMethods->DrawCenterPoint(trendImage, letter.GetMiddleBottomPoint());
 		}
-		trendImage = session->imageMethods->DrawLine(trendImage, cLine[0], cLine[1]);
-		trendImage = session->imageMethods->DrawLine(trendImage, bLine[0], bLine[1]);
+		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
+		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, bLine[0], bLine[1]);
 
 		SaveOcvImage::SaveImageData(session, trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
 	}
@@ -167,7 +167,7 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 		LetterArea letterB = lettersToFilter[i];
 
 		//Check if the letters are identical.
-		bool isDuplicates = session->imageMethods->IsIdenticalContours(letterA.OuterContour, letterB.OuterContour);
+		bool isDuplicates = session->imageHelper->contourMethods->IsIdenticalContours(letterA.OuterContour, letterB.OuterContour);
 		if (!isDuplicates) {
 
 			//The were not identical so add the second letter to the collection of unique letters.
@@ -217,7 +217,7 @@ LetterAreas LetterFilter::filterOutLetterHoles(LetterAreas lettersToFilter) {
 		}
 
 		LetterArea letter = lettersToFilter[i];
-		bool hasParent = LetterArea::HasParentLetter(letter, neighbours);
+		bool hasParent = LetterAreas::HasParentLetter(letter, neighbours);
 		if (!hasParent) {
 
 			letters.push_back(letter);
@@ -281,7 +281,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 	int maxCoordinateX = (titleWidth / 2) + middleAreaWidth / 2;
 	for (LetterAreas letters : letterSections) {
 
-		Contour combinedLetterContorus = session->imageMethods->GetCombinedLetterContorus(letters);
+		Contour combinedLetterContorus = session->imageHelper->contourMethods->GetCombinedLetterContorus(letters);
 		RotatedRect textArea = minAreaRect(combinedLetterContorus);
 
 		bool isCentered = (minCoordinateX < textArea.center.x && maxCoordinateX > textArea.center.x);
@@ -374,15 +374,15 @@ vector<LetterAreas> LetterFilter::groupLettersBySection(LetterAreas lettersToFil
 bool LetterFilter::hasWideLimitDistance(RotatedRect leftLetterArea, RotatedRect rightLetterArea) {
 
 	//The first letter probably isn't a mana symbol.
-	if (!session->imageMethods->IsInitialized(leftLetterArea)) { return false; }
+	if (!session->imageHelper->rectangleMethods->IsInitialized(leftLetterArea)) { return false; }
 
 	float wideDistance = (float)(session->WORKING_CARD_HEIGHT / 13.062478); //52.0575-ish
 
 	//The distance between the centers.
 	float centerDistance = rightLetterArea.center.x - leftLetterArea.center.x;
 
-	float halfWidthA = session->imageMethods->SmallestDistanceCenterToLimit(leftLetterArea);
-	float halfWidthB = session->imageMethods->SmallestDistanceCenterToLimit(rightLetterArea);
+	float halfWidthA = session->imageHelper->rectangleMethods->SmallestDistanceCenterToLimit(leftLetterArea);
+	float halfWidthB = session->imageHelper->rectangleMethods->SmallestDistanceCenterToLimit(rightLetterArea);
 	//The distance between the limits if the rectangles would stand up.
 	float limitDistance = centerDistance - halfWidthA - halfWidthB;
 

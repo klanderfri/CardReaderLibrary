@@ -14,7 +14,7 @@ public:
 	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;
 	//Pointer to object containing image methods.
-	ImageHelper* imageMethods;
+	ImageHelper* imageHelper;
 	//Tells if the program should do debugging such as exporting the images to files.
 	bool runDebugging;
 	//Tells if the program should run without printing any messages.

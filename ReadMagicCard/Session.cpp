@@ -7,7 +7,7 @@ Session::Session(SystemMethods* systemMethods, char* runArguments[], int numberO
 	: WORKING_CARD_HEIGHT(680)
 {
 	this->systemMethods = systemMethods;
-	this->imageMethods = new ImageHelper();
+	this->imageHelper = new ImageHelper();
 
 	//Running the program silent will prevent it from doing
 	//outputs in the command line window.
@@ -32,7 +32,7 @@ Session::~Session()
 {
 	//Go memory! Be FREEEE!!
 	delete systemMethods;
-	delete imageMethods;
+	delete imageHelper;
 }
 
 bool Session::getInputArgumentValue(char* runArguments[], int numberOfRunArguments, int index, bool defaultValue) {

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "LetterArea.h"
-#include "ImageHelper.h"
+#include "ContourHelper.h"
+#include "RectangleHelper.h"
 
 using namespace cv;
 using namespace std;
@@ -13,10 +14,41 @@ LetterArea::~LetterArea()
 {
 }
 
+LetterAreas::LetterAreas()
+{
+}
+
+LetterAreas::~LetterAreas()
+{
+}
+
+LetterAreas::LetterAreas(Contours contours) {
+
+	for (size_t i = 0; i < contours.size(); i++) {
+
+		Contour letterContour = ContourHelper::GetConvexHullContours({ contours[i] });
+		RotatedRect letterBox = minAreaRect(letterContour);
+
+		LetterArea area;
+		area.TightContour = contours[i];
+		area.OuterContour = letterContour;
+		area.Box = letterBox;
+
+		this->push_back(area);
+	}
+
+	sort(this->begin(), this->end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
+}
+
+LetterAreas::LetterAreas(const_iterator first, const_iterator last)
+	: vector<LetterArea>(first, last)
+{
+}
+
 bool LetterArea::CompareLetterAreaByLeftBorderXAscending(LetterArea area1, LetterArea area2) {
 
-	float borderX1 = area1.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area1.Box);
-	float borderX2 = area2.Box.center.x - ImageHelper::SmallestDistanceCenterToLimit(area2.Box);
+	float borderX1 = area1.Box.center.x - RectangleHelper::SmallestDistanceCenterToLimit(area1.Box);
+	float borderX2 = area2.Box.center.x - RectangleHelper::SmallestDistanceCenterToLimit(area2.Box);
 
 	return (borderX1 < borderX2);
 }
@@ -26,7 +58,7 @@ bool LetterArea::CompareLetterAreaByHeightAscending(LetterArea area1, LetterArea
 	return (area1.Box.size.height < area2.Box.size.height);
 }
 
-bool LetterArea::HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents) {
+bool LetterAreas::HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents) {
 
 	for (size_t i = 0; i < possibleParents.size(); i++) {
 
@@ -36,7 +68,7 @@ bool LetterArea::HasParentLetter(LetterArea letterToCheck, LetterAreas possibleP
 	return false;
 }
 
-bool LetterArea::hasChildParentRelation(LetterArea child, LetterArea parent) {
+bool LetterAreas::hasChildParentRelation(LetterArea child, LetterArea parent) {
 
 	//A child will have its' center inside the parent.
 	bool parentContainsChildCenter = pointPolygonTest(parent.OuterContour, child.Box.center, false) > 0;

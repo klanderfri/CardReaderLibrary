@@ -173,7 +173,12 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="CardTitleType.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="Contour.h" />
+    <ClInclude Include="ContourHelper.h" />
+    <ClInclude Include="ConversionHelper.h" />
+    <ClInclude Include="DrawingHelper.h" />
     <ClInclude Include="Hierarchy.h" />
+    <ClInclude Include="ImageEditHelper.h" />
+    <ClInclude Include="ImageInformationHelper.h" />
     <ClInclude Include="LetterArea.h" />
     <ClInclude Include="AlgorithmHelper.h" />
     <ClInclude Include="CardCollectionReader.h" />
@@ -191,6 +196,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="OcrDecodeResult.h" />
     <ClInclude Include="OcrImageNoiseCleaner.h" />
     <ClInclude Include="ReadingConfiguration.h" />
+    <ClInclude Include="RectangleHelper.h" />
     <ClInclude Include="SaveOcvImage.h" />
     <ClInclude Include="Session.h" />
     <ClInclude Include="SessionBound.h" />
@@ -212,6 +218,11 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="ApplicationMessages.cpp" />
     <ClCompile Include="CardNameInfo.cpp" />
     <ClCompile Include="CardTestRunner.cpp" />
+    <ClCompile Include="ContourHelper.cpp" />
+    <ClCompile Include="ConversionHelper.cpp" />
+    <ClCompile Include="DrawingHelper.cpp" />
+    <ClCompile Include="ImageEditHelper.cpp" />
+    <ClCompile Include="ImageInformationHelper.cpp" />
     <ClCompile Include="LetterArea.cpp" />
     <ClCompile Include="AlgorithmHelper.cpp" />
     <ClCompile Include="CardCollectionReader.cpp" />
@@ -228,6 +239,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="OcrDecodeResult.cpp" />
     <ClCompile Include="OcrImageNoiseCleaner.cpp" />
     <ClCompile Include="ReadingConfiguration.cpp" />
+    <ClCompile Include="RectangleHelper.cpp" />
     <ClCompile Include="SaveOcvImage.cpp" />
     <ClCompile Include="Session.cpp" />
     <ClCompile Include="SessionBound.cpp" />

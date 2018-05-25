@@ -177,6 +177,24 @@
     <ClInclude Include="ImageHandlerBase.h">
       <Filter>Engine\ImageHandler</Filter>
     </ClInclude>
+    <ClInclude Include="ConversionHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawingHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ContourHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageEditHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageInformationHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -280,6 +298,24 @@
     </ClCompile>
     <ClCompile Include="ImageHandlerBase.cpp">
       <Filter>Engine\ImageHandler</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversionHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawingHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ContourHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageEditHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageInformationHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
