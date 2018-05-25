@@ -65,7 +65,7 @@ Mat DrawingHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRec
 	return workingImage;
 }
 
-Mat DrawingHelper::DrawLimits(const Mat image, const Contours contours, Hierarchy hierarchy, bool useRandomColours) {
+Mat DrawingHelper::DrawLimits(const Mat image, const Contours contours, bool useRandomColours, Hierarchy hierarchy) {
 
 	RNG rng(time(0));
 	Mat drawing = converter->ToColourImage(image);

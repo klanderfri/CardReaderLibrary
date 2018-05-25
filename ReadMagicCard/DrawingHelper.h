@@ -22,7 +22,7 @@ public:
 	//Draws the specified limits to the image.
 	cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
 	//Draws the specified limits to the image.
-	cv::Mat DrawLimits(const cv::Mat image, const Contours contours, const Hierarchy hierarchy, bool useRandomColours = true);
+	cv::Mat DrawLimits(const cv::Mat image, const Contours contours, bool useRandomColours = false, const Hierarchy hierarchy = Hierarchy());
 	//Creates an image showing the limits of the individual letters.
 	cv::Mat DrawLimits(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
 	//Draws the specified center point to the image.
