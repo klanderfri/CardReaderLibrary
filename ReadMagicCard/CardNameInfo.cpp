@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CardNameInfo.h"
-#include "MtgCardInfoHelper.h"
 #include "FileHandling.h"
 
 using namespace std;
@@ -15,6 +14,7 @@ CardNameInfo::CardNameInfo(wstring fileName, wstring cardName)
 }
 
 CardNameInfo::CardNameInfo(wstring fileName, wstring cardName, CardTitleType cardType)
+	: CardNameInfo()
 {
 	this->FileName = fileName;
 	this->CardName = cardName;
@@ -41,11 +41,17 @@ bool CardNameInfo::IsConfidentTitle(int minimumConfidence) const {
 	//The Tesseract algorithm needs to be confident with the result otherwise we shouldn't either.
 	if (Confidence < minimumConfidence) { return false; }
 
+	//Create methods checking card name.
+	MtgCardInfoHelper* cardInfo = new MtgCardInfoHelper();
+
 	//The shortest card name is three letters.
-	if (!MtgCardInfoHelper::IsNameLongEnough(CardName)) { return false; }
+	if (!cardInfo->IsNameLongEnough(CardName)) { return false; }
 
 	//Check for illegal characters.
-	if (MtgCardInfoHelper::ContainsInvalidCharacters(CardName)) { return false; }
+	if (cardInfo->ContainsInvalidCharacters(CardName)) { return false; }
+
+	//Free the pointer.
+	delete cardInfo;
 
 	return true;
 }

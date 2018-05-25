@@ -237,7 +237,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 
 		//Remove sections not containing enough letters to be the title.
 		size_t sectionSize = section.size();
-		if (sectionSize < (size_t)MtgCardInfoHelper::LettersInShortestCardName()) {
+		if (sectionSize < (size_t)session->cardInfo->LettersInShortestCardName()) {
 			continue;
 		}
 

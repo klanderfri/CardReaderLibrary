@@ -1,6 +1,7 @@
 #pragma once
 #include "SystemMethods.h"
 #include "ImageHelper.h"
+#include "MtgCardInfoHelper.h"
 //Class for the session of card reading.
 class Session
 {
@@ -15,6 +16,8 @@ public:
 	SystemMethods* systemMethods;
 	//Pointer to object containing image methods.
 	ImageHelper* imageHelper;
+	//Pointer to object holding methods giving information about the MtG card environment.
+	MtgCardInfoHelper* cardInfo;
 	//Tells if the program should do debugging such as exporting the images to files.
 	bool runDebugging;
 	//Tells if the program should run without printing any messages.

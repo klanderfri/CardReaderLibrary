@@ -8,6 +8,7 @@ Session::Session(SystemMethods* systemMethods, char* runArguments[], int numberO
 {
 	this->systemMethods = systemMethods;
 	this->imageHelper = new ImageHelper();
+	this->cardInfo = new MtgCardInfoHelper();
 
 	//Running the program silent will prevent it from doing
 	//outputs in the command line window.
@@ -33,6 +34,7 @@ Session::~Session()
 	//Go memory! Be FREEEE!!
 	delete systemMethods;
 	delete imageHelper;
+	delete cardInfo;
 }
 
 bool Session::getInputArgumentValue(char* runArguments[], int numberOfRunArguments, int index, bool defaultValue) {

@@ -154,9 +154,9 @@ CardNameInfo CardReader::readTitleOfCardWithUnknownOrientation(const Mat cardIma
 
 CardTitleType CardReader::getTitleType(const CardNameInfo info) {
 
-	bool isEmblem = info.HasDarkTitleBackground && MtgCardInfoHelper::IsEmblem(info.CardName);
-	bool isToken = !isEmblem && info.HasDarkTitleBackground && MtgCardInfoHelper::IsToken(info.CardName);
-	bool isTransformed = !isToken && !info.HasDarkTitleBackground && MtgCardInfoHelper::IsToken(info.CardName);
+	bool isEmblem = info.HasDarkTitleBackground && session->cardInfo->IsEmblem(info.CardName);
+	bool isToken = !isEmblem && info.HasDarkTitleBackground && session->cardInfo->IsToken(info.CardName);
+	bool isTransformed = !isToken && !info.HasDarkTitleBackground && session->cardInfo->IsToken(info.CardName);
 
 	assert(isToken + isEmblem + isTransformed <= 1);
 
@@ -376,13 +376,13 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 	Rect titleBox;
 	switch (titleType) {
 	case NormalTitle:
-		titleBox = MtgCardInfoHelper::GetNormalTitleSectionBox(cardImage.size());
+		titleBox = session->cardInfo->GetNormalTitleSectionBox(cardImage.size());
 		break;
 	case SplitCardTitle:
-		titleBox = MtgCardInfoHelper::GetSplitTitleSectionBox(cardImage.size());
+		titleBox = session->cardInfo->GetSplitTitleSectionBox(cardImage.size());
 		break;
 	case AkhSplitCardTitle:
-		titleBox = MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(cardImage.size());
+		titleBox = session->cardInfo->GetAmonkhetSplitTitleSectionBox(cardImage.size());
 		break;
 	}
 

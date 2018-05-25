@@ -1,5 +1,6 @@
 #pragma once
 #include "CardTitleType.h"
+#include "MtgCardInfoHelper.h"
 //Class holding information about a card.
 class CardNameInfo
 {

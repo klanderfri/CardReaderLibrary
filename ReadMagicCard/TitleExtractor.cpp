@@ -108,7 +108,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
 
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
-	bool toShortTitle = letters.size() < (size_t)MtgCardInfoHelper::LettersInShortestCardName();
+	bool toShortTitle = letters.size() < (size_t)session->cardInfo->LettersInShortestCardName();
 	if (toShortTitle) { return false; }
 
 	//Get the areas of the entire title.
