@@ -189,6 +189,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClInclude Include="Exception.h" />
     <ClInclude Include="FileHandling.h" />
     <ClInclude Include="ImageHelper.h" />
+    <ClInclude Include="LetterAreas.h" />
     <ClInclude Include="LetterCheckHelper.h" />
     <ClInclude Include="LetterFilter.h" />
     <ClInclude Include="LoadOcvImage.h" />
@@ -232,6 +233,7 @@ xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
     <ClCompile Include="CardReaderApplication.cpp" />
     <ClCompile Include="FileHandling.cpp" />
     <ClCompile Include="ImageHelper.cpp" />
+    <ClCompile Include="LetterAreas.cpp" />
     <ClCompile Include="LetterCheckHelper.cpp" />
     <ClCompile Include="LetterFilter.cpp" />
     <ClCompile Include="LoadOcvImage.cpp" />

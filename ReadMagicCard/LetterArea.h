@@ -21,21 +21,3 @@ public:
 	//The box containing the letter.
 	cv::RotatedRect Box;
 };
-
-class LetterAreas :
-	public std::vector<LetterArea>
-{
-public:
-	LetterAreas();
-	LetterAreas(Contours contours);
-	LetterAreas(const_iterator first, const_iterator last);
-	~LetterAreas();
-
-	//Checks if a letter is a child to any other letter.
-	static bool HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents);
-
-private:
-
-	//Checks if one letter is child to another letter.
-	static bool hasChildParentRelation(LetterArea child, LetterArea parent);
-};

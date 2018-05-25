@@ -1,7 +1,7 @@
 #pragma once
 #include "TrendLine.h"
 #include "Hierarchy.h"
-#include "LetterArea.h"
+#include "LetterAreas.h"
 #include "ConversionHelper.h"
 //Class for drawing on images.
 class DrawingHelper

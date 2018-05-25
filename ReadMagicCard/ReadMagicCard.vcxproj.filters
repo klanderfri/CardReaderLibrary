@@ -195,6 +195,9 @@
     <ClInclude Include="ImageInformationHelper.h">
       <Filter>Libraries\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="LetterAreas.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CardNameInfo.cpp">
@@ -316,6 +319,9 @@
     </ClCompile>
     <ClCompile Include="ImageInformationHelper.cpp">
       <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="LetterAreas.cpp">
+      <Filter>Core\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
