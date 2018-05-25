@@ -42,16 +42,13 @@ bool CardNameInfo::IsConfidentTitle(int minimumConfidence) const {
 	if (Confidence < minimumConfidence) { return false; }
 
 	//Create methods checking card name.
-	MtgCardInfoHelper* cardInfo = new MtgCardInfoHelper();
+	MtgCardInfoHelper cardInfo;
 
 	//The shortest card name is three letters.
-	if (!cardInfo->IsNameLongEnough(CardName)) { return false; }
+	if (!cardInfo.IsNameLongEnough(CardName)) { return false; }
 
 	//Check for illegal characters.
-	if (cardInfo->ContainsInvalidCharacters(CardName)) { return false; }
-
-	//Free the pointer.
-	delete cardInfo;
+	if (cardInfo.ContainsInvalidCharacters(CardName)) { return false; }
 
 	return true;
 }

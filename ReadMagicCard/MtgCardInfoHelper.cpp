@@ -91,18 +91,15 @@ Rect MtgCardInfoHelper::getSectionBox(Size cardSize, double xCoordinateFactor, d
 double MtgCardInfoHelper::CompareCardNames(const wstring name1, const wstring name2) {
 
 	//Create an instance of this class to access methods through.
-	MtgCardInfoHelper* cardInfo = new MtgCardInfoHelper();
+	MtgCardInfoHelper cardInfo;
 
 	//We dont care about lower case/upper case when it comes to sorting card names.
 	wstring tmp_name1 = name1;
 	wstring tmp_name2 = name2;
 	boost::algorithm::to_lower(tmp_name1);
 	boost::algorithm::to_lower(tmp_name2);
-	tmp_name1 = cardInfo->RemoveNonSortingRelevantCharacters(tmp_name1);
-	tmp_name2 = cardInfo->RemoveNonSortingRelevantCharacters(tmp_name2);
-
-	//Delete the instance since we are done with it now.
-	delete cardInfo;
+	tmp_name1 = cardInfo.RemoveNonSortingRelevantCharacters(tmp_name1);
+	tmp_name2 = cardInfo.RemoveNonSortingRelevantCharacters(tmp_name2);
 
 	if (tmp_name1 == tmp_name2) { return 0; }
 
