@@ -20,13 +20,17 @@ public:
 	//Draws a line on an image.
 	cv::Mat DrawLine(const cv::Mat image, TrendLine line, Colour colour = Purple, int borderThickness = DEFAULT_BORDER_THICKNESS);
 	//Draws the specified limits to the image.
-	cv::Mat DrawLimits(const cv::Mat image, const cv::RotatedRect rotatedLimitRectangle, const cv::Rect straightLimitRectangle = cv::Rect(), const Contour limitContour = Contour());
+	cv::Mat DrawLimits(const cv::Mat image, const Contour contourLimit = Contour(), const cv::RotatedRect rotatedRectangleLimit = cv::RotatedRect(), const cv::Rect straightRectangleLimit = cv::Rect());
+	
+	cv::Mat DrawRectangle(const cv::Mat image, const cv::RotatedRect rectangle, Colour colour = DarkBlue);
+
+	cv::Mat DrawRectangle(const cv::Mat image, const cv::Rect rectangle, Colour colour = Green);
 	//Draws the specified limits to the image.
 	cv::Mat DrawContours(const cv::Mat image, const Contours contours, bool useRandomColours = false, const Hierarchy hierarchy = Hierarchy());
 	//Creates an image showing the limits of the individual letters.
 	cv::Mat DrawLetterAreas(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
 	//Draws the specified center point to the image.
-	cv::Mat DrawCenterPoint(const cv::Mat image, const cv::Point imageCenter, const Colour colour = Red, int radius = 3);
+	cv::Mat DrawCircle(const cv::Mat image, const cv::Point imageCenter, int radius = 3, const Colour colour = Red);
 	//Fills a contour in the image with the specified colour.
 	void FillContour(cv::Mat& image, const Contour contour, const Colour colour);
 

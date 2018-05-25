@@ -38,37 +38,59 @@ Mat DrawingHelper::DrawLine(const Mat image, TrendLine line, Colour colour, int 
 	return outImage;
 }
 
-Mat DrawingHelper::DrawLimits(const Mat image, const RotatedRect rotatedLimitRectangle, const Rect straightLimitRectangle, const Contour limitContour)
+Mat DrawingHelper::DrawLimits(const Mat image, const Contour contourLimit, const RotatedRect rotatedRectangleLimit, const Rect straightRectangleLimit)
 {
 	//Create a working RGB image so the border lines are colour even if the image isn't.
 	Mat workingImage = converter->ToColourImage(image);
 
-	Scalar yellow = converter->ToScalarColour(Yellow);
-	Scalar green = converter->ToScalarColour(Green);
-	Scalar darkBlue = converter->ToScalarColour(DarkBlue);
-
 	//Draw the contours.
-	if (!limitContour.empty()) {
-		DrawContours(workingImage, Contours{ limitContour });
+	if (!contourLimit.empty()) {
+		DrawContours(workingImage, Contours{ contourLimit });
 	}
+
 	//Draw the straight rectangle.
-	if (!straightLimitRectangle.empty()) {
-		rectangle(workingImage, straightLimitRectangle.tl(), straightLimitRectangle.br(), green, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, 0);
+	if (!straightRectangleLimit.empty()) {
+		DrawRectangle(workingImage, straightRectangleLimit);
 	}
+
 	//Draw the rotated rectangle
-	Point2f rect_points[4];
-	rotatedLimitRectangle.points(rect_points);
-	for (int j = 0; j < 4; j++) {
-		line(workingImage, rect_points[j], rect_points[(j + 1) % 4], darkBlue, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE);
+	if (rotatedRectangleLimit.size.area() > 0) {
+		DrawRectangle(workingImage, rotatedRectangleLimit);
 	}
+
+	return workingImage;
+}
+
+Mat DrawingHelper::DrawRectangle(const Mat image, const RotatedRect rectangle, Colour colour) {
+
+	Mat workingImage = converter->ToColourImage(image);
+
+	Point2f rect_points[4];
+	rectangle.points(rect_points);
+
+	for (int i = 0; i < 4; i++) {
+		
+		int j = (i + 1) % 4;
+		workingImage = DrawLine(workingImage, rect_points[i], rect_points[j], colour, DEFAULT_BORDER_THICKNESS);
+	}
+
+	return workingImage;
+}
+
+Mat DrawingHelper::DrawRectangle(const Mat image, const Rect rectangle, Colour colour) {
+
+	Mat workingImage = converter->ToColourImage(image);
+
+	Scalar sColour = converter->ToScalarColour(colour);
+	cv::rectangle(workingImage, rectangle.tl(), rectangle.br(), sColour, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, 0);
 
 	return workingImage;
 }
 
 Mat DrawingHelper::DrawContours(const Mat image, const Contours contours, bool useRandomColours, Hierarchy hierarchy) {
 
+	Mat workingImage = converter->ToColourImage(image);
 	RNG rng(time(0));
-	Mat drawing = converter->ToColourImage(image);
 
 	for (size_t i = 0; i < contours.size(); i++)
 	{
@@ -76,32 +98,32 @@ Mat DrawingHelper::DrawContours(const Mat image, const Contours contours, bool u
 			Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255)) :
 			converter->ToScalarColour(Red);
 
-		drawContours(drawing, contours, i, colour, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, hierarchy, 0, Point());
+		drawContours(workingImage, contours, i, colour, DEFAULT_BORDER_THICKNESS, DEFAULT_BORDER_LINE_TYPE, hierarchy, 0, Point());
 	}
 
-	return drawing;
+	return workingImage;
 }
 
 Mat DrawingHelper::DrawLetterAreas(const Mat image, const LetterAreas letters, int letterCenterRadius) {
 
-	Mat drawing = converter->ToColourImage(image);
+	Mat workingImage = converter->ToColourImage(image);
 
 	for (size_t i = 0; i < letters.size(); i++) {
 
 		LetterArea area = letters[i];
 
 		//Draw the area.
-		drawing = drawing.empty() ? image : drawing;
-		drawing = DrawLimits(drawing, area.Box, Rect(), area.OuterContour);
+		workingImage = workingImage.empty() ? image : workingImage;
+		workingImage = DrawLimits(workingImage, area.OuterContour, area.Box);
 
 		//Draw the center.
-		drawing = DrawCenterPoint(drawing, area.Box.center, DarkBlue, letterCenterRadius);
+		workingImage = DrawCircle(workingImage, area.Box.center, letterCenterRadius, DarkBlue);
 	}
 
-	return drawing;
+	return workingImage;
 }
 
-Mat DrawingHelper::DrawCenterPoint(const Mat image, const Point imageCenter, const Colour colour, int radius) {
+Mat DrawingHelper::DrawCircle(const Mat image, const Point imageCenter, int radius, const Colour colour) {
 
 	//Create a working rgb image so the border lines are colour even if the image isn't.
 	Mat workingImage = converter->ToColourImage(image);

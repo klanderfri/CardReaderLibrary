@@ -121,7 +121,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
 		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawLetterAreas(titleImage, letters, radius);
-		dbg_possibleTitleAreaImage = session->imageHelper->drawingMethods->DrawLimits(titleImage, textArea, Rect(), combinedLetterContorus);
+		dbg_possibleTitleAreaImage = session->imageHelper->drawingMethods->DrawLimits(titleImage, combinedLetterContorus, textArea);
 	}
 
 	//The title image cropped using a RotatedRect.
@@ -195,7 +195,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 
 		Mat lineImages;
 		titleImage.copyTo(lineImages);
-		lineImages = session->imageHelper->drawingMethods->DrawLimits(lineImages, RotatedRect(), Rect(), letters);
+		lineImages = session->imageHelper->drawingMethods->DrawContours(lineImages, { letters });
 		lineImages = session->imageHelper->drawingMethods->DrawLine(lineImages, horizontalBounds[0]);
 		lineImages = session->imageHelper->drawingMethods->DrawLine(lineImages, horizontalBounds[1]);
 		lineImages = session->imageHelper->drawingMethods->DrawLine(lineImages, verticalBounds[0]);
@@ -211,7 +211,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	//Debug
 	Mat textAreaImage;
 	titleImage.copyTo(textAreaImage);
-	textAreaImage = session->imageHelper->drawingMethods->DrawLimits(textAreaImage, textArea, Rect(), letters);
+	textAreaImage = session->imageHelper->drawingMethods->DrawLimits(textAreaImage, letters, textArea);
 
 	return textArea;
 }

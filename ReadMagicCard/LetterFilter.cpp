@@ -64,7 +64,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 		Mat trendImage = session->imageHelper->drawingMethods->DrawLetterAreas(originalImageData, letters, 3);
 		for (LetterArea letter : letters) {
-			trendImage = session->imageHelper->drawingMethods->DrawCenterPoint(trendImage, letter.GetMiddleBottomPoint());
+			trendImage = session->imageHelper->drawingMethods->DrawCircle(trendImage, letter.GetMiddleBottomPoint());
 		}
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, bLine[0], bLine[1]);
