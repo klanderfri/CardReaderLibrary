@@ -27,7 +27,7 @@ void CardCollectionReader::AddCard(wstring imageFilePath) {
 		currentAmountOfReaders++;
 
 		//Check if the new card has the longest filename.
-		wstring imageFileName = session->systemMethods->GetFileNameFromFilePath(imageFilePath);
+		wstring imageFileName = session->fileSystem->GetFileNameFromFilePath(imageFilePath);
 		if (longestFilename.length() < imageFileName.length()) {
 			longestFilename = imageFileName;
 		}
@@ -66,11 +66,11 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 	amountOfErrors = 0;
 	int lengthOfLongestFilename = LengthOfLongestFilename();
 
-	if (!session->runSilent) {
+	if (!session->inputData->runSilent) {
 		wcout << L"Reading cards . . ." << endl;
 	}
 
-	if (session->runParallelized) {
+	if (session->inputData->runParallelized) {
 		parallel_for_(range, [&](const Range& internalRange) {
 			cardNameExtraction(internalRange, result, range.end, lengthOfLongestFilename);
 		});
@@ -79,7 +79,7 @@ vector<CardNameInfo> CardCollectionReader::ExtractCardNames() {
 		cardNameExtraction(range, result, range.end, lengthOfLongestFilename);
 	}
 
-	if (!session->runSilent) {
+	if (!session->inputData->runSilent) {
 		wcout << endl;
 	}
 
@@ -115,7 +115,7 @@ void CardCollectionReader::cardNameExtraction(const Range& range, vector<CardNam
 		assert(!gotCardImage || !info.ExtractedCardImage.empty());
 
 		//Print that we have read the image.
-		if (!session->runSilent) {
+		if (!session->inputData->runSilent) {
 			printProgressMessage(info.FileName, info.CardName, amountOfCardsRead, lengthOfLongestFilename);
 		}
 

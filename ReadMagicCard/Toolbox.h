@@ -1,23 +1,18 @@
 #pragma once
-#include "SystemMethods.h"
-#include "ImageHelper.h"
-#include "MtgCardInfoHelper.h"
-//Class for the session of card reading.
-class Session
+#include "Converter.h"
+#include "StoreCardProcessingData.h"
+class Toolbox
 {
 public:
-	Session(SystemMethods* systemMethods, char* runArguments[], int numberOfRunArguments);
-	~Session();
+	Toolbox(char* runArguments[], int numberOfRunArguments);
+	~Toolbox();
+	//Sets the command line text colour to the specified colour.
+	void SetCommandLineTextColour(int colour);
+	//Resets the command line text colour to the OS default one.
+	void ResetCommandLineTextColour();
+	//Sets the width of the console window to accommodate a specific amount of characters.
+	void SetConsoleWidthInCharacters(int amountOfCharacters);
 
-	//The height of the shrinked card image we work with to maximize performance.
-	const int WORKING_CARD_HEIGHT;
-
-	//Pointer to object handling the system dependent methods.
-	SystemMethods* systemMethods;
-	//Pointer to object containing image methods.
-	ImageHelper* imageHelper;
-	//Pointer to object holding methods giving information about the MtG card environment.
-	MtgCardInfoHelper* cardInfo;
 	//Tells if the program should do debugging such as exporting the images to files.
 	bool runDebugging;
 	//Tells if the program should run without printing any messages.
@@ -26,6 +21,10 @@ public:
 	bool runParallelized;
 	//The file path of a specific image to decode.
 	std::wstring filePathToImageToDecode;
+
+	Converter* converter;
+
+	StoreCardProcessingData* resultStorer;
 
 private:
 

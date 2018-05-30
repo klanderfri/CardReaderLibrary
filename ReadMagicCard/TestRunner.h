@@ -1,15 +1,19 @@
 #pragma once
-#include "SessionBound.h"
-#include "CardNameInfo.h"
+#include "Toolbox.h"
+#include "Card.h"
 //Class running tests of the program.
-class TestRunner :
-	public SessionBound
+class TestRunner
 {
 public:
-	TestRunner(Session* session);
+	TestRunner(Toolbox* toolbox);
 	~TestRunner();
 
 	//Runs tests to see if there are any broken code.
-	void RunTestCases(std::vector<CardNameInfo> result);
+	void RunTestCases(std::vector<Card> result);
+
+private:
+
+	//Pointer to object holding useful data/methods.
+	Toolbox* toolbox;
 };
 

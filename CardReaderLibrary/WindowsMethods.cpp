@@ -9,8 +9,6 @@ using namespace std;
 
 WindowsMethods::WindowsMethods()
 {
-	//Make sure the cache for the current user name is cleare.
-	cache_currentUserName = L"";
 }
 
 WindowsMethods::~WindowsMethods()
@@ -95,26 +93,6 @@ wstring WindowsMethods::ToWString(const float& floatToConvert, int numberOfDecim
 	return convertedString;
 }
 
-wstring WindowsMethods::GetCurrentUserName() {
-
-	if (cache_currentUserName.empty())
-	{
-		//Get username.
-		wchar_t username[UNLEN + 1];
-		DWORD username_len = UNLEN + 1;
-		GetUserNameW(username, &username_len);
-
-		cache_currentUserName = wstring(username);
-	}
-
-	return cache_currentUserName;
-}
-
-wstring WindowsMethods::GetUserPicturesFileDirectory() {
-
-	return L"C:\\Users\\" + GetCurrentUserName() + L"\\Pictures\\";
-}
-
 wstring WindowsMethods::AddToEndOfFilename(wstring originalFilename, wstring addition) {
 
 	if (addition.empty()) { return originalFilename; }
@@ -125,25 +103,6 @@ wstring WindowsMethods::AddToEndOfFilename(wstring originalFilename, wstring add
 	wstring newFilename = filename + addition + extension;
 
 	return newFilename;
-}
-
-void WindowsMethods::SetConsoleWidthInCharacters(int amountOfCharacters) {
-
-	//Implemented as suggested at
-	//https://stackoverflow.com/a/29197930/1997617
-	HANDLE Hout = ::GetStdHandle(STD_OUTPUT_HANDLE);
-	CONSOLE_FONT_INFOEX Font = { sizeof(Font) };
-	GetCurrentConsoleFontEx(Hout, FALSE, &Font);
-
-	//Implemented as suggested at
-	//https://stackoverflow.com/a/21238849/1997617
-	HWND console = GetConsoleWindow();
-	RECT r;
-	GetWindowRect(console, &r); //Stores the console's current dimensions.
-	double phi = (1 + sqrt(5)) / 2;
-	int width = amountOfCharacters * Font.dwFontSize.X + 33; //Lets hope the user doesn't change the font size!
-	int height = (int)round(width / phi); //Use the golden ratio! :-D
-	MoveWindow(console, r.left, r.top, width, height, TRUE);
 }
 
 wstring WindowsMethods::GetPathToExeParentDirectory() {
@@ -174,18 +133,4 @@ wstring WindowsMethods::GetExeFileName()
 	boost::filesystem::path path(GetPathToExeFile());
 	wstring tmp = path.filename().wstring();
 	return path.filename().wstring();
-}
-
-void WindowsMethods::SetCommandLineTextColour(Colour colour) {
-
-	//Implemented as suggested at:
-	//https://stackoverflow.com/a/4053879/1997617
-
-	HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-	SetConsoleTextAttribute(console, colour);
-}
-
-void WindowsMethods::ResetCommandLineTextColour() {
-
-	SetCommandLineTextColour(Colour::FadedWhite);
 }

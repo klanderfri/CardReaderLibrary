@@ -1,12 +1,10 @@
 #include "stdafx.h"
 #include "CardReader.h"
 #include "CardExtractor.h"
-#include "FileHandling.h"
 #include "MtgCardInfoHelper.h"
 #include "SaveOcvImage.h"
 #include "TitleExtractor.h"
 #include "ImageOcrHelper.h"
-#include "StoreCardProcessingData.h"
 #include "TitleLetterFixer.h"
 #include "AlgorithmHelper.h"
 
@@ -48,7 +46,7 @@ void CardReader::ReadCardName(Mat cardImage) {
 
 	//Add additional data to the result container.
 	finalResult.FilePath = imageFilePath;
-	finalResult.FileName = session->systemMethods->GetFileNameFromFilePath(finalResult.FilePath);
+	finalResult.FileName = session->fileSystem->GetFileNameFromFilePath(finalResult.FilePath);
 	finalResult.CardType = getTitleType(finalResult);
 	if (rotateFinalCardImage180Degrees) {
 		rotate(cardImage, cardImage, ROTATE_180);
@@ -62,12 +60,12 @@ void CardReader::ReadCardName(Mat cardImage) {
 	}
 
 	//Store result for debugging.
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
 		size_t size = finalResult.OcrTitleImages.size();
 		for (size_t i = 0; i < size; i++) {
 
-			SaveOcvImage::SaveImageData(session, finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
+			session->fileSystem->imageSaver->SaveImageData(finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
 		}
 	}
 }
@@ -284,10 +282,9 @@ CardNameInfo CardReader::joinSplitCardTitles(const CardNameInfo resultA, const C
 
 void CardReader::storeOcrConfidence(const CardNameInfo result, const int numberOfTries) {
 
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
-		StoreCardProcessingData storer = StoreCardProcessingData(session);
-		storer.StoreOcrConfidence(imageFilePath, numberOfTries, result.CardName, result.Confidence);
+		session->fileSystem->dataStorer->StoreOcrConfidence(imageFilePath, numberOfTries, result.CardName, result.Confidence);
 	}
 }
 
@@ -363,8 +360,8 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 		session->imageHelper->imageEditor->SetBackgroundByInverting(outImages[i], true);
 
 		//Store result for debugging.
-		if (session->runDebugging) {
-			SaveOcvImage::SaveImageData(session, outImages[i], imageFileName, L"12 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
+		if (session->inputData->runDebugging) {
+			session->fileSystem->imageSaver->SaveImageData(outImages[i], imageFileName, L"12 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
 		}
 	}
 
@@ -389,7 +386,7 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 	session->imageHelper->imageEditor->CropImage(cardImage, outImage, titleBox);
 
 	//Store result for debugging.
-	if (session->runDebugging) {
-		SaveOcvImage::SaveImageData(session, outImage, imageFileName, L"6 - Title Section", ++numberOfTitleImagesStoredForDebug);
+	if (session->inputData->runDebugging) {
+		session->fileSystem->imageSaver->SaveImageData(outImage, imageFileName, L"6 - Title Section", ++numberOfTitleImagesStoredForDebug);
 	}
 }

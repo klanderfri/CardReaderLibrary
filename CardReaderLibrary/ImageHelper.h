@@ -5,11 +5,14 @@
 #include "ContourHelper.h"
 #include "RectangleHelper.h"
 #include "ImageInformationHelper.h"
+#include "ProcessingDataStorer.h"
+#include "LoadOcvImage.h"
+#include "SaveOcvImage.h"
 //Class holding image processing methods.
 class ImageHelper
 {
 public:
-	ImageHelper();
+	ImageHelper(SystemMethods* systemMethods);
 	~ImageHelper();
 
 	//Pointer to object doing conversions.

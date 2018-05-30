@@ -5,7 +5,7 @@
 using namespace cv;
 using namespace std;
 
-ImageHelper::ImageHelper()
+ImageHelper::ImageHelper(SystemMethods* systemMethods)
 {
 	this->converter = new ConversionHelper();
 	this->drawingMethods = new DrawingHelper();

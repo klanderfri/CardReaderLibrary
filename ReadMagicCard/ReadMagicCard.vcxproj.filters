@@ -1,74 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{26d2ba97-cdab-4dd6-ac6e-35eee8e9c04c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Containers">
-      <UniqueIdentifier>{5bf04ce3-3f55-4d7f-9d8a-fc24f5f78a6a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Exceptions">
-      <UniqueIdentifier>{cd2d7ffd-c1ad-44b1-bc3d-901368ebc0d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{5bd75323-628d-49ec-afc5-53481d3c3a05}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\CardReaders">
-      <UniqueIdentifier>{1a0c66e6-90b8-4ee9-9102-cc27e7235fcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries">
-      <UniqueIdentifier>{db03803c-e910-4560-b446-6884ba2315f5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\Helpers">
-      <UniqueIdentifier>{28420d15-8642-4baf-9e32-bba75f908805}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Application">
       <UniqueIdentifier>{7cb8e1eb-8b3f-4ec0-ab16-96987a296333}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\FileSystem">
-      <UniqueIdentifier>{3ec4cd99-ff12-4311-b7e5-027fa07348c6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Testing">
       <UniqueIdentifier>{7374cc12-c204-46b0-9eb4-20c7fdad0dba}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\LanguageData">
-      <UniqueIdentifier>{7d50b2e4-d2c6-49cc-a828-41cdcd11ff15}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Helpers">
-      <UniqueIdentifier>{3707de21-7b33-4b00-97e7-dc75725ea499}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\SystemMethods">
-      <UniqueIdentifier>{6c7808d3-2821-44f3-aab2-254cddfdea07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\SectionExtractors">
-      <UniqueIdentifier>{014d17a5-869b-43bb-9262-b7f310de960c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Enums">
-      <UniqueIdentifier>{cb86f848-54bc-4bec-aa5a-300498ef7a72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Deployment">
-      <UniqueIdentifier>{b69851ff-db45-49c8-83b1-b3c3f2139085}</UniqueIdentifier>
+      <UniqueIdentifier>{9b2e51fa-f0ea-42d0-8c09-90c89f0a1d4f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Session">
-      <UniqueIdentifier>{0de93391-ce28-47b7-8990-9c0fbbf85ddc}</UniqueIdentifier>
+    <Filter Include="Application\Exceptions">
+      <UniqueIdentifier>{355d901e-e46d-4913-a4db-b3ff8b4fdbe0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ImageHandler">
-      <UniqueIdentifier>{71c71539-a35b-4f3e-82d7-ad10fab4acc9}</UniqueIdentifier>
+    <Filter Include="Application\Helpers">
+      <UniqueIdentifier>{0a7ca9e2-90e0-4cf6-8390-7656a8eb9815}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Application\Containers">
+      <UniqueIdentifier>{cca6bee6-797f-47bd-ab76-52b52058268f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Contour.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="LetterArea.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="CardNameInfo.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="Hierarchy.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Application</Filter>
     </ClInclude>
@@ -81,80 +33,8 @@
     <ClInclude Include="TestRunner.h">
       <Filter>Testing</Filter>
     </ClInclude>
-    <ClInclude Include="ImageOcrHelper.h">
-      <Filter>Engine\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="Exception.h">
-      <Filter>Core\Exceptions</Filter>
-    </ClInclude>
-    <ClInclude Include="CardCollectionReader.h">
-      <Filter>Engine\CardReaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CardReader.h">
-      <Filter>Engine\CardReaders</Filter>
-    </ClInclude>
-    <ClInclude Include="LetterCheckHelper.h">
-      <Filter>Engine\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="CardExtractor.h">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleExtractor.h">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClInclude>
-    <ClInclude Include="SystemMethods.h">
-      <Filter>Libraries\SystemMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="MtgCardInfoHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="AlgorithmHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="FileHandling.h">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClInclude>
     <ClInclude Include="CardReaderApplication.h">
       <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadOcvImage.h">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="SaveOcvImage.h">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowsMethods.h">
-      <Filter>Libraries\SystemMethods</Filter>
-    </ClInclude>
-    <ClInclude Include="Colour.h">
-      <Filter>Core\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="CardTitleType.h">
-      <Filter>Core\Enums</Filter>
-    </ClInclude>
-    <ClInclude Include="OcrDecodeResult.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="ApplicationMessages.h">
-      <Filter>Application</Filter>
-    </ClInclude>
-    <ClInclude Include="TimePoint.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="LetterFilter.h">
-      <Filter>Engine\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="TitleLetterFixer.h">
-      <Filter>Engine\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ReadingConfiguration.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="TrendLine.h">
-      <Filter>Core\Containers</Filter>
     </ClInclude>
     <ClInclude Include="CardTestRunner.h">
       <Filter>Testing</Filter>
@@ -162,53 +42,32 @@
     <ClInclude Include="AlgorithmTestRunner.h">
       <Filter>Testing</Filter>
     </ClInclude>
+    <ClInclude Include="Exception.h">
+      <Filter>Application\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="ApplicationMessages.h">
+      <Filter>Application\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileHandling.h">
+      <Filter>Application\Helpers</Filter>
+    </ClInclude>
     <ClInclude Include="StoreCardProcessingData.h">
-      <Filter>Application</Filter>
+      <Filter>Application\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="OcrImageNoiseCleaner.h">
-      <Filter>Engine\Helpers</Filter>
+    <ClInclude Include="Toolbox.h">
+      <Filter>Application\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="Session.h">
-      <Filter>Engine\Session</Filter>
+    <ClInclude Include="Card.h">
+      <Filter>Application\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="SessionBound.h">
-      <Filter>Engine\Session</Filter>
+    <ClInclude Include="Converter.h">
+      <Filter>Application\Helpers</Filter>
     </ClInclude>
-    <ClInclude Include="ImageHandlerBase.h">
-      <Filter>Engine\ImageHandler</Filter>
-    </ClInclude>
-    <ClInclude Include="ConversionHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="DrawingHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ContourHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageEditHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="RectangleHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ImageInformationHelper.h">
-      <Filter>Libraries\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="LetterAreas.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="AllowedTitleCharactersHelper.h">
-      <Filter>Libraries\Helpers</Filter>
+    <ClInclude Include="TimePoint.h">
+      <Filter>Application\Containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CardNameInfo.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterArea.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
     <ClCompile Include="ReadMagicCard.cpp">
       <Filter>Application</Filter>
     </ClCompile>
@@ -218,71 +77,8 @@
     <ClCompile Include="TestRunner.cpp">
       <Filter>Testing</Filter>
     </ClCompile>
-    <ClCompile Include="ImageOcrHelper.cpp">
-      <Filter>Engine\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="CardCollectionReader.cpp">
-      <Filter>Engine\CardReaders</Filter>
-    </ClCompile>
-    <ClCompile Include="CardReader.cpp">
-      <Filter>Engine\CardReaders</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterCheckHelper.cpp">
-      <Filter>Engine\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="CardExtractor.cpp">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleExtractor.cpp">
-      <Filter>Engine\SectionExtractors</Filter>
-    </ClCompile>
-    <ClCompile Include="MtgCardInfoHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="AlgorithmHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="FileHandling.cpp">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClCompile>
     <ClCompile Include="CardReaderApplication.cpp">
       <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="LoadOcvImage.cpp">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="SaveOcvImage.cpp">
-      <Filter>Libraries\FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="WindowsMethods.cpp">
-      <Filter>Libraries\SystemMethods</Filter>
-    </ClCompile>
-    <ClCompile Include="ApplicationMessages.cpp">
-      <Filter>Application</Filter>
-    </ClCompile>
-    <ClCompile Include="TimePoint.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterFilter.cpp">
-      <Filter>Engine\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="OcrDecodeResult.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="TitleLetterFixer.cpp">
-      <Filter>Engine\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="SystemMethods.cpp">
-      <Filter>Libraries\SystemMethods</Filter>
-    </ClCompile>
-    <ClCompile Include="ReadingConfiguration.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="TrendLine.cpp">
-      <Filter>Core\Containers</Filter>
     </ClCompile>
     <ClCompile Include="CardTestRunner.cpp">
       <Filter>Testing</Filter>
@@ -290,50 +86,29 @@
     <ClCompile Include="AlgorithmTestRunner.cpp">
       <Filter>Testing</Filter>
     </ClCompile>
+    <ClCompile Include="ApplicationMessages.cpp">
+      <Filter>Application\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="FileHandling.cpp">
+      <Filter>Application\Helpers</Filter>
+    </ClCompile>
     <ClCompile Include="StoreCardProcessingData.cpp">
-      <Filter>Application</Filter>
+      <Filter>Application\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="OcrImageNoiseCleaner.cpp">
-      <Filter>Engine\Helpers</Filter>
+    <ClCompile Include="Toolbox.cpp">
+      <Filter>Application\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="Session.cpp">
-      <Filter>Engine\Session</Filter>
+    <ClCompile Include="Card.cpp">
+      <Filter>Application\Containers</Filter>
     </ClCompile>
-    <ClCompile Include="SessionBound.cpp">
-      <Filter>Engine\Session</Filter>
+    <ClCompile Include="Converter.cpp">
+      <Filter>Application\Helpers</Filter>
     </ClCompile>
-    <ClCompile Include="ImageHandlerBase.cpp">
-      <Filter>Engine\ImageHandler</Filter>
-    </ClCompile>
-    <ClCompile Include="ConversionHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="DrawingHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ContourHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageEditHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="RectangleHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="ImageInformationHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterAreas.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="AllowedTitleCharactersHelper.cpp">
-      <Filter>Libraries\Helpers</Filter>
+    <ClCompile Include="TimePoint.cpp">
+      <Filter>Application\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="tessdata\eng.traineddata">
-      <Filter>Engine\LanguageData</Filter>
-    </None>
     <None Include="..\CONTRIBUTING.md" />
     <None Include="..\LICENSE.md" />
     <None Include="..\README.md" />

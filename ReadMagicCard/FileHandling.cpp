@@ -1,16 +1,21 @@
 #include "stdafx.h"
 #include "FileHandling.h"
+#include "Converter.h"
 #include <experimental\filesystem>
 #include <chrono>
 #include "boost\algorithm\string.hpp"
 #include "boost\filesystem.hpp"
+#include <windows.h>
+#include <Lmcons.h>
 
 namespace fs = std::experimental::filesystem;
 using namespace std;
 
 const wstring FileHandling::MTG_IMAGES_WORKING_FOLDER = L"MtG-cards";
+const wstring FileHandling::MTG_OUTPUT_FOLDER = L"Image Data";
 mutex FileHandling::m_fileLock;
 mutex FileHandling::m_createFolderLock;
+wstring FileHandling::cache_currentUserName = L"";
 
 FileHandling::FileHandling()
 {
@@ -20,13 +25,19 @@ FileHandling::~FileHandling()
 {
 }
 
-wstring FileHandling::GetMtgImageFileFolderPath(Session* session) {
+wstring FileHandling::GetOutputFolderPath() {
 
 	//Create the file path.
-	return session->systemMethods->GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
+	return GetMtgImageFileFolderPath() + MTG_OUTPUT_FOLDER + L"\\";
 }
 
-vector<wstring> FileHandling::GetMtgImageFilePaths(Session* session, wstring fullFolderPath) {
+wstring FileHandling::GetMtgImageFileFolderPath() {
+
+	//Create the file path.
+	return GetUserPicturesFileDirectory() + MTG_IMAGES_WORKING_FOLDER + L"\\";
+}
+
+vector<wstring> FileHandling::GetMtgImageFilePaths(wstring fullFolderPath) {
 
 	//Create a list holding the filenames.
 	vector<wstring> filepaths;
@@ -49,14 +60,14 @@ vector<wstring> FileHandling::GetMtgImageFilePaths(Session* session, wstring ful
 	return filepaths;
 }
 
-wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstring fileName, wstring subFolder) {
+wstring FileHandling::AddRowToFile(wstring textToWrite, wstring fileName, wstring subFolder) {
 
-	return AddRowToFile(session, textToWrite, fileName, subFolder, m_fileLock);
+	return AddRowToFile(textToWrite, fileName, subFolder, m_fileLock);
 }
 
-wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
+wstring FileHandling::AddRowToFile(wstring textToWrite, wstring fileName, wstring subFolder, std::mutex& fileLock) {
 
-	wstring folderPath = GetSubFolderPath(session, subFolder);
+	wstring folderPath = GetSubFolderPath(subFolder);
 	wstring fullFilePath = folderPath + fileName;
 
 	if (CreateFileDirectory(folderPath))
@@ -76,13 +87,14 @@ wstring FileHandling::AddRowToFile(Session* session, wstring textToWrite, wstrin
 	else
 	{
 		//Failed to create directory.
-		throw SaveException("Could not create file directory: " + session->systemMethods->ToString(folderPath));
+		Converter converter = Converter();
+		throw SaveException("Could not create file directory: " + converter.ToString(folderPath));
 	}
 
 	return fullFilePath;
 }
 
-wstring FileHandling::GetSubFolderPath(Session* session, wstring subFolder)
+wstring FileHandling::GetSubFolderPath(wstring subFolder)
 {
 	//Check that we actually got a subfolder.
 	if (subFolder.empty()) {
@@ -90,7 +102,7 @@ wstring FileHandling::GetSubFolderPath(Session* session, wstring subFolder)
 	}
 
 	//Create the file path.
-	return FileHandling::GetMtgImageFileFolderPath(session) + subFolder + L"\\";
+	return FileHandling::GetMtgImageFileFolderPath() + subFolder + L"\\";
 }
 
 bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {
@@ -109,22 +121,6 @@ bool FileHandling::CreateFileDirectory(wstring fullFolderPath) {
 	return folderExists;
 }
 
-wstring FileHandling::CreateFileNumberPostfix(int currentFileNumber, int amountOfFiles) {
-
-	if (currentFileNumber < 1) {
-		throw ParameterException("The first file to get a postfix must have a number bigger than zero!", "currentFileNumber");
-	}
-
-	wstring numberStr = to_wstring(currentFileNumber);
-
-	if (amountOfFiles > 0) {
-		return L" (" + numberStr + L" of " + to_wstring(amountOfFiles) + L")";
-	}
-	else {
-		return L" (" + numberStr + L")";
-	}
-}
-
 double FileHandling::CompareFilenames(std::wstring filename1, std::wstring filename2) {
 
 	wstring temp_name1 = filename1;
@@ -133,4 +129,29 @@ double FileHandling::CompareFilenames(std::wstring filename1, std::wstring filen
 	boost::to_lower(temp_name2);
 
 	return temp_name1.compare(temp_name2);
+}
+
+wstring FileHandling::GetUserPicturesFileDirectory() {
+
+	return L"C:\\Users\\" + GetCurrentUserName() + L"\\Pictures\\";
+}
+
+wstring FileHandling::GetCurrentUserName() {
+
+	if (cache_currentUserName.empty())
+	{
+		//Get username.
+		wchar_t username[UNLEN + 1];
+		DWORD username_len = UNLEN + 1;
+		GetUserNameW(username, &username_len);
+
+		cache_currentUserName = wstring(username);
+	}
+
+	return cache_currentUserName;
+}
+
+wstring FileHandling::GetFileNameFromFilePath(const wstring filePath) {
+
+	return fs::path(filePath).filename().wstring();
 }

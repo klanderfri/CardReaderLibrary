@@ -6,20 +6,20 @@
 
 using namespace std;
 
-TestRunner::TestRunner(Session* session) :
-	SessionBound(session)
+TestRunner::TestRunner(Toolbox* toolbox)
 {
+	this->toolbox = toolbox;
 }
 
 TestRunner::~TestRunner()
 {
 }
 
-void TestRunner::RunTestCases(vector<CardNameInfo> result) {
+void TestRunner::RunTestCases(vector<Card> result) {
 
 	//Set up testers.
-	CardTestRunner cardTester(session);
-	AlgorithmTestRunner algorithmTester(session);
+	CardTestRunner cardTester(toolbox);
+	AlgorithmTestRunner algorithmTester(toolbox);
 
 	//Perform tests.
 	bool cardTestsSucceded = cardTester.RunTestCases(result);
@@ -28,10 +28,10 @@ void TestRunner::RunTestCases(vector<CardNameInfo> result) {
 	//Check the test results.
 	if (cardTestsSucceded && algorithmTestsSucceded) {
 
-		session->systemMethods->SetCommandLineTextColour(Colour::Green);
+		toolbox->SetCommandLineTextColour(10);
 
 		wcout << L"All test cases still works!" << endl << endl;
 
-		session->systemMethods->ResetCommandLineTextColour();
+		toolbox->ResetCommandLineTextColour();
 	}
 }

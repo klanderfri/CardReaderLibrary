@@ -1,25 +1,26 @@
 #include "stdafx.h"
 #include "CardReaderApplication.h"
+#include "CardReaderLibrary.h"
 #include "FileHandling.h"
 #include "StoreCardProcessingData.h"
-#include "WindowsMethods.h"
+#include "Card.h"
 #include "TestRunner.h"
 #include <iostream>
 #include "boost\filesystem.hpp"
 
 using namespace std;
+using namespace CardReaderLibrary;
 
 CardReaderApplication::CardReaderApplication(char* runArguments[], int numberOfRunArguments)
 {
-	WindowsMethods* systemMethods = new WindowsMethods();
-	session = new Session(systemMethods, runArguments, numberOfRunArguments);
-	messages = new ApplicationMessages(session);
+	toolbox = new Toolbox(runArguments, numberOfRunArguments);
+	messages = new ApplicationMessages(toolbox);
 }
 
 CardReaderApplication::~CardReaderApplication()
 {
 	delete messages;
-	delete session;
+	delete toolbox;
 }
 
 int CardReaderApplication::Run() {
@@ -37,16 +38,16 @@ int CardReaderApplication::Run() {
 	vector<wstring> filepathsOfImages = getMtgImageFilePaths();
 
 	//Check if there are to many files to handle.
-	vector<CardNameInfo> result;
+	vector<Card> cards;
 	size_t numberOfFiles = filepathsOfImages.size();
 	if (numberOfFiles == 0) {
 		//Tell the user that no files was found.
 		messages->printNoImagesMessage();
 	}
-	else if (numberOfFiles <= (size_t)CardCollectionReader::MaxSize()) {
+	else if (numberOfFiles <= (size_t)CRLibrary::GetMaxCardAmount()) {
 
 		//Read the cards.
-		result = readAllCards(filepathsOfImages);
+		cards = readAllCards(filepathsOfImages);
 	}
 	else {
 
@@ -56,88 +57,122 @@ int CardReaderApplication::Run() {
 	
 	//Print out how long the program took to execute.
 	TimePoint endTime = chrono::high_resolution_clock::now();
-	messages->printExecutionTimeMessage(startTime, endTime, numberOfFiles, !session->runDebugging);
+	messages->printExecutionTimeMessage(startTime, endTime, numberOfFiles, !toolbox->runDebugging);
 
 	//Run tests to see if any code has been broken.
-	if (session->runDebugging && !session->runSilent) {
+	if (toolbox->runDebugging && !toolbox->runSilent) {
 
-		TestRunner tester(session);
-		tester.RunTestCases(result);
+		TestRunner tester(toolbox);
+		tester.RunTestCases(cards);
 	}
 
 	//Wait for a keystroke in the window.
-	if (!session->runSilent) {
+	if (!toolbox->runSilent) {
 		system("pause");
 	}
 
 	return 0;
 }
 
+vector<Card> CardReaderApplication::readAllCards(vector<wstring> filepathsOfImages)
+{
+	//Read the cards.
+	string readingParameters = createReadingParameter(filepathsOfImages);
+	string result = CRLibrary::ReadCardTitles(readingParameters.c_str());
+	vector<Card> cards = extractCardData(result);
+
+	//Store the result.
+	toolbox->resultStorer->StoreFinalResult(cards);
+
+	//Give a reassuring message... or not.
+	int amountOfErrors = 0;
+	for (Card card : cards) {
+		if (!card.IsSuccessful) { amountOfErrors++; }
+	}
+	messages->printResultMessage(amountOfErrors);
+
+	return cards;
+}
+
+vector<Card> CardReaderApplication::extractCardData(string output) {
+
+	const char DELIMITER = ';';
+	const int VALUES_PER_CARD = 5;
+
+	vector<wstring> values;
+	int index = 0;
+	while ((index = output.find(DELIMITER)) >= 0) {
+
+		wstring value = toolbox->converter->ToWString(output.substr(0, index));
+		values.push_back(value);
+
+		output = output.substr(index + 1);
+	}
+
+	if (values.size() % VALUES_PER_CARD != 0) {
+
+		throw OperationException("The reading output data has incorrect amount of values!");
+	}
+
+	vector<Card> cards;
+	for (size_t i = 0; i < values.size(); i += VALUES_PER_CARD) {
+
+		Card card;
+		card.FilePath = values[i];
+		card.FileName = FileHandling::GetFileNameFromFilePath(card.FilePath);
+		card.CardName = values[i + 1];
+		card.CardType = stoi(values[i + 2]);
+		card.Confidence = stoi(values[i + 3]);
+		card.IsSuccessful = toolbox->converter->ToBool(values[i + 4]);
+
+		cards.push_back(card);
+	}
+
+	return cards;
+}
+
+string CardReaderApplication::createReadingParameter(vector<wstring> filepathsOfImages) {
+
+	string params =
+		to_string(toolbox->runSilent) + ";" +
+		to_string(toolbox->runParallelized) + ";" +
+		"1;" + //Store extracted cards.
+		to_string(toolbox->runDebugging) + ";" +
+		toolbox->converter->ToString(FileHandling::GetOutputFolderPath()) + ";";
+
+	for (wstring path : filepathsOfImages) {
+
+		params += toolbox->converter->ToString(path) + ";";
+	}
+
+	return params;
+}
+
 void CardReaderApplication::removeOldData() {
 
-	wstring folderPath = FileHandling::GetSubFolderPath(session, StoreCardProcessingData::SubfolderName);
-	boost::filesystem::remove_all(folderPath);
+	boost::filesystem::remove_all(FileHandling::GetOutputFolderPath());
 }
 
 vector<wstring> CardReaderApplication::getMtgImageFilePaths() {
 
 	vector<wstring> filepaths;
 
-	if (session->filePathToImageToDecode.empty())
+	if (toolbox->filePathToImageToDecode.empty())
 	{
-		wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath(session);
+		wstring mtgFolderPath = FileHandling::GetMtgImageFileFolderPath();
 		messages->printWorkingFolderMessage(mtgFolderPath);
-		filepaths = FileHandling::GetMtgImageFilePaths(session, mtgFolderPath);
+		filepaths = FileHandling::GetMtgImageFilePaths(mtgFolderPath);
 	}
 	else {
 
-		filepaths.push_back(session->filePathToImageToDecode);
+		filepaths.push_back(toolbox->filePathToImageToDecode);
 	}
 
 	return filepaths;
 }
 
-CardCollectionReader* CardReaderApplication::createCardReaderCollection(const vector<wstring> filepathsOfImages) {
-
-	CardCollectionReader* readers = new CardCollectionReader(session);
-
-	//Add the cards to the reader collection
-	for (size_t i = 0; i < filepathsOfImages.size(); i++) {
-
-		readers->AddCard(filepathsOfImages[i]);
-	}
-
-	return readers;
-}
-
 void CardReaderApplication::reziseCommandWindow(size_t numberOfFiles, int lengthOfLongestFilename) {
 
 	int lettersToAccommodate = to_string(numberOfFiles).length() * 2 + lengthOfLongestFilename + 75;
-	session->systemMethods->SetConsoleWidthInCharacters(lettersToAccommodate);
-}
-
-vector<CardNameInfo> CardReaderApplication::readAllCards(const vector<wstring> filepathsOfImages) {
-
-	//Create a reader for every card.
-	CardCollectionReader* readers = createCardReaderCollection(filepathsOfImages);
-
-	//Resize console window to avoid line breaks.
-	reziseCommandWindow(filepathsOfImages.size(), readers->LengthOfLongestFilename());
-
-	//Fetch the card names.
-	vector<CardNameInfo> result = readers->ExtractCardNames();
-
-	//Write the card names to a separate file.
-	messages->printSavingResultsToDiskMessage();
-	StoreCardProcessingData storer = StoreCardProcessingData(session);
-	wstring pathToResultFolder = storer.StoreFinalResult(result);
-	messages->printResultsHasBeenSavedToDiskMessage(pathToResultFolder);
-
-	//Give a reassuring message... or not.
-	messages->printResultMessage(readers->AmountOfErrors());
-
-	//Since we don't need the readers anymore...
-	delete readers;
-
-	return result;
+	toolbox->SetConsoleWidthInCharacters(lettersToAccommodate);
 }

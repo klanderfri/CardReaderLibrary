@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "AlgorithmTestRunner.h"
+#include "CardReaderLibrary.h"
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
+using namespace CardReaderLibrary;
 
-AlgorithmTestRunner::AlgorithmTestRunner(Session* session) :
-	SessionBound(session)
+AlgorithmTestRunner::AlgorithmTestRunner(Toolbox* toolbox)
 {
+	this->toolbox = toolbox;
 }
 
 AlgorithmTestRunner::~AlgorithmTestRunner()
@@ -17,25 +20,19 @@ bool AlgorithmTestRunner::RunTestCases() {
 
 	//Run tests
 	bool sortTestsSucceded = runSortTest();
-	bool lineAngleSucceded = testLineAngleCalculation();
 
 	//Check the test results.
-	if (!sortTestsSucceded || !lineAngleSucceded) {
+	if (!sortTestsSucceded) {
 
-		session->systemMethods->SetCommandLineTextColour(Colour::Red);
+		toolbox->SetCommandLineTextColour(12);
 
 		//Inform about trouble in the sorting.
 		if (!sortTestsSucceded) {
 			wcout << L"The algorithm for sorting card is broken!" << endl;
 		}
 
-		//Inform about trouble in the algorithm calculating angles between lines.
-		if (!lineAngleSucceded) {
-			wcout << L"The algorithm calculating the angle between two lines is broken!" << endl;
-		}
-
 		wcout << endl;
-		session->systemMethods->ResetCommandLineTextColour();
+		toolbox->ResetCommandLineTextColour();
 
 		return false;
 	}
@@ -45,12 +42,12 @@ bool AlgorithmTestRunner::RunTestCases() {
 
 bool AlgorithmTestRunner::runSortTest() {
 
-	vector<CardNameInfo> cardList = getCardListToSort();
-	sort(cardList.begin(), cardList.end(), CardNameInfo::CompareByCardName);
+	vector<Card> cardList = getCardListToSort();
+	sort(cardList.begin(), cardList.end(), compareByCardName);
 
 	wstring expectedResult = getExpectedSortResult();
 	wstring actualResult;
-	for (CardNameInfo card : cardList) {
+	for (Card card : cardList) {
 
 		actualResult += card.CardName + L"\n";
 	}
@@ -59,27 +56,37 @@ bool AlgorithmTestRunner::runSortTest() {
 	return success;
 }
 
-vector<CardNameInfo> AlgorithmTestRunner::getCardListToSort() {
+bool AlgorithmTestRunner::compareByCardName(Card card1, Card card2) {
 
-	vector<CardNameInfo> cardListToSort{
+	Converter converter = Converter();
 
-		CardNameInfo(L"", L"Buccaneer's Armada"),
-		CardNameInfo(L"", L"Buccaneer's Crest"),
-		CardNameInfo(L"", L"Buccaneers Bravado"),
-		CardNameInfo(L"", L"Dark Martyr"),
-		CardNameInfo(L"", L"Dark"),
-		CardNameInfo(L"", L"Darker Offering"),
-		CardNameInfo(L"", L"Jötun Grunt"),
-		CardNameInfo(L"", L"Jotun Grunt"),
-		CardNameInfo(L"", L"Jötun Owl Keeper"),
-		CardNameInfo(L"", L"Sun-Crested Raptor"),
-		CardNameInfo(L"", L"Suncrap Gather"),
-		CardNameInfo(L"", L"Vear"),
-		CardNameInfo(L"", L"Very Fast Raptor"),
-		CardNameInfo(L"", L"Wear // Tear"),
-		CardNameInfo(L"", L"Wear Away"),
-		CardNameInfo(L"", L"Zombie"),
-		CardNameInfo(L"", L"ZONDER")
+	string name1 = converter.ToString(card1.CardName);
+	string name2 = converter.ToString(card2.CardName);
+
+	return CRLibrary::CompareCardNames(name1.c_str(), name2.c_str());
+}
+
+vector<Card> AlgorithmTestRunner::getCardListToSort() {
+
+	vector<Card> cardListToSort{
+
+		Card(L"", L"Buccaneer's Armada"),
+		Card(L"", L"Buccaneer's Crest"),
+		Card(L"", L"Buccaneers Bravado"),
+		Card(L"", L"Dark Martyr"),
+		Card(L"", L"Dark"),
+		Card(L"", L"Darker Offering"),
+		Card(L"", L"Jötun Grunt"),
+		Card(L"", L"Jotun Grunt"),
+		Card(L"", L"Jötun Owl Keeper"),
+		Card(L"", L"Sun-Crested Raptor"),
+		Card(L"", L"Suncrap Gather"),
+		Card(L"", L"Vear"),
+		Card(L"", L"Very Fast Raptor"),
+		Card(L"", L"Wear // Tear"),
+		Card(L"", L"Wear Away"),
+		Card(L"", L"Zombie"),
+		Card(L"", L"ZONDER")
 	};
 
 	return cardListToSort;
@@ -107,32 +114,4 @@ wstring AlgorithmTestRunner::getExpectedSortResult() {
 		L"ZONDER\n";
 
 	return result;
-}
-
-bool AlgorithmTestRunner::testLineAngleCalculation() {
-
-	TrendLine lineA(2, -3);
-	TrendLine lineB(5, 1);
-	TrendLine lineC(4, 1);
-	TrendLine lineD((1 / (double)2), -(1 / (double)3));
-	TrendLine lineE(-1, 0);
-	TrendLine lineF(1, 2);
-	TrendLine lineG(0.32, 2);
-	TrendLine lineH(-3.125, 3);
-	long double result1 = TrendLine::GetAngleBetweenLines(lineA, lineB);
-	long double result2 = TrendLine::GetAngleBetweenLines(lineC, lineD);
-	long double result3 = TrendLine::GetAngleBetweenLines(lineE, lineF);
-	long double result4 = TrendLine::GetAngleBetweenLines(lineG, lineH);
-
-	long double expectedResult1 = -15.255118703057775;
-	long double expectedResult2 = 49.398705354995542;
-	long double expectedResult3 = -90.000000000000000;
-	long double expectedResult4 = 90.000000000000000;
-
-	bool isWorking =
-		result1 == expectedResult1 &&
-		result2 == expectedResult2 &&
-		result3 == expectedResult3 &&
-		result4 == expectedResult4;
-	return isWorking;
 }

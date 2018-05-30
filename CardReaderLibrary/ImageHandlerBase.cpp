@@ -12,7 +12,7 @@ ImageHandlerBase::ImageHandlerBase(Session* session, wstring imageFilePath)
 	}
 
 	this->imageFilePath = imageFilePath;
-	this->imageFileName = session->systemMethods->GetFileNameFromFilePath(imageFilePath);
+	this->imageFileName = session->fileSystem->GetFileNameFromFilePath(imageFilePath);
 }
 
 ImageHandlerBase::ImageHandlerBase(Session* session, wstring imageFilePath, Mat originalImageData)

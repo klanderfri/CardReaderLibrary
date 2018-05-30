@@ -1,11 +1,9 @@
 #include "stdafx.h"
 #include "SystemMethods.h"
-#include <experimental\filesystem>
 #include <codecvt>
 #include "boost\lexical_cast.hpp"
 #include "boost\algorithm\string.hpp"
 
-namespace fs = std::experimental::filesystem;
 using namespace std;
 using boost::lexical_cast;
 
@@ -44,9 +42,4 @@ bool SystemMethods::ToBool(const string& stringToConvert) {
 	if (strCopy == "0") { return false; }
 
 	throw ParameterException("The provided string cannot be converted to a boolean!", "stringToConvert");
-}
-
-wstring SystemMethods::GetFileNameFromFilePath(const wstring filePath) {
-
-	return fs::path(filePath).filename().wstring();
 }

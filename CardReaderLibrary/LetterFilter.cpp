@@ -54,7 +54,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	findCenterLine(letters);
 
 	//Store result for debugging.
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
 		bool hasLetters = !letters.empty();
 		float leftLimit = hasLetters ? letters[0].Box.center.x : 0;
@@ -70,7 +70,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, bLine[0], bLine[1]);
 
-		SaveOcvImage::SaveImageData(session, trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
 	}
 
 	return letters;

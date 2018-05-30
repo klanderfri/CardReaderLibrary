@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CardNameInfo.h"
-#include "FileHandling.h"
 
 using namespace std;
 
@@ -56,9 +55,4 @@ bool CardNameInfo::IsConfidentTitle(int minimumConfidence) const {
 bool CardNameInfo::CompareByCardName(CardNameInfo info1, CardNameInfo info2)
 {
 	return MtgCardInfoHelper::CompareCardNames(info1.CardName, info2.CardName) <= 0;
-}
-
-bool CardNameInfo::CompareByFileName(CardNameInfo info1, CardNameInfo info2)
-{
-	return FileHandling::CompareFilenames(info1.FileName, info2.FileName) <= 0;
 }

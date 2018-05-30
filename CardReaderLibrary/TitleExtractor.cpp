@@ -117,7 +117,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 	//Store result for debugging.
 	Mat dbg_onlyLettersBoundImage, dbg_possibleTitleAreaImage;
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
 		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
 		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawLetterAreas(titleImage, letters, radius);
@@ -148,11 +148,11 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	}
 
 	//Store result for debugging.
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
-		SaveOcvImage::SaveImageData(session, dbg_onlyLettersBoundImage, imageFileName, L"9 - Only Title Letters", numberOfTries);
-		SaveOcvImage::SaveImageData(session, dbg_possibleTitleAreaImage, imageFileName, L"10 - Possible Title Area", numberOfTries);
-		SaveOcvImage::SaveImageData(session, straightenTitleImage, imageFileName, L"11 - Title Text", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(dbg_onlyLettersBoundImage, imageFileName, L"9 - Only Title Letters", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(dbg_possibleTitleAreaImage, imageFileName, L"10 - Possible Title Area", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(straightenTitleImage, imageFileName, L"11 - Title Text", numberOfTries);
 	}
 
 	return true;
@@ -191,7 +191,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 	vector<TrendLine> verticalBounds = perpendicularLine.GetBoundLines(dLettersContour);
 
 	//Store result for debugging.
-	if (session->runDebugging) {
+	if (session->inputData->runDebugging) {
 
 		Mat lineImages;
 		titleImage.copyTo(lineImages);
@@ -201,7 +201,7 @@ RotatedRect TitleExtractor::getTextArea(Contour letters, TrendLine centerLine, T
 		lineImages = session->imageHelper->drawingMethods->DrawLine(lineImages, verticalBounds[0]);
 		lineImages = session->imageHelper->drawingMethods->DrawLine(lineImages, verticalBounds[1]);
 
-		SaveOcvImage::SaveImageData(session, lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(lineImages, imageFileName, L"8 - Bounded Characters", numberOfTries);
 	}
 
 	//Get the bounded rectangle.

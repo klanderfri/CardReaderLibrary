@@ -20,20 +20,20 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{51C2D20E-4ADF-43F7-B9CC-1CD467741641}</ProjectGuid>
+    <ProjectGuid>{D8F17974-EDF2-4A8E-8328-C449149A3ABB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>ReadMagicCard</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <RootNamespace>CardReaderLibrary</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -90,17 +90,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CardReaderLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;CardReaderLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -111,15 +108,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -131,18 +124,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)CardReaderLibrary;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>ws2_32.lib;CardReaderLibrary.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)deployment\vcredist_x86.exe" "$(OutDir)"</Command>
+      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"
+xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)crlib\"
+xcopy /Y "$(OutDir)CardReaderLibrary.dll" "$(OutDir)crlib\"
+xcopy /Y "$(OutDir)CardReaderLibrary.lib" "$(OutDir)crlib\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -155,7 +149,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <DisableSpecificWarnings>%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,57 +156,102 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AlgorithmTestRunner.h" />
-    <ClInclude Include="ApplicationMessages.h" />
-    <ClInclude Include="Card.h" />
-    <ClInclude Include="CardTestRunner.h" />
-    <ClInclude Include="CardReaderApplication.h" />
-    <ClInclude Include="Converter.h" />
+    <ClInclude Include="AlgorithmHelper.h" />
+    <ClInclude Include="AllowedTitleCharactersHelper.h" />
+    <ClInclude Include="ApiCodeConnector.h" />
+    <ClInclude Include="CardCollectionReader.h" />
+    <ClInclude Include="CardExtractor.h" />
+    <ClInclude Include="CardNameInfo.h" />
+    <ClInclude Include="CardReader.h" />
+    <ClInclude Include="CardReaderLibrary.h" />
+    <ClInclude Include="CardReadInput.h" />
+    <ClInclude Include="CardTitleType.h" />
+    <ClInclude Include="Colour.h" />
+    <ClInclude Include="Contour.h" />
+    <ClInclude Include="ContourHelper.h" />
+    <ClInclude Include="ConversionHelper.h" />
+    <ClInclude Include="DrawingHelper.h" />
     <ClInclude Include="Exception.h" />
-    <ClInclude Include="FileHandling.h" />
-    <ClInclude Include="StoreCardProcessingData.h" />
-    <ClInclude Include="ReadMagicCard.h" />
+    <ClInclude Include="FileSystem.h" />
+    <ClInclude Include="FileSystemHelper.h" />
+    <ClInclude Include="Hierarchy.h" />
+    <ClInclude Include="ImageEditHelper.h" />
+    <ClInclude Include="ImageHandlerBase.h" />
+    <ClInclude Include="ImageHelper.h" />
+    <ClInclude Include="ImageInformationHelper.h" />
+    <ClInclude Include="ImageOcrHelper.h" />
+    <ClInclude Include="LetterArea.h" />
+    <ClInclude Include="LetterAreas.h" />
+    <ClInclude Include="LetterCheckHelper.h" />
+    <ClInclude Include="LetterFilter.h" />
+    <ClInclude Include="LoadOcvImage.h" />
+    <ClInclude Include="MtgCardInfoHelper.h" />
+    <ClInclude Include="OcrDecodeResult.h" />
+    <ClInclude Include="OcrImageNoiseCleaner.h" />
+    <ClInclude Include="ProcessingDataStorer.h" />
+    <ClInclude Include="ReadingConfiguration.h" />
+    <ClInclude Include="RectangleHelper.h" />
+    <ClInclude Include="SaveOcvImage.h" />
+    <ClInclude Include="Session.h" />
+    <ClInclude Include="SessionBound.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SystemMethods.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestRunner.h" />
-    <ClInclude Include="TimePoint.h" />
-    <ClInclude Include="Toolbox.h" />
+    <ClInclude Include="TitleExtractor.h" />
+    <ClInclude Include="TitleLetterFixer.h" />
+    <ClInclude Include="TrendLine.h" />
+    <ClInclude Include="WindowsMethods.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AlgorithmTestRunner.cpp" />
-    <ClCompile Include="ApplicationMessages.cpp" />
-    <ClCompile Include="Card.cpp" />
-    <ClCompile Include="CardTestRunner.cpp" />
-    <ClCompile Include="CardReaderApplication.cpp" />
-    <ClCompile Include="Converter.cpp" />
-    <ClCompile Include="FileHandling.cpp" />
-    <ClCompile Include="StoreCardProcessingData.cpp" />
-    <ClCompile Include="ReadMagicCard.cpp" />
+    <ClCompile Include="AlgorithmHelper.cpp" />
+    <ClCompile Include="AllowedTitleCharactersHelper.cpp" />
+    <ClCompile Include="ApiCodeConnector.cpp" />
+    <ClCompile Include="CardCollectionReader.cpp" />
+    <ClCompile Include="CardExtractor.cpp" />
+    <ClCompile Include="CardNameInfo.cpp" />
+    <ClCompile Include="CardReader.cpp" />
+    <ClCompile Include="CardReaderLibrary.cpp" />
+    <ClCompile Include="CardReadInput.cpp" />
+    <ClCompile Include="ContourHelper.cpp" />
+    <ClCompile Include="ConversionHelper.cpp" />
+    <ClCompile Include="DrawingHelper.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
+    <ClCompile Include="FileSystemHelper.cpp" />
+    <ClCompile Include="ImageEditHelper.cpp" />
+    <ClCompile Include="ImageHandlerBase.cpp" />
+    <ClCompile Include="ImageHelper.cpp" />
+    <ClCompile Include="ImageInformationHelper.cpp" />
+    <ClCompile Include="ImageOcrHelper.cpp" />
+    <ClCompile Include="LetterArea.cpp" />
+    <ClCompile Include="LetterAreas.cpp" />
+    <ClCompile Include="LetterCheckHelper.cpp" />
+    <ClCompile Include="LetterFilter.cpp" />
+    <ClCompile Include="LoadOcvImage.cpp" />
+    <ClCompile Include="MtgCardInfoHelper.cpp" />
+    <ClCompile Include="OcrDecodeResult.cpp" />
+    <ClCompile Include="OcrImageNoiseCleaner.cpp" />
+    <ClCompile Include="ProcessingDataStorer.cpp" />
+    <ClCompile Include="ReadingConfiguration.cpp" />
+    <ClCompile Include="RectangleHelper.cpp" />
+    <ClCompile Include="SaveOcvImage.cpp" />
+    <ClCompile Include="Session.cpp" />
+    <ClCompile Include="SessionBound.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestRunner.cpp" />
-    <ClCompile Include="TimePoint.cpp" />
-    <ClCompile Include="Toolbox.cpp" />
+    <ClCompile Include="SystemMethods.cpp" />
+    <ClCompile Include="TitleExtractor.cpp" />
+    <ClCompile Include="TitleLetterFixer.cpp" />
+    <ClCompile Include="TrendLine.cpp" />
+    <ClCompile Include="WindowsMethods.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\CONTRIBUTING.md" />
-    <None Include="..\LICENSE.md" />
-    <None Include="..\README.md" />
-    <None Include="deployment\vcredist_x86.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CardReaderLibrary\CardReaderLibrary.vcxproj">
-      <Project>{d8f17974-edf2-4a8e-8328-c449149a3abb}</Project>
-    </ProjectReference>
+    <None Include="tessdata\eng.traineddata" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
