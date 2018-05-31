@@ -35,7 +35,7 @@ void SaveOcvImage::SaveImageData(Mat imageToSave, wstring fileNameOfSavedFile, w
 	fileNameOfSavedFile = systemMethods->AddToEndOfFilename(fileNameOfSavedFile, imageNumberPostfix);
 
 	//Get the path the image should be saved to.
-	wstring folderPath = inputData->fullOutputFolderPath + subFolderName + L"\\";
+	wstring folderPath = inputData->fullOutputFolderPath + L"\\" + subFolderName + L"\\";
 	wstring savePath = folderPath + fileNameOfSavedFile;
 
 	if (CreateFileDirectory(folderPath))
