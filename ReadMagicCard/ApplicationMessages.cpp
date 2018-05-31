@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "ApplicationMessages.h"
-#include "CardReaderLibrary.h"
 #include <iostream>
 
 using namespace std;
-using namespace CardReaderLibrary;
 
 ApplicationMessages::ApplicationMessages(Toolbox* toolbox)
 {
@@ -67,7 +65,7 @@ void ApplicationMessages::printToManyFilesMessage() {
 		toolbox->SetCommandLineTextColour(12);
 		wcout
 			<< L"Glunck! There were to many cards for me to handle! Don't feed me more than "
-			+ to_wstring(CRLibrary::GetMaxCardAmount())
+			+ to_wstring(toolbox->cardReader->GetMaxCardAmount())
 			+ L" card image files!"
 			<< endl;
 		toolbox->ResetCommandLineTextColour();

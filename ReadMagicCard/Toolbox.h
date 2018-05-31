@@ -1,6 +1,7 @@
 #pragma once
 #include "Converter.h"
 #include "StoreCardProcessingData.h"
+#include "CRLibraryHelper.h"
 class Toolbox
 {
 public:
@@ -25,6 +26,8 @@ public:
 	Converter* converter;
 
 	StoreCardProcessingData* resultStorer;
+
+	CRLibraryHelper* cardReader;
 
 private:
 

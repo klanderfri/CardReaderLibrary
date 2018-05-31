@@ -1,11 +1,10 @@
 #include "stdafx.h"
 #include "AlgorithmTestRunner.h"
-#include "CardReaderLibrary.h"
+#include "CRLibraryHelper.h"
 #include <iostream>
 #include <algorithm>
 
 using namespace std;
-using namespace CardReaderLibrary;
 
 AlgorithmTestRunner::AlgorithmTestRunner(Toolbox* toolbox)
 {
@@ -63,7 +62,8 @@ bool AlgorithmTestRunner::compareByCardName(Card card1, Card card2) {
 	string name1 = converter.ToString(card1.CardName);
 	string name2 = converter.ToString(card2.CardName);
 
-	return CRLibrary::CompareCardNames(name1.c_str(), name2.c_str());
+	bool isInCorrectOrder = CRLibraryHelper().CompareCardNames(name1.c_str(), name2.c_str());
+	return isInCorrectOrder;
 }
 
 vector<Card> AlgorithmTestRunner::getCardListToSort() {

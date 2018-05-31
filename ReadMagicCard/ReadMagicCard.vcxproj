@@ -174,6 +174,7 @@
     <ClInclude Include="CardTestRunner.h" />
     <ClInclude Include="CardReaderApplication.h" />
     <ClInclude Include="Converter.h" />
+    <ClInclude Include="CRLibraryHelper.h" />
     <ClInclude Include="Exception.h" />
     <ClInclude Include="FileHandling.h" />
     <ClInclude Include="StoreCardProcessingData.h" />
@@ -191,6 +192,7 @@
     <ClCompile Include="CardTestRunner.cpp" />
     <ClCompile Include="CardReaderApplication.cpp" />
     <ClCompile Include="Converter.cpp" />
+    <ClCompile Include="CRLibraryHelper.cpp" />
     <ClCompile Include="FileHandling.cpp" />
     <ClCompile Include="StoreCardProcessingData.cpp" />
     <ClCompile Include="ReadMagicCard.cpp" />

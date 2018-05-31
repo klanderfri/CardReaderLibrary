@@ -199,9 +199,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>LibraryInterface</Filter>
     </ClCompile>
-    <ClCompile Include="CardReaderLibrary.cpp">
-      <Filter>LibraryInterface</Filter>
-    </ClCompile>
     <ClCompile Include="CardNameInfo.cpp">
       <Filter>Core\Containers</Filter>
     </ClCompile>
@@ -312,6 +309,9 @@
     </ClCompile>
     <ClCompile Include="FileSystemHelper.cpp">
       <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="CardReaderLibrary.cpp">
+      <Filter>LibraryInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

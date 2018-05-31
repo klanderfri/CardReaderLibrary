@@ -8,6 +8,7 @@ Toolbox::Toolbox(char* runArguments[], int numberOfRunArguments)
 {
 	this->converter = new Converter();
 	this->resultStorer = new StoreCardProcessingData();
+	this->cardReader = new CRLibraryHelper();
 
 	//Running the program silent will prevent it from doing
 	//outputs in the command line window.

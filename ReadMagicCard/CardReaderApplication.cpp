@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "CardReaderApplication.h"
-#include "CardReaderLibrary.h"
 #include "FileHandling.h"
 #include "StoreCardProcessingData.h"
 #include "Card.h"
@@ -9,7 +8,6 @@
 #include "boost\filesystem.hpp"
 
 using namespace std;
-using namespace CardReaderLibrary;
 
 CardReaderApplication::CardReaderApplication(char* runArguments[], int numberOfRunArguments)
 {
@@ -44,7 +42,7 @@ int CardReaderApplication::Run() {
 		//Tell the user that no files was found.
 		messages->printNoImagesMessage();
 	}
-	else if (numberOfFiles <= (size_t)CRLibrary::GetMaxCardAmount()) {
+	else if (numberOfFiles <= (size_t)toolbox->cardReader->GetMaxCardAmount()) {
 
 		//Read the cards.
 		cards = readAllCards(filepathsOfImages);
@@ -78,7 +76,7 @@ vector<Card> CardReaderApplication::readAllCards(vector<wstring> filepathsOfImag
 {
 	//Read the cards.
 	string readingParameters = createReadingParameter(filepathsOfImages);
-	string result = CRLibrary::ReadCardTitles(readingParameters.c_str());
+	string result = toolbox->cardReader->ReadCardTitles(readingParameters.c_str());
 	vector<Card> cards = extractCardData(result);
 
 	//Store the result.

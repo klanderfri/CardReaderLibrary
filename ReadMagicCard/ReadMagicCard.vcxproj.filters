@@ -66,6 +66,9 @@
     <ClInclude Include="TimePoint.h">
       <Filter>Application\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="CRLibraryHelper.h">
+      <Filter>Application\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ReadMagicCard.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="TimePoint.cpp">
       <Filter>Application\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="CRLibraryHelper.cpp">
+      <Filter>Application\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
