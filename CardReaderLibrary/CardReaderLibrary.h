@@ -57,5 +57,11 @@ namespace CardReaderLibrary {
 		// - Result output format -
 		// int: The maximum amount of cards one single call to the ReadCardTitles method could handle.
 		static CARDREADERLIBRARY_EXPORTS int GetMaxCardAmount();
+
+		// Method giving an example of how the card reading method might return.
+		//
+		// - Result output format -
+		// string: Same as the ReadCardTitles method.
+		static CARDREADERLIBRARY_EXPORTS char const* GetResultExample();
 	};
 }
