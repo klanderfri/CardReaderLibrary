@@ -40,9 +40,11 @@ namespace CRLibrary {
 	//
 	// If the entire read failed then the output will contain the error messages:
 	// ERROR: <description of error>
+	// If only a specific card failed to read then the error message will be placed in the card name slot.
 	// 
 	// Example:
-	// "ERROR: To many files to read!;ERROR: File 'D:\\MTG-card\\Zombie - Token.jpg' does not exist!;
+	// "ERROR: To many files to read!;ERROR: File 'D:\\MTG-card\\Zombie - Token.jpg' does not exist!;"
+	// "C:\Users\BjornLa\Pictures\MtG-cards\Problematic Testcases\Old design\Llanowar Elves - Rotated.jpg;ERROR: Could not OCR-read the title!;1;0;0;"
 	//
 	// -- IMPORTANT! --
 	// You must delete the pointer to the result data when you are done with the result!
