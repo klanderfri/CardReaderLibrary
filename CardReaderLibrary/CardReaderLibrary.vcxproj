@@ -97,7 +97,7 @@
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)tessdata\*.traineddata" "$(OutDir)tessdata\" /Y</Command>
+      <Command>xcopy "$(ProjectDir)tessdata\*.traineddata" "$(TargetDir)tessdata\" /Y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,7 +133,7 @@
       <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)tessdata\*.traineddata" "$(OutDir)tessdata\" /Y
+      <Command>xcopy "$(ProjectDir)tessdata\*.traineddata" "$(TargetDir)tessdata\" /Y
 xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
