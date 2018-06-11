@@ -110,11 +110,6 @@ Mat CardExtractor::getCardPart(const Mat rawImage, const RotatedRect rawCardArea
 		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"5 - Extracted Cards");
 	}
 
-	//Store the extracted card so the user can use it (for example, to showing before selling it).
-	if (session->inputData->storeExtractedCardImages) {
-		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"Extracted Cards");
-	}
-
 	return workingImage;
 }
 

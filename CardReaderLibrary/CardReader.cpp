@@ -53,6 +53,11 @@ void CardReader::ReadCardName(Mat cardImage) {
 	}
 	finalResult.ExtractedCardImage = cardImage;
 
+	//Store the extracted card so the user can use it (for example, to showing before selling it).
+	if (session->inputData->storeExtractedCardImages) {
+		session->fileSystem->imageSaver->SaveImageData(finalResult.ExtractedCardImage, imageFileName, L"Extracted Cards");
+	}
+
 	//Oops! Seems like we couldn't get any title text.
 	if (!finalResult.HasGotResult()) {
 		finalResult.CardName = L"ERROR: Could not OCR-read the title!";
