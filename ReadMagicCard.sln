@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReadMagicCard", "ReadMagicCard\ReadMagicCard.vcxproj", "{51C2D20E-4ADF-43F7-B9CC-1CD467741641}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CardReaderLibrary", "CardReaderLibrary\CardReaderLibrary.vcxproj", "{D8F17974-EDF2-4A8E-8328-C449149A3ABB}"
 EndProject
 Global
@@ -15,14 +13,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Debug|x64.ActiveCfg = Debug|x64
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Debug|x64.Build.0 = Debug|x64
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Debug|x86.ActiveCfg = Debug|Win32
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Debug|x86.Build.0 = Debug|Win32
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Release|x64.ActiveCfg = Release|x64
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Release|x64.Build.0 = Release|x64
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Release|x86.ActiveCfg = Release|Win32
-		{51C2D20E-4ADF-43F7-B9CC-1CD467741641}.Release|x86.Build.0 = Release|Win32
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Debug|x64.ActiveCfg = Debug|x64
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Debug|x64.Build.0 = Debug|x64
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Debug|x86.ActiveCfg = Debug|Win32
