@@ -134,9 +134,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy /Y "$(ProjectDir)tessdata\eng.traineddata" "$(OutDir)tessdata\"
-xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)crlib\"
-xcopy /Y "$(OutDir)CardReaderLibrary.dll" "$(OutDir)crlib\"
-xcopy /Y "$(OutDir)CardReaderLibrary.lib" "$(OutDir)crlib\"</Command>
+xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
