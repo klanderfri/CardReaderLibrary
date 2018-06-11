@@ -2,15 +2,16 @@
 An open source computer vision library for *Magic: the Gathering* card recognition.
 
 ## I just want to run the code!
-Go to the page for releases and read the instructions for the latest release.
-https://github.com/klanderfri/ReadMagicCard/releases
+Then you're at the WRONG place! You want the C++ or the C# client. They can be found in the repositories below.
+ * https://github.com/klanderfri/CppCardReaderClient
+ * https://github.com/klanderfri/CsCardReaderClient
 
 ## Where do I get the result data?
-The program will present the results in two ways.
- 1. In the command line window.
- 2. In a tab separated file named *CardTitles.txt* in the subfolder *Image Data*.
+The library will present the results in two ways.
+ 1. As a character array returned by the library method reading the cards (see the *CardReaderLibrary.h* file for more information).
+ 2. In a tab separated file named *CardTitles.txt* in the subfolder *MtG-cards\Image Data* in your image folder.
 
 ## What else to know?
-Not much. This program should be quite straightforward.
+This project is a library provided as a DLL, currently compiled in Windows. You need to know how to handle DLLs to be able to use this library in your projects.
 
 Developers and curious users might want to head for the CONTRIBUTING.md file though.
