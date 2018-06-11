@@ -33,7 +33,10 @@ Vcpkg makes the installations quick and easy.
  * https://github.com/Microsoft/vcpkg
  * https://blogs.msdn.microsoft.com/vcblog/2016/09/19/vcpkg-a-tool-to-acquire-and-build-c-open-source-libraries-on-windows/
  * https://docs.microsoft.com/en-us/cpp/vcpkg
-
+ 
+Should this fail and you need to install OpenCV manually, then the guide below is recommended:
+ * https://docs.opencv.org/3.4.1/dd/d6e/tutorial_windows_visual_studio_opencv.html
+  
 ### Libraries
 This project uses several third-party libraries, listed below.
 
