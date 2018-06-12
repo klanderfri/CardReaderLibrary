@@ -8,7 +8,7 @@ Then you're at the WRONG place! You want the C++ or the C# client. They can be f
 
 ## Where do I get the result data?
 The library will present the results in two ways.
- 1. As a character array returned by the library method reading the cards (see the *CardReaderLibrary.h* file for more information).
+ 1. As a character array returned by the library method reading the cards (see the *CardReaderLibrary.h* file for details).
  2. In a tab separated file named *CardTitles.txt* in the subfolder *MtG-cards\Image Data* in your image folder.
 
 ## What else to know?
