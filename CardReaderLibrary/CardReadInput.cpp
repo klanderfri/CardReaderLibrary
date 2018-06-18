@@ -22,9 +22,7 @@ void CardReadInput::setInputData(char const* input) {
 	storeExtractedCardImages = systemMethods->ToBool(data.substr(4, 1));
 	runDebugging = systemMethods->ToBool(data.substr(6, 1));
 
-	int index = data.find(INPUT_DELIMITER, 8);
-	fullOutputFolderPath = systemMethods->ToWString(data.substr(8, index - 8));
-
+	int index = setOutputFolderPath(data);
 	data = data.substr(index + 1);
 
 	while ((index = data.find(INPUT_DELIMITER)) >= 0) {
@@ -34,4 +32,21 @@ void CardReadInput::setInputData(char const* input) {
 
 		data = data.substr(index + 1);
 	}
+}
+
+int CardReadInput::setOutputFolderPath(string data) {
+
+	int index = data.find(INPUT_DELIMITER, 8);
+	string path = data.substr(8, index - 8);
+
+	//Make sure the folder path ends with a backslash.
+	const char FOLDER_DELIMITER = '\\';
+	char lastCharacterInPath = path[path.length() - 1];
+	if (lastCharacterInPath != FOLDER_DELIMITER){
+		path += FOLDER_DELIMITER;
+	}
+
+	fullOutputFolderPath = systemMethods->ToWString(path);
+
+	return index;
 }

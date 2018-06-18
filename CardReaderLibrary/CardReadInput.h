@@ -24,8 +24,10 @@ public:
 
 private:
 
-
+	//Decodes the input and sets the input data in appropriate variables.
 	void setInputData(char const* input);
+	//Sets the path to the folder holding the output data.
+	int setOutputFolderPath(std::string data);
 
 	//Pointer to object handling the system dependent methods.
 	SystemMethods* systemMethods;
