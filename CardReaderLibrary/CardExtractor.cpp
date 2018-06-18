@@ -43,7 +43,7 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	outImage = session->imageHelper->converter->ToGreyImage(outImage);
 
 	//Find the card in the image.
-	RotatedRect cardArea = getOriginalCardArea(outImage, originalImageData.size());
+	RotatedRect cardArea = getCardArea(outImage, originalImageData.size());
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
@@ -52,12 +52,12 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	}
 
 	//Extract the card.
-	outImage = getCardPart(originalImageData, cardArea);
+	outImage = getCardImage(originalImageData, cardArea);
 
 	return true;
 }
 
-RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size originalImageSize) {
+RotatedRect CardExtractor::getCardArea(const Mat thumbImage, const Size originalImageSize) {
 
 	//Find the area that contains the card in the image.
 	RotatedRect workingCardSquare = findCardSquare(thumbImage, 80);
@@ -88,16 +88,16 @@ RotatedRect CardExtractor::getOriginalCardArea(const Mat thumbImage, const Size 
 	return originalCardArea;
 }
 
-Mat CardExtractor::getCardPart(const Mat rawImage, const RotatedRect rawCardArea) {
+Mat CardExtractor::getCardImage(const Mat rawImage, const RotatedRect cardArea) {
 
 	//Rotate the image to make it straight.
 	Mat workingImage;
 	Rect2f straightCardArea;
-	session->imageHelper->imageEditor->StraightenUpImage(rawImage, workingImage, rawCardArea, straightCardArea);
+	session->imageHelper->imageEditor->StraightenUpImage(rawImage, workingImage, cardArea, straightCardArea);
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
-		Mat debugImage = session->imageHelper->drawingMethods->DrawCircle(workingImage, rawCardArea.center);
+		Mat debugImage = session->imageHelper->drawingMethods->DrawCircle(workingImage, cardArea.center);
 		debugImage = session->imageHelper->drawingMethods->DrawRectangle(debugImage, straightCardArea);
 		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"4 - Rotated Cards");
 	}

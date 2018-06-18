@@ -18,10 +18,10 @@ private:
 	//The height of the shrinked card image we work with to maximize performance.
 	const int WORKING_IMAGE_HEIGHT;
 
-	//Finds the area in the original card image that contains the card.
-	cv::RotatedRect getOriginalCardArea(const cv::Mat workingImage, const cv::Size originalImageSize);
-	//Extracts the card part of the original card image.
-	cv::Mat getCardPart(const cv::Mat rawImage, const cv::RotatedRect cardArea);
+	//Finds the area in the card image that contains the card.
+	cv::RotatedRect getCardArea(const cv::Mat workingImage, const cv::Size originalImageSize);
+	//Extracts the cropped image of the card from the original card image.
+	cv::Mat getCardImage(const cv::Mat rawImage, const cv::RotatedRect cardArea);
 	//Finds the smallest square containing the card.
 	cv::RotatedRect findCardSquare(const cv::Mat rawImage, int thresh);
 	//Finds the biggest contour amoung the contours. That contour generally contains the others.
