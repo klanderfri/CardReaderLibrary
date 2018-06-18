@@ -5,6 +5,11 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CardReaderLibrary", "CardReaderLibrary\CardReaderLibrary.vcxproj", "{D8F17974-EDF2-4A8E-8328-C449149A3ABB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DebugClient", "DebugClient\DebugClient.vcxproj", "{3286CB38-B0EB-4D9C-95E7-735A25C1572C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8F17974-EDF2-4A8E-8328-C449149A3ABB} = {D8F17974-EDF2-4A8E-8328-C449149A3ABB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +26,14 @@ Global
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Release|x64.Build.0 = Release|x64
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Release|x86.ActiveCfg = Release|Win32
 		{D8F17974-EDF2-4A8E-8328-C449149A3ABB}.Release|x86.Build.0 = Release|Win32
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Debug|x64.ActiveCfg = Debug|x64
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Debug|x64.Build.0 = Debug|x64
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Debug|x86.ActiveCfg = Debug|Win32
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Debug|x86.Build.0 = Debug|Win32
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Release|x64.ActiveCfg = Release|x64
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Release|x64.Build.0 = Release|x64
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Release|x86.ActiveCfg = Release|Win32
+		{3286CB38-B0EB-4D9C-95E7-735A25C1572C}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
