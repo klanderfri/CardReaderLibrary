@@ -144,9 +144,9 @@ long double TrendLine::GetPerpendicularDistance(Point2d point) {
 	//Also check "Line defined by an equation" at Wikipedia:
 	//https://en.wikipedia.org/w/index.php?title=Distance_from_a_point_to_a_line&oldid=837108058#Line_defined_by_an_equation
 
-	long double a = (-1) * Slope;
-	long double b = (1);
-	long double c = (-1) * Offset;
+	long double a = (1) * Slope;
+	long double b = (-1);
+	long double c = (1) * Offset;
 
 	long double numerator = a * point.x + b * point.y + c;
 	long double denominator = sqrt(pow(a, 2) + pow(b, 2)); //Will never be negative or zero.
