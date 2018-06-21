@@ -154,7 +154,7 @@ long double TrendLine::GetPerpendicularDistance(Point2d point) {
 	long double distance = numerator / denominator;
 
 	//The two methods should render the same result but considering the result being doubles
-	//after valculations with doubles, they most likely have small differences.
+	//after calculations with doubles, they most likely have small differences.
 	
 	//The first method can't determine which side the point is relative the line, hense absolute value method.
 	long double difference = abs(controlDistance - abs(distance));
