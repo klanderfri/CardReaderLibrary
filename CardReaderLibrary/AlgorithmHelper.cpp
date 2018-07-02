@@ -29,8 +29,10 @@ long double AlgorithmHelper::Slope(const vector<long double>& x, const vector<lo
 	long double denominator = 0.0;
 
 	for (size_t i = 0; i < x.size(); ++i) {
-		numerator += (x[i] - avgX) * (y[i] - avgY);
-		denominator += (x[i] - avgX) * (x[i] - avgX);
+		
+		long double xDiffToAvg = (x[i] - avgX);
+		numerator += xDiffToAvg * (y[i] - avgY);
+		denominator += xDiffToAvg * xDiffToAvg;
 	}
 
 	long double slope = numerator / denominator;
