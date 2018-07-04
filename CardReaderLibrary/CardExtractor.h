@@ -19,11 +19,13 @@ private:
 	const int WORKING_IMAGE_HEIGHT;
 
 	//Finds the area in the card image that contains the card.
-	cv::RotatedRect getCardArea(const cv::Mat workingImage, const cv::Size originalImageSize);
+	LetterArea getCardArea(const cv::Mat workingImage, const cv::Size originalImageSize);
 	//Extracts the cropped image of the card from the original card image.
-	cv::Mat getCardImage(const cv::Mat rawImage, const cv::RotatedRect cardArea);
+	cv::Mat getCardImage(const cv::Mat rawImage, const LetterArea cardArea);
+	//Finds the corner points of the card (those points will be inside the card border).
+	std::vector<cv::Point> getCloseCornerPoints(Contour cardContour, const cv::Point contourCenter);
 	//Finds the smallest square containing the card.
-	cv::RotatedRect findCardSquare(const cv::Mat rawImage, int thresh);
+	LetterArea findCardArea(const cv::Mat rawImage, int thresh);
 	//Finds the biggest contour amoung the contours. That contour generally contains the others.
 	Contour findMaxContour(const Contours contours, const cv::Mat workingImage);
 	//Tells if a contour could contain the card.
