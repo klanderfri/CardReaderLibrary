@@ -239,16 +239,34 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 
 long double TrendLine::GetAngleBetweenLines(TrendLine normLine, TrendLine relationLine) {
 
+	//Handle infinity.
+	long double inf = numeric_limits<double>::infinity();
+	if (abs(normLine.Slope) == inf && abs(relationLine.Slope) == inf) {
+		return 0;
+	}
+	else if (abs(normLine.Slope) == inf || abs(relationLine.Slope) == inf) {
+
+		TrendLine nonInfiniteLine = (abs(normLine.Slope) != inf) ? normLine : relationLine;
+		long double correctedAngle = GetAngleBetweenLines(TrendLine::XAxis, nonInfiniteLine) - 90;
+		correctedAngle = (correctedAngle < -90) ? correctedAngle + 180 : correctedAngle;
+		return correctedAngle;
+	}
+
 	//Implemented according to:
 	//https://www.youtube.com/watch?v=JSEPDJfl8m8
 
 	long double numerator = normLine.Slope - relationLine.Slope;
 	long double denominator = 1 + normLine.Slope * relationLine.Slope;
-	if (denominator == 0) { return (numerator < 0) ? -90 : 90; }
+	if (denominator == 0) { return -90; }
 	long double value = numerator / denominator;
-	long double angle = atan(value) * 180 / CV_PI;
+	long double angle = degreesFromRadians(atan(value));
 
 	return angle;
+}
+
+long double TrendLine::degreesFromRadians(long double radians) {
+
+	return radians * 180 / CV_PI;
 }
 
 long double TrendLine::GetAngleToAxisX() {
