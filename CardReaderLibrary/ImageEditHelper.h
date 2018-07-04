@@ -2,6 +2,7 @@
 #include "ConversionHelper.h"
 #include "RectangleHelper.h"
 #include "ImageInformationHelper.h"
+#include "TransformHelper.h"
 //Class for editing images.
 class ImageEditHelper
 {
@@ -21,6 +22,9 @@ public:
 	void ResizeImage(const cv::Mat rawImage, cv::Mat& outImage, int height);
 	//Inverts the image background from black to white or vice versa.
 	void SetBackgroundByInverting(cv::Mat& blackAndWhiteimage, bool setblackBackground);
+
+	//Pointer to object transforming images.
+	TransformHelper* transformations;
 
 private:
 

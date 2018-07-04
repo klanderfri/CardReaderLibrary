@@ -10,6 +10,7 @@ ImageEditHelper::ImageEditHelper()
 	this->converter = new ConversionHelper();
 	this->rectangleMethods = new RectangleHelper();
 	this->imageInfo = new ImageInformationHelper();
+	this->transformations = new TransformHelper();
 }
 
 ImageEditHelper::~ImageEditHelper()
@@ -17,6 +18,7 @@ ImageEditHelper::~ImageEditHelper()
 	delete converter;
 	delete rectangleMethods;
 	delete imageInfo;
+	delete transformations;
 }
 
 void ImageEditHelper::RotateImage(const Mat rawImage, Mat& outImage, const double angleToRotate, const Point2f centerPoint)
