@@ -9,12 +9,14 @@ ContourHelper::ContourHelper()
 {
 	this->drawingMethods = new DrawingHelper();
 	this->imageEditor = new ImageEditHelper();
+	this->rectangleMethods = new RectangleHelper();
 }
 
 ContourHelper::~ContourHelper()
 {
 	delete drawingMethods;
 	delete imageEditor;
+	delete rectangleMethods;
 }
 
 Mat ContourHelper::GetContourAreaFromImage(const Contour contour, const Mat rawImage, const int margins, const bool drawContour) {
@@ -111,4 +113,17 @@ bool ContourHelper::IsIdenticalContours(Contour contour1, Contour contour2) {
 	}
 
 	return true;
+}
+
+void ContourHelper::StraightenUpContour(const Contour rawContour, Contour& outContour, bool enforcePortraitMode) {
+
+	//Get the bounds for the contour.
+	RotatedRect rawContourBounds = minAreaRect(rawContour);
+
+	//Get the angle to rotate to straighten up the contour.
+	double angleToRotate = rectangleMethods->GetAnglesToStrightenUp(rawContourBounds, enforcePortraitMode);
+
+	//Rotate the contour.
+	Mat rotation = getRotationMatrix2D(rawContourBounds.center, angleToRotate, 1.0);
+	transform(rawContour, outContour, rotation);
 }

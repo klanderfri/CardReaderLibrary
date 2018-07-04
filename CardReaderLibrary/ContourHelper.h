@@ -20,6 +20,8 @@ public:
 	cv::Mat GetContourDrawing(const Contour contour);
 	//Checks if two contours are identical.
 	bool IsIdenticalContours(Contour contour1, Contour contour2);
+	//Straighten up a contour so it won't be slightly rotated.
+	void StraightenUpContour(const Contour rawContour, Contour& outContour, bool enforcePortraitMode);
 
 private:
 
@@ -27,4 +29,6 @@ private:
 	DrawingHelper * drawingMethods;
 	//Pointer to object editing images.
 	ImageEditHelper* imageEditor;
+	//Pointer to object handling rectangles.
+	RectangleHelper* rectangleMethods;
 };
