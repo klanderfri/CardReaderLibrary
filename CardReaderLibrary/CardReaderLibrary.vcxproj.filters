@@ -194,6 +194,12 @@
     <ClInclude Include="FileSystemHelper.h">
       <Filter>Libraries\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="PointToPoint.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformHelper.h">
+      <Filter>Libraries\Helpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -312,6 +318,12 @@
     </ClCompile>
     <ClCompile Include="CardReaderLibrary.cpp">
       <Filter>LibraryInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="PointToPoint.cpp">
+      <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformHelper.cpp">
+      <Filter>Libraries\Helpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
