@@ -66,7 +66,7 @@ Rect MtgCardInfoHelper::GetSplitTitleSectionBox(Size cardSize) {
 
 Rect MtgCardInfoHelper::GetAmonkhetSplitTitleSectionBox(Size cardSize) {
 
-	double xCoordinateFactor = 0.065;
+	double xCoordinateFactor = 0.060;
 	double yCoordinateFactor = 0.061;
 	double widthFactor = 0.540;
 	double heightFactor = 0.088;
