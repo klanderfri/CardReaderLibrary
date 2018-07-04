@@ -107,3 +107,12 @@ bool RectangleHelper::DoesRectangleContainPoint(RotatedRect rectangle, Point2f p
 
 	return rectangleContainsPoint;
 }
+
+void RectangleHelper::StretchRectangle(const RotatedRect rectangleToStretch, RotatedRect& outRectangle, float xFactor, float yFactor) {
+
+	Point2f center(rectangleToStretch.center.x * xFactor, rectangleToStretch.center.y * yFactor);
+	Size2f size(rectangleToStretch.size.width * xFactor, rectangleToStretch.size.height * yFactor);
+	float angle = rectangleToStretch.angle;
+
+	outRectangle = RotatedRect(center, size, angle);
+}

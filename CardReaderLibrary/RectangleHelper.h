@@ -17,5 +17,7 @@ public:
 	bool DoesRectangleContainPoint(cv::RotatedRect rectangle, cv::Point2f point);
 	//Gets how many degrees the rectangle needs to be rotated in positive direction (counter-clockwise) to be straight.
 	double GetAnglesToStrightenUp(const cv::RotatedRect rotatedRectangle, bool enforcePortraitMode = true);
+	//Stretches a rectangle according to the provided factors.
+	void StretchRectangle(const cv::RotatedRect rectangleToStretch, cv::RotatedRect& outRectangle, float xFactor, float yFactor);
 };
 
