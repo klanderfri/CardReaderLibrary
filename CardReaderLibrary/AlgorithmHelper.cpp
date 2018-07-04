@@ -35,7 +35,7 @@ long double AlgorithmHelper::Slope(const vector<long double>& x, const vector<lo
 		denominator += xDiffToAvg * xDiffToAvg;
 	}
 
-	long double slope = numerator / denominator;
+	long double slope = (denominator == 0) ? numeric_limits<double>::infinity() : numerator / denominator;
 	return slope;
 }
 
@@ -68,8 +68,8 @@ Point2f AlgorithmHelper::FindClosestPointX(double x, vector<Point2f> points) {
 
 double AlgorithmHelper::FindDistance(Point2d point1, Point2d point2) {
 
-	double xDistance = abs(point1.x - point2.x);
-	double yDistance = abs(point1.y - point2.y);
+	double xDistance = point1.x - point2.x;
+	double yDistance = point1.y - point2.y;
 
 	double distance = sqrt(pow(xDistance, 2) + pow(yDistance, 2));
 
