@@ -127,3 +127,14 @@ void ContourHelper::StraightenUpContour(const Contour rawContour, Contour& outCo
 	Mat rotation = getRotationMatrix2D(rawContourBounds.center, angleToRotate, 1.0);
 	transform(rawContour, outContour, rotation);
 }
+
+void ContourHelper::StretchContour(const Contour contourToStretch, Contour& outContour, float xFactor, float yFactor) {
+
+	outContour.clear();
+
+	for (Point p : contourToStretch) {
+
+		Point bigP((int)(p.x * xFactor), (int)(p.y * yFactor));
+		outContour.push_back(bigP);
+	}
+}

@@ -22,6 +22,8 @@ public:
 	bool IsIdenticalContours(Contour contour1, Contour contour2);
 	//Straighten up a contour so it won't be slightly rotated.
 	void StraightenUpContour(const Contour rawContour, Contour& outContour, bool enforcePortraitMode);
+	//Stretches a contour according to the provided factors.
+	void StretchContour(const Contour contourToStretch, Contour& outContour, float xFactor, float yFactor);
 
 private:
 
