@@ -70,7 +70,7 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, bLine[0], bLine[1]);
 
-		session->fileSystem->imageSaver->SaveImageData(trendImage, imageFileName, L"7 - Title Center Line", numberOfTries);
+		session->fileSystem->imageSaver->SaveImageData(trendImage, imageFileName, L"5 - Title Center Line", numberOfTries);
 	}
 
 	return letters;

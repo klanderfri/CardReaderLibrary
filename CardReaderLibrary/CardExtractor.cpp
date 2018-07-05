@@ -49,7 +49,7 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
 		Mat debugImage = session->imageHelper->drawingMethods->DrawRectangle(originalImageData, cardArea.Box);
-		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"3 - HD with Limit");
+		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"2 - HD with Limit");
 	}
 
 	//Extract the card.
@@ -102,12 +102,12 @@ Mat CardExtractor::getCardImage(const Mat rawImage, const LetterArea cardArea) {
 		//Create image showing the rotation.
 		Mat rotatedCard = session->imageHelper->drawingMethods->DrawCircle(workingImage, cardArea.Box.center);
 		rotatedCard = session->imageHelper->drawingMethods->DrawRectangle(rotatedCard, straightCardArea);
-		session->fileSystem->imageSaver->SaveImageData(rotatedCard, imageFileName, L"4a - Rotated Cards");
+		session->fileSystem->imageSaver->SaveImageData(rotatedCard, imageFileName, L"3a - Rotated Cards");
 
 		//Create image showing the card without transformation.
 		Mat originalCrop;
 		session->imageHelper->imageEditor->CropImage(workingImage, originalCrop, straightCardArea);
-		session->fileSystem->imageSaver->SaveImageData(originalCrop, imageFileName, L"4b - Untransformed Extracted Cards");
+		session->fileSystem->imageSaver->SaveImageData(originalCrop, imageFileName, L"3b - Untransformed Extracted Cards");
 	}
 
 	//Get the straight contour of the card.
@@ -128,7 +128,7 @@ Mat CardExtractor::getCardImage(const Mat rawImage, const LetterArea cardArea) {
 			cardCornerPointsImage = session->imageHelper->drawingMethods->DrawCircle(cardCornerPointsImage, c);
 			cardCornerPointsImage = session->imageHelper->drawingMethods->DrawCircle(cardCornerPointsImage, c, 15);
 		}
-		session->fileSystem->imageSaver->SaveImageData(cardCornerPointsImage, imageFileName, L"4c - Card Corner Points");
+		session->fileSystem->imageSaver->SaveImageData(cardCornerPointsImage, imageFileName, L"3c - Card Corner Points");
 	}
 
 	//Transform the card image part to a straight rectangle. This will also crop out the card.
@@ -137,7 +137,7 @@ Mat CardExtractor::getCardImage(const Mat rawImage, const LetterArea cardArea) {
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
-		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"4d - Extracted Cards");
+		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"3d - Extracted Cards");
 	}
 
 	return workingImage;
@@ -200,7 +200,7 @@ LetterArea CardExtractor::findCardArea(const Mat rawImage, int thresh) {
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
-		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"1 - Black and White");
+		session->fileSystem->imageSaver->SaveImageData(workingImage, imageFileName, L"1a - Border Detection");
 	}
 
 	//Find the countours of the card.
@@ -216,7 +216,7 @@ LetterArea CardExtractor::findCardArea(const Mat rawImage, int thresh) {
 	if (session->inputData->runDebugging) {
 		Rect straightCardRectangle = getContourRectangle(maxContour); //Get the smallest straight rectangle containing the card.
 		Mat debugImage = session->imageHelper->drawingMethods->DrawLimits(rawImage, maxContour);// , rotatedCardRectangle, straightCardRectangle);
-		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"2 - Cards with Limits");
+		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"1b - Cards with Limits");
 	}
 
 	LetterArea cardArea;

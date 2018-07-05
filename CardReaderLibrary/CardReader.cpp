@@ -70,7 +70,7 @@ void CardReader::ReadCardName(Mat cardImage) {
 		size_t size = finalResult.OcrTitleImages.size();
 		for (size_t i = 0; i < size; i++) {
 
-			session->fileSystem->imageSaver->SaveImageData(finalResult.OcrTitleImages[i], finalResult.FileName, L"13 - Best OCR Title", i, size);
+			session->fileSystem->imageSaver->SaveImageData(finalResult.OcrTitleImages[i], finalResult.FileName, L"9 - Best OCR Title", i, size);
 		}
 	}
 }
@@ -366,7 +366,7 @@ bool CardReader::extractOcrReadyTitle(const Mat cardImage, vector<Mat>& outImage
 
 		//Store result for debugging.
 		if (session->inputData->runDebugging) {
-			session->fileSystem->imageSaver->SaveImageData(outImages[i], imageFileName, L"12 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
+			session->fileSystem->imageSaver->SaveImageData(outImages[i], imageFileName, L"8 - OCR Prepared Title", ++numberOfOcrTitleImagesStoredForDebug);
 		}
 	}
 
@@ -392,6 +392,6 @@ void CardReader::cropImageToTitleSection(const Mat cardImage, Mat& outImage, con
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
-		session->fileSystem->imageSaver->SaveImageData(outImage, imageFileName, L"6 - Title Section", ++numberOfTitleImagesStoredForDebug);
+		session->fileSystem->imageSaver->SaveImageData(outImage, imageFileName, L"4 - Title Section", ++numberOfTitleImagesStoredForDebug);
 	}
 }
