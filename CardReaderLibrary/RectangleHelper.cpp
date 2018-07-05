@@ -27,8 +27,8 @@ RotatedRect RectangleHelper::GetRotatedRectangle(vector<TrendLine> verticalBorde
 		throw ParameterException("The side borders are not paralell!");
 	}
 
-	long double angle1 = TrendLine::GetAngleBetweenLines(verticalBorders[0], horizontalBorders[0]);
-	long double angle2 = TrendLine::GetAngleBetweenLines(verticalBorders[1], horizontalBorders[1]);
+	long double angle1 = TrendLine::GetDegreesBetweenLines(verticalBorders[0], horizontalBorders[0]);
+	long double angle2 = TrendLine::GetDegreesBetweenLines(verticalBorders[1], horizontalBorders[1]);
 	bool isPerpendicular = abs(angle1) == 90.0 && abs(angle2) == 90;
 	if (!isPerpendicular) {
 		throw ParameterException("The horizontal and vertical borders are not perpendicular!");
@@ -42,7 +42,7 @@ RotatedRect RectangleHelper::GetRotatedRectangle(vector<TrendLine> verticalBorde
 	Point2d center = 0.5f * (corner + oppositeCorner);
 
 	//Calculate angle.
-	long double angle = (-1) * horizontalBorders[0].GetAngleToAxisX();
+	long double angle = (-1) * horizontalBorders[0].GetDegreesToAxisX();
 	angle += angleAdjustment;
 
 	//Calculate size.

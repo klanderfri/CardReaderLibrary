@@ -194,7 +194,7 @@ TrendLine TrendLine::GetPerpendicularLine(Point2d pointOnPerpendicularLine) {
 	TrendLine perpendicularLine(slope, offset);
 
 	//Verify that the line is perpendicular.
-	long double lineAngles = TrendLine::GetAngleBetweenLines(*this, perpendicularLine);
+	long double lineAngles = GetDegreesBetweenLines(*this, perpendicularLine);
 	//The perpendicular line is not perpendicular!
 	assert(abs(lineAngles) == 90);
 
@@ -237,7 +237,7 @@ Point2d TrendLine::GetIntersectionPoint(TrendLine lineA, TrendLine lineB) {
 	return intersection;
 }
 
-long double TrendLine::GetAngleBetweenLines(TrendLine normLine, TrendLine relationLine) {
+long double TrendLine::GetDegreesBetweenLines(TrendLine normLine, TrendLine relationLine) {
 
 	//Handle infinity.
 	long double inf = numeric_limits<double>::infinity();
@@ -247,7 +247,7 @@ long double TrendLine::GetAngleBetweenLines(TrendLine normLine, TrendLine relati
 	else if (abs(normLine.Slope) == inf || abs(relationLine.Slope) == inf) {
 
 		TrendLine nonInfiniteLine = (abs(normLine.Slope) != inf) ? normLine : relationLine;
-		long double correctedAngle = GetAngleBetweenLines(TrendLine::XAxis, nonInfiniteLine) - 90;
+		long double correctedAngle = GetDegreesBetweenLines(TrendLine::XAxis, nonInfiniteLine) - 90;
 		correctedAngle = (correctedAngle < -90) ? correctedAngle + 180 : correctedAngle;
 		return correctedAngle;
 	}
@@ -269,9 +269,9 @@ long double TrendLine::degreesFromRadians(long double radians) {
 	return radians * 180 / CV_PI;
 }
 
-long double TrendLine::GetAngleToAxisX() {
+long double TrendLine::GetDegreesToAxisX() {
 
-	long double angle = GetAngleBetweenLines(XAxis, *this);
+	long double angle = GetDegreesBetweenLines(XAxis, *this);
 	return angle;
 }
 

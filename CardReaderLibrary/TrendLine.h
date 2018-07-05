@@ -30,12 +30,12 @@ public:
 	TrendLine GetPerpendicularLine(cv::Point2d pointOnPerpendicularLine);
 	//Gets another line parallel to the line.
 	TrendLine GetParallelLine(cv::Point2d pointOnParallelLine);
-	//Gets the point in which thw two lines meet.
+	//Gets the point in which the two lines meet.
 	static cv::Point2d GetIntersectionPoint(TrendLine lineA, TrendLine lineB);
 	//Gets the clockwise angle (degrees) from the norm line to the relation line.
-	static long double GetAngleBetweenLines(TrendLine normLine, TrendLine relationLine);
+	static long double GetDegreesBetweenLines(TrendLine normLine, TrendLine relationLine);
 	//Gets the angle (degrees) between the line and the X axis.
-	long double GetAngleToAxisX();
+	long double GetDegreesToAxisX();
 	//Gets the two lines parallel to the line, having all the points between them.
 	std::vector<TrendLine> GetBoundLines(std::vector<cv::Point2d> points);
 	//Tells if two lines are parallel.
