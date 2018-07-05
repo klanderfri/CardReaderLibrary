@@ -32,18 +32,18 @@ Mat TransformHelper::TransformToRectangle(const Mat rawImage, vector<Point2d> fo
 	double width = max(AlgorithmHelper::FindDistance(tl, tr), AlgorithmHelper::FindDistance(bl, br));
 	double height = max(AlgorithmHelper::FindDistance(tl, bl), AlgorithmHelper::FindDistance(tr, br));
 
-	int widthMargin = width * widthMarginFactor;
-	int heightMargin = height * heightMarginFactor;
+	double widthMargin = width * widthMarginFactor;
+	double heightMargin = height * heightMarginFactor;
 
 	Size2d newImageSize(width + 2 * widthMargin, height + 2 * heightMargin);
 
 	Point2f oldCorners[] = { tl, tr, br, bl };
 	Point2f newCorners[] =
 	{
-		Point2f(0 + widthMargin, 0 + heightMargin),
-		Point2f(width - 1 + widthMargin, 0 + heightMargin),
-		Point2f(width - 1 + widthMargin, height - 1 + heightMargin),
-		Point2f(0 + widthMargin, height - 1 + heightMargin)
+		Point2d(0 + widthMargin, 0 + heightMargin),
+		Point2d(width - 1 + widthMargin, 0 + heightMargin),
+		Point2d(width - 1 + widthMargin, height - 1 + heightMargin),
+		Point2d(0 + widthMargin, height - 1 + heightMargin)
 	};
 
 	Mat transformedImage;
