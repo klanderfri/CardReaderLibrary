@@ -14,14 +14,14 @@ public:
 private:
 
 	//Handles a single figure (noise or letter).
-	void handleFigure(LetterArea figure, cv::Mat& dirtyImage);
+	void handleFigure(FigureArea figure, cv::Mat& dirtyImage);
 	//Checks if a figure is noise.
-	bool isNoise(LetterArea figure, cv::Size imageArea);
+	bool isNoise(FigureArea figure, cv::Size imageArea);
 	//Checks if a figure is too long and thin to be a letter.
-	bool isOblong(LetterArea figure);
+	bool isOblong(FigureArea figure);
 	//Checks if a figure is so small it can be considered noise.
-	bool isSmallEnoughToBeNoise(LetterArea figure);
+	bool isSmallEnoughToBeNoise(FigureArea figure);
 	//Checks if a figure is in the middle of the text image.
-	bool isInCenter(LetterArea figure, cv::Size imageArea);
+	bool isInCenter(FigureArea figure, cv::Size imageArea);
 };
 

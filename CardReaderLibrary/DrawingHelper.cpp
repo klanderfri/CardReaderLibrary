@@ -104,20 +104,20 @@ Mat DrawingHelper::DrawContours(const Mat image, const Contours contours, bool u
 	return workingImage;
 }
 
-Mat DrawingHelper::DrawLetterAreas(const Mat image, const LetterAreas letters, int letterCenterRadius) {
+Mat DrawingHelper::DrawFigureAreas(const Mat image, const FigureAreas figures, int figureCenterRadius) {
 
 	Mat workingImage = converter->ToColourImage(image);
 
-	for (size_t i = 0; i < letters.size(); i++) {
+	for (size_t i = 0; i < figures.size(); i++) {
 
-		LetterArea area = letters[i];
+		FigureArea area = figures[i];
 
 		//Draw the area.
 		workingImage = workingImage.empty() ? image : workingImage;
 		workingImage = DrawLimits(workingImage, area.OuterContour, area.Box);
 
 		//Draw the center.
-		workingImage = DrawCircle(workingImage, area.Box.center, letterCenterRadius, Green);
+		workingImage = DrawCircle(workingImage, area.Box.center, figureCenterRadius, Green);
 	}
 
 	return workingImage;

@@ -14,8 +14,8 @@ public:
 	cv::Mat GetContourAreaFromImage(const Contour contour, const cv::Mat rawImage, const int margins, const bool drawContour = false);
 	//Finds the convex hull of multiple contours.
 	static Contour GetConvexHullContours(const Contours contours);
-	//Gives the combined contour of several letters.
-	Contour GetCombinedLetterContorus(LetterAreas letters);
+	//Gives the combined contour of several figures.
+	Contour GetCombinedFigureContorus(FigureAreas figures);
 	//Creates an image containing the contour.
 	cv::Mat GetContourDrawing(const Contour contour);
 	//Checks if two contours are identical.

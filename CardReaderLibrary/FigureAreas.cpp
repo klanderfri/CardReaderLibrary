@@ -1,26 +1,26 @@
 #include "stdafx.h"
-#include "LetterAreas.h"
+#include "FigureAreas.h"
 #include "ContourHelper.h"
 
 using namespace cv;
 using namespace std;
 
-LetterAreas::LetterAreas()
+FigureAreas::FigureAreas()
 {
 }
 
-LetterAreas::~LetterAreas()
+FigureAreas::~FigureAreas()
 {
 }
 
-LetterAreas::LetterAreas(Contours contours) {
+FigureAreas::FigureAreas(Contours contours) {
 
 	for (size_t i = 0; i < contours.size(); i++) {
 
 		Contour letterContour = ContourHelper::GetConvexHullContours({ contours[i] });
 		RotatedRect letterBox = minAreaRect(letterContour);
 
-		LetterArea area;
+		FigureArea area;
 		area.TightContour = contours[i];
 		area.OuterContour = letterContour;
 		area.Box = letterBox;
@@ -28,25 +28,25 @@ LetterAreas::LetterAreas(Contours contours) {
 		this->push_back(area);
 	}
 
-	sort(this->begin(), this->end(), LetterArea::CompareLetterAreaByLeftBorderXAscending);
+	sort(this->begin(), this->end(), FigureArea::CompareFigureAreaByLeftBorderXAscending);
 }
 
-LetterAreas::LetterAreas(const_iterator first, const_iterator last)
-	: LetterAreasBase(first, last)
+FigureAreas::FigureAreas(const_iterator first, const_iterator last)
+	: FigureAreasBase(first, last)
 {
 }
 
-bool LetterAreas::HasParentLetter(LetterArea letterToCheck, LetterAreas possibleParents) {
+bool FigureAreas::HasParentFigure(FigureArea figureToCheck, FigureAreas possibleParents) {
 
 	for (size_t i = 0; i < possibleParents.size(); i++) {
 
-		if (hasChildParentRelation(letterToCheck, possibleParents[i])) { return true; }
+		if (hasChildParentRelation(figureToCheck, possibleParents[i])) { return true; }
 	}
 
 	return false;
 }
 
-bool LetterAreas::hasChildParentRelation(LetterArea child, LetterArea parent) {
+bool FigureAreas::hasChildParentRelation(FigureArea child, FigureArea parent) {
 
 	//A child will have its' center inside the parent.
 	bool parentContainsChildCenter = pointPolygonTest(parent.OuterContour, child.Box.center, false) > 0;

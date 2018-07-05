@@ -44,7 +44,7 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	outImage = session->imageHelper->converter->ToGreyImage(outImage);
 
 	//Find the card in the image.
-	LetterArea cardArea = getCardArea(outImage, originalImageData.size());
+	FigureArea cardArea = getCardArea(outImage, originalImageData.size());
 
 	//Store result for debugging.
 	if (session->inputData->runDebugging) {
@@ -58,10 +58,10 @@ bool CardExtractor::ExtractCard(Mat& outImage) {
 	return true;
 }
 
-LetterArea CardExtractor::getCardArea(const Mat thumbImage, const Size originalImageSize) {
+FigureArea CardExtractor::getCardArea(const Mat thumbImage, const Size originalImageSize) {
 
 	//Find the area that contains the card in the image.
-	LetterArea workingCardArea = findCardArea(thumbImage, 80);
+	FigureArea workingCardArea = findCardArea(thumbImage, 80);
 
 	float longSide = max(workingCardArea.Box.size.height, workingCardArea.Box.size.width);
 	float shortSide = min(workingCardArea.Box.size.height, workingCardArea.Box.size.width);
@@ -82,14 +82,14 @@ LetterArea CardExtractor::getCardArea(const Mat thumbImage, const Size originalI
 	float yFactor = originalImageSize.height / (float)thumbImage.size().height;
 
 	//Create an area container for the HD card image.
-	LetterArea originalCardArea;
+	FigureArea originalCardArea;
 	session->imageHelper->rectangleMethods->StretchRectangle(workingCardArea.Box, originalCardArea.Box, xFactor, yFactor);
 	session->imageHelper->contourMethods->StretchContour(workingCardArea.TightContour, originalCardArea.TightContour, xFactor, yFactor);
 
 	return originalCardArea;
 }
 
-Mat CardExtractor::getCardImage(const Mat rawImage, const LetterArea cardArea) {
+Mat CardExtractor::getCardImage(const Mat rawImage, const FigureArea cardArea) {
 
 	//Rotate the image to make it straight.
 	Mat workingImage;
@@ -186,7 +186,7 @@ vector<Point> CardExtractor::getCloseCornerPoints(Contour cardContour, const Poi
 	return corners;
 }
 
-LetterArea CardExtractor::findCardArea(const Mat rawImage, int thresh) {
+FigureArea CardExtractor::findCardArea(const Mat rawImage, int thresh) {
 
 	//Copy the raw image to a separate variable to keep the original from changes.
 	Mat workingImage;
@@ -219,7 +219,7 @@ LetterArea CardExtractor::findCardArea(const Mat rawImage, int thresh) {
 		session->fileSystem->imageSaver->SaveImageData(debugImage, imageFileName, L"1b - Cards with Limits");
 	}
 
-	LetterArea cardArea;
+	FigureArea cardArea;
 	cardArea.Box = rotatedCardRectangle;
 	cardArea.TightContour = maxContour;
 

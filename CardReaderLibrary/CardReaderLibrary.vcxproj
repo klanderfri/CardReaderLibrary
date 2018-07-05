@@ -180,8 +180,8 @@ xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)"</Command>
     <ClInclude Include="ImageHelper.h" />
     <ClInclude Include="ImageInformationHelper.h" />
     <ClInclude Include="ImageOcrHelper.h" />
-    <ClInclude Include="LetterArea.h" />
-    <ClInclude Include="LetterAreas.h" />
+    <ClInclude Include="FigureArea.h" />
+    <ClInclude Include="FigureAreas.h" />
     <ClInclude Include="LetterCheckHelper.h" />
     <ClInclude Include="LetterFilter.h" />
     <ClInclude Include="LoadOcvImage.h" />
@@ -224,8 +224,8 @@ xcopy /Y "$(ProjectDir)CardReaderLibrary.h" "$(OutDir)"</Command>
     <ClCompile Include="ImageHelper.cpp" />
     <ClCompile Include="ImageInformationHelper.cpp" />
     <ClCompile Include="ImageOcrHelper.cpp" />
-    <ClCompile Include="LetterArea.cpp" />
-    <ClCompile Include="LetterAreas.cpp" />
+    <ClCompile Include="FigureArea.cpp" />
+    <ClCompile Include="FigureAreas.cpp" />
     <ClCompile Include="LetterCheckHelper.cpp" />
     <ClCompile Include="LetterFilter.cpp" />
     <ClCompile Include="LoadOcvImage.cpp" />

@@ -20,7 +20,7 @@ void OcrImageNoiseCleaner::CleanImage(Mat& dirtyImage) {
 
 	threshold(dirtyImage, binaryImage, 240, 255, THRESH_BINARY);
 	Contours contours = session->imageHelper->contourMethods->GetCannyContours(binaryImage, 120);
-	LetterAreas figures(contours);
+	FigureAreas figures(contours);
 
 	for (size_t i = 0; i < figures.size(); i++) {
 
@@ -28,7 +28,7 @@ void OcrImageNoiseCleaner::CleanImage(Mat& dirtyImage) {
 	}
 }
 
-void OcrImageNoiseCleaner::handleFigure(LetterArea figure, Mat& dirtyImage) {
+void OcrImageNoiseCleaner::handleFigure(FigureArea figure, Mat& dirtyImage) {
 
 	if (figure.Box.size.area() == 0) { return; }
 
@@ -40,7 +40,7 @@ void OcrImageNoiseCleaner::handleFigure(LetterArea figure, Mat& dirtyImage) {
 	}
 }
 
-bool OcrImageNoiseCleaner::isNoise(LetterArea figure, Size imageArea) {
+bool OcrImageNoiseCleaner::isNoise(FigureArea figure, Size imageArea) {
 
 	if (isOblong(figure)) { return true; }
 	if (isSmallEnoughToBeNoise(figure) &&
@@ -49,7 +49,7 @@ bool OcrImageNoiseCleaner::isNoise(LetterArea figure, Size imageArea) {
 	return false;
 }
 
-bool OcrImageNoiseCleaner::isOblong(LetterArea figure) {
+bool OcrImageNoiseCleaner::isOblong(FigureArea figure) {
 
 	double height = min(figure.Box.size.height, figure.Box.size.width);
 	double width = max(figure.Box.size.height, figure.Box.size.width);
@@ -58,7 +58,7 @@ bool OcrImageNoiseCleaner::isOblong(LetterArea figure) {
 	return (relation > 5.5);
 }
 
-bool OcrImageNoiseCleaner::isSmallEnoughToBeNoise(LetterArea figure) {
+bool OcrImageNoiseCleaner::isSmallEnoughToBeNoise(FigureArea figure) {
 
 	bool isOpen = !isContourConvex(figure.TightContour);
 	double area = contourArea(isOpen ? figure.OuterContour : figure.TightContour);
@@ -67,7 +67,7 @@ bool OcrImageNoiseCleaner::isSmallEnoughToBeNoise(LetterArea figure) {
 	return (area <= maxNoiseArea);
 }
 
-bool OcrImageNoiseCleaner::isInCenter(LetterArea figure, Size imageArea) {
+bool OcrImageNoiseCleaner::isInCenter(FigureArea figure, Size imageArea) {
 
 	int borderMargin = (int)(session->WORKING_CARD_HEIGHT / 27.2); //25
 	Rect rCenter(borderMargin, borderMargin, imageArea.width - 2 * borderMargin, imageArea.height - 2 * borderMargin);

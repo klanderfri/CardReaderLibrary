@@ -105,14 +105,14 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 
 	Contours contours = session->imageHelper->contourMethods->GetCannyContours(titleImage, 120);
 	LetterFilter filter(session, imageFilePath, titleImage);
-	LetterAreas letters = filter.RunFilter(contours, numberOfTries);
+	FigureAreas letters = filter.RunFilter(contours, numberOfTries);
 
 	//Something is wrong if there are fewer letters than there are in the shortest MtG card name.
 	bool toShortTitle = letters.size() < (size_t)session->cardInfo->LettersInShortestCardName();
 	if (toShortTitle) { return false; }
 
 	//Get the areas of the entire title.
-	Contour combinedLetterContorus = session->imageHelper->contourMethods->GetCombinedLetterContorus(letters);
+	Contour combinedLetterContorus = session->imageHelper->contourMethods->GetCombinedFigureContorus(letters);
 	RotatedRect textArea = getTextArea(combinedLetterContorus, filter.GetTextCenterLine(), filter.GetTextBaseLine(), titleImage, numberOfTries);
 
 	//Store result for debugging.
@@ -120,7 +120,7 @@ bool TitleExtractor::getTitleText(const Mat titleImage, vector<Mat>& textImages,
 	if (session->inputData->runDebugging) {
 
 		int radius = (int)(session->WORKING_CARD_HEIGHT / 226.5); //3
-		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawLetterAreas(titleImage, letters, radius);
+		dbg_onlyLettersBoundImage = session->imageHelper->drawingMethods->DrawFigureAreas(titleImage, letters, radius);
 		dbg_possibleTitleAreaImage = session->imageHelper->drawingMethods->DrawLimits(titleImage, combinedLetterContorus, textArea);
 	}
 

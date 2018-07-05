@@ -77,12 +77,6 @@
     <ClInclude Include="Hierarchy.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
-    <ClInclude Include="LetterArea.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="LetterAreas.h">
-      <Filter>Core\Containers</Filter>
-    </ClInclude>
     <ClInclude Include="OcrDecodeResult.h">
       <Filter>Core\Containers</Filter>
     </ClInclude>
@@ -200,18 +194,18 @@
     <ClInclude Include="TransformHelper.h">
       <Filter>Libraries\Helpers</Filter>
     </ClInclude>
+    <ClInclude Include="FigureArea.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="FigureAreas.h">
+      <Filter>Core\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>LibraryInterface</Filter>
     </ClCompile>
     <ClCompile Include="CardNameInfo.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterArea.cpp">
-      <Filter>Core\Containers</Filter>
-    </ClCompile>
-    <ClCompile Include="LetterAreas.cpp">
       <Filter>Core\Containers</Filter>
     </ClCompile>
     <ClCompile Include="OcrDecodeResult.cpp">
@@ -324,6 +318,12 @@
     </ClCompile>
     <ClCompile Include="TransformHelper.cpp">
       <Filter>Libraries\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="FigureArea.cpp">
+      <Filter>Core\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="FigureAreas.cpp">
+      <Filter>Core\Containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

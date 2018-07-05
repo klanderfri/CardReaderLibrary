@@ -1,19 +1,19 @@
 #include "stdafx.h"
-#include "LetterArea.h"
+#include "FigureArea.h"
 #include "RectangleHelper.h"
 
 using namespace cv;
 using namespace std;
 
-LetterArea::LetterArea()
+FigureArea::FigureArea()
 {
 }
 
-LetterArea::~LetterArea()
+FigureArea::~FigureArea()
 {
 }
 
-bool LetterArea::CompareLetterAreaByLeftBorderXAscending(LetterArea area1, LetterArea area2) {
+bool FigureArea::CompareFigureAreaByLeftBorderXAscending(FigureArea area1, FigureArea area2) {
 
 	float borderX1 = area1.Box.center.x - RectangleHelper::SmallestDistanceCenterToLimit(area1.Box);
 	float borderX2 = area2.Box.center.x - RectangleHelper::SmallestDistanceCenterToLimit(area2.Box);
@@ -21,12 +21,12 @@ bool LetterArea::CompareLetterAreaByLeftBorderXAscending(LetterArea area1, Lette
 	return (borderX1 < borderX2);
 }
 
-bool LetterArea::CompareLetterAreaByHeightAscending(LetterArea area1, LetterArea area2) {
+bool FigureArea::CompareFigureAreaByHeightAscending(FigureArea area1, FigureArea area2) {
 
 	return (area1.Box.size.height < area2.Box.size.height);
 }
 
-Point2d LetterArea::GetMiddleBottomPoint() {
+Point2d FigureArea::GetMiddleBottomPoint() {
 
 	//Implemented according to section "But which one?" at:
 	//http://www.mathsisfun.com/algebra/trig-inverse-sin-cos-tan.html

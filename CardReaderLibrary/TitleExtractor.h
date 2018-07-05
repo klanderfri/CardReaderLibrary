@@ -1,6 +1,6 @@
 #pragma once
 #include "ImageHandlerBase.h"
-#include "LetterArea.h"
+#include "FigureArea.h"
 #include "TrendLine.h"
 #include "CardTitleType.h"
 //Class for extracting the title section from a card.

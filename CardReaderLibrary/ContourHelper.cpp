@@ -72,18 +72,18 @@ Contour ContourHelper::GetConvexHullContours(const Contours contours)
 	return result;
 }
 
-Contour ContourHelper::GetCombinedLetterContorus(LetterAreas letters) {
+Contour ContourHelper::GetCombinedFigureContorus(FigureAreas figures) {
 
-	Contour combinedLetterContorus;
+	Contour combinedFigureContorus;
 
-	for (size_t i = 0; i < letters.size(); i++) {
+	for (size_t i = 0; i < figures.size(); i++) {
 
-		LetterArea area = letters[i];
+		FigureArea area = figures[i];
 
-		combinedLetterContorus.insert(combinedLetterContorus.end(), area.OuterContour.begin(), area.OuterContour.end());
+		combinedFigureContorus.insert(combinedFigureContorus.end(), area.OuterContour.begin(), area.OuterContour.end());
 	}
 
-	return combinedLetterContorus;
+	return combinedFigureContorus;
 }
 
 Mat ContourHelper::GetContourDrawing(const Contour contour) {

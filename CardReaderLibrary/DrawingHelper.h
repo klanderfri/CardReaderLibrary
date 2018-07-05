@@ -1,7 +1,7 @@
 #pragma once
 #include "TrendLine.h"
 #include "Hierarchy.h"
-#include "LetterAreas.h"
+#include "FigureAreas.h"
 #include "ConversionHelper.h"
 //Class for drawing on images.
 class DrawingHelper
@@ -27,8 +27,8 @@ public:
 	cv::Mat DrawRectangle(const cv::Mat image, const cv::Rect rectangle, Colour colour = Green);
 	//Draws the specified contours on an image.
 	cv::Mat DrawContours(const cv::Mat image, const Contours contours, bool useRandomColours = false, const Hierarchy hierarchy = Hierarchy());
-	//Draws the specified letter areas on an image.
-	cv::Mat DrawLetterAreas(const cv::Mat image, const LetterAreas letters, int letterCenterRadius);
+	//Draws the specified figure areas on an image.
+	cv::Mat DrawFigureAreas(const cv::Mat image, const FigureAreas figures, int figureCenterRadius);
 	//Draws a circle on an image.
 	cv::Mat DrawCircle(const cv::Mat image, const cv::Point imageCenter, int radius = 3, const Colour colour = Red);
 	//Fills a contour in the image with the specified colour.

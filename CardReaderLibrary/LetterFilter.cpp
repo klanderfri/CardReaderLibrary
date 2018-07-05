@@ -27,18 +27,18 @@ TrendLine LetterFilter::GetTextBaseLine() {
 	return textBaseLine;
 }
 
-LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
+FigureAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 
 	//Reset base and center line.
 	textBaseLine = textCenterLine = TrendLine(0, originalImageData.rows / 2);
 
 	//Do a crude filtering of the the letters.
-	LetterAreas allPossibleLetters(contours);
-	LetterAreas letters = filterOutNonTitleSymbols(allPossibleLetters);
+	FigureAreas allPossibleLetters(contours);
+	FigureAreas letters = filterOutNonTitleSymbols(allPossibleLetters);
 
 	//Check if there was any letters at all.
 	if (letters.empty()) {
-		return LetterAreas();
+		return FigureAreas();
 	}
 
 	//Find the center of the title.
@@ -63,8 +63,8 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 		vector<Point2d> bLine = textBaseLine.GetEndPoints(leftLimit, rightLimit);
 
 		int radius = 3;
-		Mat trendImage = session->imageHelper->drawingMethods->DrawLetterAreas(originalImageData, letters, radius);
-		for (LetterArea letter : letters) {
+		Mat trendImage = session->imageHelper->drawingMethods->DrawFigureAreas(originalImageData, letters, radius);
+		for (FigureArea letter : letters) {
 			trendImage = session->imageHelper->drawingMethods->DrawCircle(trendImage, letter.GetMiddleBottomPoint(), radius, Green);
 		}
 		trendImage = session->imageHelper->drawingMethods->DrawLine(trendImage, cLine[0], cLine[1]);
@@ -76,12 +76,12 @@ LetterAreas LetterFilter::RunFilter(Contours contours, int numberOfTries) {
 	return letters;
 }
 
-TrendLine LetterFilter::findCenterLine(LetterAreas letters) {
+TrendLine LetterFilter::findCenterLine(FigureAreas letters) {
 
 	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	vector<long double> xCoordinates, yCoordinates;
 
-	for (LetterArea letter : letters) {
+	for (FigureArea letter : letters) {
 
 		if (letterCheck.IsDotLikeCharacter(letter.Box)) { continue; }
 
@@ -106,13 +106,13 @@ TrendLine LetterFilter::findCenterLine(LetterAreas letters) {
 	return textCenterLine;
 }
 
-TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
+TrendLine LetterFilter::findBaseLine(FigureAreas letters) {
 
 	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	vector<Point2d> bottomPoints;
-	LetterAreas baseLineLetters;
+	FigureAreas baseLineLetters;
 
-	for (LetterArea letter : letters) {
+	for (FigureArea letter : letters) {
 
 		if (letterCheck.IsDotLikeCharacter(letter.Box)) { continue; }
 
@@ -124,7 +124,7 @@ TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 	double allowedPerpendicularDistance = (double)(session->WORKING_CARD_HEIGHT / 85.0); //8
 	bottomPoints.clear();
 
-	for (LetterArea letter : baseLineLetters) {
+	for (FigureArea letter : baseLineLetters) {
 
 		double perpendicularDistance = abs(baseLine.GetPerpendicularDistance(letter.GetMiddleBottomPoint()));
 		if (perpendicularDistance > allowedPerpendicularDistance) { continue; }
@@ -136,9 +136,9 @@ TrendLine LetterFilter::findBaseLine(LetterAreas letters) {
 	return baseLine;
 }
 
-LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutNonTitleSymbols(FigureAreas lettersToFilter) {
 
-	LetterAreas letters;
+	FigureAreas letters;
 	letters = filterOutDuplicates(lettersToFilter);
 	letters = filterOutNoise(letters);
 	letters = filterOutTransformSymbol(letters);
@@ -147,11 +147,11 @@ LetterAreas LetterFilter::filterOutNonTitleSymbols(LetterAreas lettersToFilter) 
 	return letters;
 }
 
-LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutDuplicates(FigureAreas lettersToFilter) {
 
 	if (lettersToFilter.size() < 2) { return lettersToFilter; }
 
-	LetterAreas letters;
+	FigureAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++) {
 
@@ -162,10 +162,10 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 		}
 
 		//Bring out the last unique letter.
-		LetterArea letterA = letters[letters.size() - 1];
+		FigureArea letterA = letters[letters.size() - 1];
 
 		//Bring out the next letter to check for duplication.
-		LetterArea letterB = lettersToFilter[i];
+		FigureArea letterB = lettersToFilter[i];
 
 		//Check if the letters are identical.
 		bool isDuplicates = session->imageHelper->contourMethods->IsIdenticalContours(letterA.OuterContour, letterB.OuterContour);
@@ -179,14 +179,14 @@ LetterAreas LetterFilter::filterOutDuplicates(LetterAreas lettersToFilter) {
 	return letters;
 }
 
-LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutNoise(FigureAreas lettersToFilter) {
 
 	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
-	LetterAreas letters;
+	FigureAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++)
 	{
-		LetterArea letter = lettersToFilter[i];
+		FigureArea letter = lettersToFilter[i];
 
 		if (letterCheck.IsLetter(letter.Box)) {
 
@@ -197,13 +197,13 @@ LetterAreas LetterFilter::filterOutNoise(LetterAreas lettersToFilter) {
 	return letters;
 }
 
-LetterAreas LetterFilter::filterOutLetterHoles(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutLetterHoles(FigureAreas lettersToFilter) {
 
-	LetterAreas letters;
+	FigureAreas letters;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++) {
 
-		LetterAreas neighbours;
+		FigureAreas neighbours;
 		if (i != 0) {
 			neighbours.push_back(lettersToFilter[i - 1]);
 		}
@@ -217,8 +217,8 @@ LetterAreas LetterFilter::filterOutLetterHoles(LetterAreas lettersToFilter) {
 			neighbours.push_back(letters[letters.size() - 1]);
 		}
 
-		LetterArea letter = lettersToFilter[i];
-		bool hasParent = LetterAreas::HasParentLetter(letter, neighbours);
+		FigureArea letter = lettersToFilter[i];
+		bool hasParent = FigureAreas::HasParentFigure(letter, neighbours);
 		if (!hasParent) {
 
 			letters.push_back(letter);
@@ -228,13 +228,13 @@ LetterAreas LetterFilter::filterOutLetterHoles(LetterAreas lettersToFilter) {
 	return letters;
 }
 
-LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutNonNameSymbols(FigureAreas lettersToFilter) {
 
-	vector<LetterAreas> sections = groupLettersBySection(lettersToFilter);
+	vector<FigureAreas> sections = groupLettersBySection(lettersToFilter);
 
 	//Remove unworthy sections.
-	vector<LetterAreas> letterSections;
-	for (LetterAreas section : sections) {
+	vector<FigureAreas> letterSections;
+	for (FigureAreas section : sections) {
 
 		//Remove sections not containing enough letters to be the title.
 		size_t sectionSize = section.size();
@@ -245,7 +245,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 		//Remove sections that has to much vertical spread between the letters, indicating noise.
 		//This would probably work better if we could find a center trend line and check the spread related to that line.
 		float toppestY = (float)originalImageData.rows, bottomestY = 0;
-		for (LetterArea letter : section) {
+		for (FigureArea letter : section) {
 
 			if (toppestY > letter.Box.center.y) {
 				toppestY = letter.Box.center.y;
@@ -267,7 +267,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 	//Make sure there actually are any sections left.
 	size_t numberOfSections = letterSections.size();
 	if (numberOfSections == 0) {
-		return LetterAreas();
+		return FigureAreas();
 	}
 
 	//Only one section? Lets hope it's the title!
@@ -280,9 +280,9 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 	int middleAreaWidth = titleWidth / 5;
 	int minCoordinateX = (titleWidth / 2) - middleAreaWidth / 2;
 	int maxCoordinateX = (titleWidth / 2) + middleAreaWidth / 2;
-	for (LetterAreas letters : letterSections) {
+	for (FigureAreas letters : letterSections) {
 
-		Contour combinedLetterContorus = session->imageHelper->contourMethods->GetCombinedLetterContorus(letters);
+		Contour combinedLetterContorus = session->imageHelper->contourMethods->GetCombinedFigureContorus(letters);
 		RotatedRect textArea = minAreaRect(combinedLetterContorus);
 
 		bool isCentered = (minCoordinateX < textArea.center.x && maxCoordinateX > textArea.center.x);
@@ -295,7 +295,7 @@ LetterAreas LetterFilter::filterOutNonNameSymbols(LetterAreas lettersToFilter) {
 }
 
 
-LetterAreas LetterFilter::filterOutTransformSymbol(LetterAreas lettersToFilter) {
+FigureAreas LetterFilter::filterOutTransformSymbol(FigureAreas lettersToFilter) {
 
 	//Sometimes the transform symbol is close enough the title to not have a wide distance.
 	//Which means we need to handle those transform symbols separately.
@@ -314,7 +314,7 @@ LetterAreas LetterFilter::filterOutTransformSymbol(LetterAreas lettersToFilter) 
 	bool hasOneRotated = false;
 	for (size_t i = 0; i < amountOfTransformLetters; i++) {
 
-		LetterArea letter = lettersToFilter[i];
+		FigureArea letter = lettersToFilter[i];
 
 		if (i == 0) {
 			lastLetterBox = letter.Box;
@@ -335,33 +335,33 @@ LetterAreas LetterFilter::filterOutTransformSymbol(LetterAreas lettersToFilter) 
 
 	if (biggestCenterDistance < allowedDistance && hasOneRotated) {
 
-		LetterAreas::const_iterator first = lettersToFilter.begin() + amountOfTransformLetters;
-		LetterAreas::const_iterator last = lettersToFilter.end();
-		return LetterAreas(first, last);
+		FigureAreas::const_iterator first = lettersToFilter.begin() + amountOfTransformLetters;
+		FigureAreas::const_iterator last = lettersToFilter.end();
+		return FigureAreas(first, last);
 	}
 
 	return lettersToFilter;
 }
 
-vector<LetterAreas> LetterFilter::groupLettersBySection(LetterAreas lettersToFilter) {
+vector<FigureAreas> LetterFilter::groupLettersBySection(FigureAreas lettersToFilter) {
 
-	vector<LetterAreas> letters;
-	LetterArea lastLetter;
+	vector<FigureAreas> letters;
+	FigureArea lastLetter;
 	bool hasFoundNameManaGap = false;
 
-	letters.push_back(LetterAreas());
+	letters.push_back(FigureAreas());
 	size_t sectionIndex = 0;
 
 	for (size_t i = 0; i < lettersToFilter.size(); i++) {
 
-		LetterArea letter = lettersToFilter[i];
+		FigureArea letter = lettersToFilter[i];
 
 		//Check if there is a wide distance between the centers.
 		//Since we have sorted the letters by the center X coordinate,
 		//all subsequent countours will be mana symbols or noise.
 		if (hasWideLimitDistance(lastLetter.Box, letter.Box)) {
 
-			letters.push_back(LetterAreas());
+			letters.push_back(FigureAreas());
 			sectionIndex++;
 		}
 
