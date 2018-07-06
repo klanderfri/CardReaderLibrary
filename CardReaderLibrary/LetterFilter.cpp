@@ -122,6 +122,7 @@ TrendLine LetterFilter::findBaseLine(FigureAreas letters) {
 
 	for (FigureArea letter : letters) {
 
+		//Ignore dots, commas and the like to avoid having them disturb the text base line.
 		if (letterCheck.IsDotLikeCharacter(letter.Box)) { continue; }
 
 		bottomPoints.push_back(letter.GetMiddleBottomPoint());
