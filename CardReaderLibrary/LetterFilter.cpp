@@ -108,6 +108,14 @@ TrendLine LetterFilter::findCenterLine(FigureAreas letters) {
 
 TrendLine LetterFilter::findBaseLine(FigureAreas letters) {
 
+	if (letters.size() == 1) {
+
+		FigureArea letter = letters[0];
+		double angle = (letter.Box.angle < -45) ? -(90 + letter.Box.angle) : -letter.Box.angle;
+		TrendLine baseLine(angle, letter.Box.center);
+		return baseLine;
+	}
+
 	LetterCheckHelper letterCheck(session->WORKING_CARD_HEIGHT, textCenterLine);
 	vector<Point2d> bottomPoints;
 	FigureAreas baseLineLetters;
