@@ -4,8 +4,12 @@ class TrendLine
 {
 public:
 	TrendLine();
+	//Creates a line with the specified slope and offset.
 	TrendLine(long double slope, long double offset);
+	//Creates a trend line for the provided points.
 	TrendLine(const std::vector<cv::Point2d>& points);
+	//Creates a line throught the provided point with the specified slope (provided in degrees, clockwise, related to the X-axis).
+	TrendLine(const double slopeInDegrees, const cv::Point2d point);
 	~TrendLine();
 
 	//Gets the end points of the line.
@@ -55,5 +59,7 @@ private:
 	void setupMemberVariables(long double slope, long double offset);
 	//Converts radians to degrees.
 	static long double degreesFromRadians(long double value);
+	//Converts degrees to radians;
+	static long double radiansFromDegrees(long double degrees);
 };
 

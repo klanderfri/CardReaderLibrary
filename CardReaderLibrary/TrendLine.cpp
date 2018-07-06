@@ -50,6 +50,25 @@ TrendLine::TrendLine(const vector<Point2d>& points) {
 	}
 }
 
+TrendLine::TrendLine(const double slopeInDegrees, const Point2d point) {
+
+	//Find the intersection point on the Y-axis.
+	//The angle will be the opposite angle of the difference
+	//on the Y-axis for the intersection and the provided point.
+
+	long double xDistance = point.x;
+	long double yDistance = tan(radiansFromDegrees(slopeInDegrees)) * xDistance;
+	
+	long double yCoordinateForIntersection = point.y + yDistance;
+
+	Point2d yIntersection(0, yCoordinateForIntersection);
+
+	vector<Point2d> linePoints{ point, yIntersection };
+	TrendLine line(linePoints);
+
+	setupMemberVariables(line.Slope, line.Offset);
+}
+
 TrendLine::~TrendLine()
 {
 }
@@ -267,6 +286,11 @@ long double TrendLine::GetDegreesBetweenLines(TrendLine normLine, TrendLine rela
 long double TrendLine::degreesFromRadians(long double radians) {
 
 	return radians * 180 / CV_PI;
+}
+
+long double TrendLine::radiansFromDegrees(long double degrees) {
+
+	return degrees * CV_PI / 180;
 }
 
 long double TrendLine::GetDegreesToAxisX() {
