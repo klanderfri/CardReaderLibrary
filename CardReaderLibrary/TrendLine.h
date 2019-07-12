@@ -18,7 +18,7 @@ public:
 	long double GetY(long double x);
 	//Gets the X value for a given Y value.
 	long double GetX(long double y);
-	//Tells if the line is a zero line, i.e equivalent with most often is the X-axis.
+	//Tells if the line is a zero line, i.e equivalent with what most often is the X-axis.
 	bool IsZeroLine();
 	//Gets the equation in the form 'y = kx + m'.
 	std::wstring GetEquation();
