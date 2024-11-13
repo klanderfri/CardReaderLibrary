@@ -84,3 +84,5 @@ It will check if there are any broken test cases, indicating broken code. You'll
 A zip files with test data (aka photos of *Magic: the Gathering*-cards) can be downloaded from the link below.
 
 https://bjornlarsson.io/f/mtg-cardreader-testdata (ZIP-file, 216 MB)
+
+Note that [the license](LICENSE.md) only covers **the code** in **this repo**. Any art, imagery, intellectual property, e.t.c related to MtG belongs to [Wizards of the Coast LLC](https://en.wikipedia.org/wiki/Wizards_of_the_Coast).
