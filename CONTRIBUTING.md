@@ -86,3 +86,15 @@ A zip files with test data (aka photos of *Magic: the Gathering*-cards) can be d
 https://bjornlarsson.io/f/mtg-cardreader-testdata (ZIP-file, 216 MB)
 
 Note that [the license](LICENSE.md) only covers **the code** in **this repo**. Any art, imagery, intellectual property, e.t.c related to MtG belongs to [Wizards of the Coast LLC](https://en.wikipedia.org/wiki/Wizards_of_the_Coast).
+
+## Debug client
+The debug client wants 2 arguments...
+1. The full path to the folder in which the debugger should place the output data.
+2. The full path to the image to read.
+
+These arguments can be set in the `DebugClient.vcxproj.user` file (which should be ignored by the `.gitignore`-file). They should be found at
+*Project>PropertyGroup>LocalDebuggerCommandArguments*
+
+`<LocalDebuggerCommandArguments>"C:\Users\<username>\Pictures\MtG-cards\Image Data" "C:\Users\<username>\Pictures\MtG-cards\Buccaneer's Bravado.jpg"</LocalDebuggerCommandArguments>`
+
+The arguments can also be set from Visual Studio by right clicking on *DebugClient => Properties => Configuration Properties => Debugging => Command Arguments*.
