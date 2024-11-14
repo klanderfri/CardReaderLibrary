@@ -1,1 +1,9 @@
-{}
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "dependencies": [
+    "boost",
+    "leptonica",
+    "opencv",
+    "tesseract"
+  ]
+}
