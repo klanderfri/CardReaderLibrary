@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "FileSystem.h"
-#include <experimental\filesystem>
+#include <filesystem>
 #include "boost\filesystem.hpp"
+#include <fstream>
 
-namespace fs = std::experimental::filesystem;
+namespace fs = std::filesystem;
 using namespace std;
 
 mutex FileSystem::m_fileLock;
@@ -38,11 +39,11 @@ wstring FileSystem::AddRowToFile(wstring textToWrite, wstring fileName, wstring 
 		fileLock.lock();
 
 		//Implemented as suggested at
-		//http://www.publicstaticfinal.com/2015/12/18/converting-stdwstring-to-utf-8-in-c-x11-and-writing-utf-8-files-with-fstream/
-		ofstream file(fullFilePath, fstream::in | fstream::out | fstream::app);
-		wbuffer_convert<codecvt_utf8<wchar_t>> converter(file.rdbuf());
-		wostream out(&converter);
-		out << textToWrite << endl;
+		//https://stackoverflow.com/a/71887365/1997617
+		//https://stackoverflow.com/a/18226387/1997617
+		wofstream file;
+		file.open(fullFilePath);
+		file << textToWrite << endl;
 		file.close();
 
 		fileLock.unlock();

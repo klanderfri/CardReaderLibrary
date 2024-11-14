@@ -1,21 +1,34 @@
 #include "stdafx.h"
 #include "SystemMethods.h"
-#include <codecvt>
 #include "boost\lexical_cast.hpp"
 #include "boost\algorithm\string.hpp"
+#include <Windows.h>
 
 using namespace std;
 using boost::lexical_cast;
 
 wstring SystemMethods::UTF8ToWstring(const char *utf8ToConvert)
 {
-	//Implemented as suggested at:
-	//https://stackoverflow.com/a/17688508/1997617
+	//ChatGPT upgraded this method from C++14 to C++17...
 
-	wstring_convert<codecvt_utf8<wchar_t>> wconv;
-	wstring wstr = wconv.from_bytes(utf8ToConvert);
+	if (utf8ToConvert == nullptr) return L"";
 
-	return wstr;
+	// Get the length of the wide character string.
+	int wideCharLength = MultiByteToWideChar(CP_UTF8, 0, utf8ToConvert, -1, nullptr, 0);
+
+	// Handle conversion error.
+	if (wideCharLength == 0) { return L""; }
+
+	// Create a wstring to hold the converted characters.
+	std::wstring wideString(wideCharLength, 0);
+
+	// Perform the actual conversion.
+	MultiByteToWideChar(CP_UTF8, 0, utf8ToConvert, -1, &wideString[0], wideCharLength);
+
+	// Remove the null terminator added by MultiByteToWideChar.
+	wideString.pop_back();
+
+	return wideString;
 }
 
 wstring SystemMethods::ToWString(long double doubleToConvert, int numberOfDecimals) {

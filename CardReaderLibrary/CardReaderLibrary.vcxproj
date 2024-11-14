@@ -94,6 +94,7 @@
       <PreprocessorDefinitions>WIN32;BOOST_CONFIG_SUPPRESS_OUTDATED_MESSAGE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(VcpkgManifestRoot)\vcpkg_installed\x64-windows\include\</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
